@@ -1,8 +1,24 @@
-נטען .env מ: C:\Users\netanelma\source\repos\SupportChat\SupportChat\bin\Debug\.env
-תיקיית מדריכים:  C:\Users\netanelma\source\repos\SupportChat\SupportChat\bin\Debug\guides
-קובץ .env אמור להיות ליד ה-exe או בתיקיית הפרויקט.
+מצא בקוד את השורה:
 
-נטענו 1 קטעים קיימים.
-❌ כשל בהפעלת השרת: Failed to listen on prefix 'http://localhost:5000/' because it conflicts with an existing registration on the machine.
+csharp
+listener.Prefixes.Add("http://localhost:5000/");
 
+שנה ל:
 
+csharp
+listener.Prefixes.Add("http://localhost:5005/");
+
+ואת השורה מתחת (ההודעה), שנה גם:
+
+csharp
+Console.WriteLine("\n🌐 השרת עלה! פתח בדפדפן:  http://localhost:5005/");
+
+ה-HTML עצמו לא צריך שינוי — הוא פונה ל-/api/chat באופן יחסי, אז הוא יעבוד על כל פורט. פשוט תיכנס לדפדפן ל-http://localhost:5005/ (עם 5005).
+
+אבל רגע — עדיף לפתור את זה נכון
+
+לפני שאתה בורח ל-5005, שווה לשחרר את 5000 שתפוס (אולי זו הרצה תקועה). בדוק:
+
+סגור את כל חלונות הקונסול של התוכנה שאולי נשארו פתוחים ברקע.
+ב-Visual Studio, אם יש כפתור Stop אדום למעלה — לחץ עליו (אולי יש הרצה שלא נעצרה).
+אם זה לא עוזר — פשוט תישאר עם 5005, זה עובד מצוין.
