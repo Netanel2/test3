@@ -1,5 +1,8 @@
-עכשיו טענתי מדריך חדש 
-הפעלתצי את התוכנה וזה עשה לי את השכאה: 
-listener.Prefixes.Add("http://localhost:5005/");
-listener.Start();
-Console.WriteLine("🌐 השרת עלה בהצלחה! פתח את הדפדפן בכתובת: http://localhost:5005/");
+נטען .env מ: C:\Users\netanelma\source\repos\SupportChat\SupportChat\bin\Debug\.env
+תיקיית מדריכים:  C:\Users\netanelma\source\repos\SupportChat\SupportChat\bin\Debug\guides
+קובץ .env אמור להיות ליד ה-exe או בתיקיית הפרויקט.
+
+נטענו 1 קטעים קיימים.
+❌ כשל בהפעלת השרת: Failed to listen on prefix 'http://localhost:5000/' because it conflicts with an existing registration on the machine.
+
+
