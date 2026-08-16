@@ -25,10 +25,13 @@ namespace Madrich
         static string ApiKey;
         static string ChatModel = "gemini-2.5-flash";
         static string EmbedModel = "gemini-embedding-001";
-        const string ApiBase = "https://googleapis.com";
+        // ✅ כתובת ה-API הנכונה (זה היה הבאג!)
+        const string ApiBase = "https://generativelanguage.googleapis.com/v1beta/models/";
 
         static readonly HttpClient http = new HttpClient();
         static readonly JavaScriptSerializer js = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+        static readonly object indexLock = new object();
+        static List<Chunk> index = new List<Chunk>();
 
         const string SysPrompt =
             "אתה עוזר פנימי שעונה על שאלות לפי מדריכי הפעלה. ענה בעברית בלבד, מעשית ושלב-אחר-שלב. " +
@@ -36,6 +39,76 @@ namespace Madrich
         const string VisionPrompt =
             "מולך צילום מסך ממדריך. תאר בעברית: תמלל את כל הטקסט, תאר מיקום כפתורים/תפריטים, " +
             "והסבר איזו פעולה מוצגת (על מה לוחצים). אל תמציא. עברית בלבד.";
+
+        // ===== דף ה-HTML מוטמע בקוד (שימוש בגרשיים בודדים כדי להימנע מבריחה) =====
+        const string HTML_PAGE = @"<!DOCTYPE html>
+<html lang='he' dir='rtl'><head><meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>מרכז המדריכים</title><style>
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0d0f14;color:#e7ecf3;display:flex;flex-direction:column;height:100vh}
+header{padding:12px 22px;border-bottom:1px solid #262c39;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header .t{font-size:19px;font-weight:600}
+header .r{display:flex;align-items:center;gap:12px}
+.stats{font-size:12.5px;color:#8b93a4}.stats b{color:#c8a45e}
+.up{background:rgba(200,164,94,.1);border:1px solid #8a7440;color:#c8a45e;padding:8px 14px;border-radius:10px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+main{flex:1;overflow-y:auto;padding:24px}.wrap{max-width:800px;margin:0 auto}
+.msg{margin-bottom:18px;line-height:1.7}.who{font-size:12px;color:#8b93a4;margin-bottom:4px}
+.bubble{background:#141821;border:1px solid #262c39;border-radius:12px;padding:12px 15px;white-space:pre-wrap;word-wrap:break-word}
+.me .bubble{background:#1b202b}.sys .bubble{background:rgba(46,160,67,.08);border-color:rgba(46,160,67,.4)}
+.src{margin-top:8px;font-size:12px;color:#c8a45e}
+footer{border-top:1px solid #262c39;padding:14px;background:#0f1219}
+.row{max-width:800px;margin:0 auto;display:flex;gap:10px}
+textarea{flex:1;background:#141821;color:#e7ecf3;border:1px solid #262c39;border-radius:10px;padding:11px;font-family:inherit;font-size:15px;resize:none}
+button.send{background:#c8a45e;color:#0d0f14;border:none;border-radius:10px;padding:0 22px;font-weight:700;cursor:pointer}
+#drop{position:fixed;inset:0;background:rgba(13,15,20,.92);z-index:50;display:none;align-items:center;justify-content:center;color:#c8a45e;font-size:24px;font-weight:700;border:3px dashed #c8a45e}
+#drop.show{display:flex}
+</style></head><body>
+<header><div class='t'>📚 מרכז המדריכים</div>
+<div class='r'><span class='stats' id='stats'></span>
+<button class='up' onclick='document.getElementById(""fi"").click()'>➕ העלה מדריך</button>
+<input type='file' id='fi' multiple style='display:none' accept='.txt,.md,.docx,.png,.jpg,.jpeg,.webp'></div></header>
+<main><div class='wrap' id='chat'></div></main>
+<footer><div class='row'>
+<textarea id='q' rows='1' placeholder='שאל שאלה בעברית...'></textarea>
+<button class='send' onclick='send()'>שלח</button></div></footer>
+<div id='drop'>שחרר כאן כדי להעלות מדריך 📄</div>
+<script>
+var q=document.getElementById('q'),drop=document.getElementById('drop'),fi=document.getElementById('fi');
+function stats(){fetch('/api/sources').then(function(r){return r.json();}).then(function(d){
+document.getElementById('stats').innerHTML=d.sources.length+' מדריכים · <b>'+d.chunks+'</b> קטעים';});}
+stats();
+function add(who,text,cls){var w=document.getElementById('chat');
+var d=document.createElement('div');d.className='msg '+(cls||'');
+var wd=document.createElement('div');wd.className='who';wd.textContent=who;
+var b=document.createElement('div');b.className='bubble';b.textContent=text;
+d.appendChild(wd);d.appendChild(b);w.appendChild(d);
+document.querySelector('main').scrollTop=1e9;return d;}
+q.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+async function send(){var t=q.value.trim();if(!t)return;q.value='';
+add('אתה',t,'me');var d=add('עוזר','חושב...');
+try{var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t})});
+var j=await r.json();d.querySelector('.bubble').textContent=j.answer||j.error||'אין תשובה';
+if(j.sources&&j.sources.length){var s=document.createElement('div');s.className='src';s.textContent='📄 '+j.sources.join(' | ');d.appendChild(s);}
+}catch(e){d.querySelector('.bubble').textContent='שגיאה: '+e.message;}}
+fi.addEventListener('change',function(){handle(fi.files);fi.value='';});
+var dc=0;
+window.addEventListener('dragenter',function(e){e.preventDefault();dc++;drop.classList.add('show');});
+window.addEventListener('dragover',function(e){e.preventDefault();});
+window.addEventListener('dragleave',function(e){e.preventDefault();dc--;if(dc<=0)drop.classList.remove('show');});
+window.addEventListener('drop',function(e){e.preventDefault();dc=0;drop.classList.remove('show');if(e.dataTransfer.files.length)handle(e.dataTransfer.files);});
+function b64(file){return new Promise(function(res,rej){var r=new FileReader();
+r.onload=function(){res(r.result.split(',')[1]);};r.onerror=function(){rej(new Error('קריאה נכשלה'));};r.readAsDataURL(file);});}
+async function handle(files){for(var i=0;i<files.length;i++){var f=files[i];
+var d=add('מערכת','מעלה ומעבד: '+f.name+' ...','sys');
+try{var data=await b64(f);
+var r=await fetch('/api/upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:f.name,data:data})});
+var j=await r.json();
+if(j.ok){d.querySelector('.bubble').textContent='נוסף למאגר: '+f.name+' ('+j.added+' קטעים) ✓';stats();}
+else{d.querySelector('.bubble').textContent='שגיאה ב-'+f.name+': '+(j.error||'נכשל');}
+}catch(e){d.querySelector('.bubble').textContent='שגיאה: '+e.message;}}}
+</script></body></html>";
+
         static void Main(string[] args)
         {
             try { Console.OutputEncoding = Encoding.UTF8; } catch { }
@@ -50,26 +123,44 @@ namespace Madrich
             Directory.CreateDirectory(GuidesDir);
             Directory.CreateDirectory(DataDir);
 
-            List<Chunk> index = new List<Chunk>();
+            Console.WriteLine("תיקיית מדריכים:  " + GuidesDir);
+            Console.WriteLine("קובץ .env אמור להיות ליד ה-exe או בתיקיית הפרויקט.");
+            Console.WriteLine();
+
+            if (string.IsNullOrWhiteSpace(ApiKey))
+            {
+                Console.WriteLine("❌ אין GEMINI_API_KEY. צור קובץ .env עם השורה:");
+                Console.WriteLine("   GEMINI_API_KEY=AIza...");
+                Console.WriteLine("   (מפתח חינם: https://aistudio.google.com/apikey )");
+                Console.WriteLine("\nהקש Enter ליציאה."); Console.ReadLine(); return;
+            }
+
+            // טעינת אינדקס קיים, או בנייה אם אין
             if (File.Exists(IndexPath))
             {
                 try { index = js.Deserialize<List<Chunk>>(File.ReadAllText(IndexPath, Encoding.UTF8)) ?? new List<Chunk>(); }
-                catch { index = Ingest().GetAwaiter().GetResult(); }
+                catch { index = new List<Chunk>(); }
+                Console.WriteLine("נטענו " + index.Count + " קטעים קיימים.");
             }
-            else { index = Ingest().GetAwaiter().GetResult(); }
+            else
+            {
+                Console.WriteLine("בונה אינדקס מהקבצים ב-guides (אם יש)...");
+                try { index = Ingest().GetAwaiter().GetResult(); }
+                catch (Exception e) { Console.WriteLine("שגיאה באינדוקס: " + e.Message); }
+            }
 
             HttpListener listener = new HttpListener();
             try
             {
                 listener.Prefixes.Add("http://localhost:5000/");
                 listener.Start();
-                Console.WriteLine("🌐 השרת עלה בהצלחה! פתח את הדפדפן בכתובת: http://localhost:5000/");
+                Console.WriteLine("\n🌐 השרת עלה! פתח בדפדפן:  http://localhost:5000/");
+                Console.WriteLine("אפשר לגרור מדריכים ישר לדפדפן. לעצירה: סגור חלון זה.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("❌ כשל בהפעלת השרת: " + ex.Message);
-                Console.ReadLine();
-                return;
+                Console.ReadLine(); return;
             }
 
             Task.Run(async () =>
@@ -78,117 +169,135 @@ namespace Madrich
                 {
                     try
                     {
-                        HttpListenerContext context = await listener.GetContextAsync();
-                        HttpListenerRequest request = context.Request;
-                        HttpListenerResponse response = context.Response;
-
+                        var context = await listener.GetContextAsync();
+                        var request = context.Request;
+                        var response = context.Response;
                         response.Headers.Add("Access-Control-Allow-Origin", "*");
                         response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
 
-                        if (request.HttpMethod == "OPTIONS")
-                        {
-                            response.StatusCode = 200;
-                            response.Close();
-                            continue;
-                        }
+                        if (request.HttpMethod == "OPTIONS") { response.StatusCode = 200; response.Close(); continue; }
 
-                        if (request.Url.AbsolutePath == "/api/chat" && request.HttpMethod == "POST")
+                        string path = request.Url.AbsolutePath;
+
+                        if (path == "/api/chat" && request.HttpMethod == "POST")
                         {
                             string bodyText;
-                            using (StreamReader reader = new StreamReader(request.InputStream, request.ContentEncoding))
-                            {
-                                bodyText = await reader.ReadToEndAsync();
-                            }
+                            using (var reader = new StreamReader(request.InputStream, Encoding.UTF8)) bodyText = await reader.ReadToEndAsync();
+                            var data = js.DeserializeObject(bodyText) as Dictionary<string, object>;
+                            string qtext = (data != null && data.ContainsKey("question") && data["question"] != null) ? data["question"].ToString().Trim() : "";
 
-                            var requestData = (Dictionary<string, object>)js.DeserializeObject(bodyText);
-                            string q = requestData != null && requestData.ContainsKey("question") ? requestData["question"].ToString().Trim() : "";
+                            Console.WriteLine("📩 שאלה: " + qtext);
+                            if (string.IsNullOrEmpty(qtext)) { WriteJson(response, new { error = "שאלה ריקה" }, 400); continue; }
 
-                            Console.WriteLine("📩 התקבלה שאלה מהאתר: " + q);
+                            List<Chunk> snapshot;
+                            lock (indexLock) snapshot = new List<Chunk>(index);
+                            if (snapshot.Count == 0) { WriteJson(response, new { error = "אין מדריכים עדיין. גרור מדריך לדפדפן." }, 400); continue; }
 
-                            if (string.IsNullOrEmpty(q))
-                            {
-                                response.StatusCode = 400;
-                                byte[] errBuffer = Encoding.UTF8.GetBytes(js.Serialize(new { error = "שאלה ריקה" }));
-                                response.ContentType = "application/json; charset=utf-8";
-                                await response.OutputStream.WriteAsync(errBuffer, 0, errBuffer.Length);
-                                response.Close();
-                                continue;
-                            }
-
-                            Console.WriteLine("🔍 מחשב Embeddings לשאלת המשתמש...");
-                            var qvList = await EmbedBatch(new List<string> { q });
-                            var qv = qvList[0]; // שליפת הוקטור הבודד בצורה מתוקנת
-
-                            Console.WriteLine("📊 מחשב מרחק ווקטורי (Cosine)...");
-                            var top = index.Select(c => new { c, s = Cosine(qv, c.Embedding) })
-                                           .OrderByDescending(x => x.s).Take(6).Select(x => x.c).ToList();
-
-                            StringBuilder sb = new StringBuilder(); int i = 1; List<string> srcs = new List<string>();
+                            var qv = (await EmbedBatch(new List<string> { qtext }))[0];
+                            var top = snapshot.Select(c => new { c, s = Cosine(qv, c.Embedding) })
+                                              .OrderByDescending(x => x.s).Take(6).Select(x => x.c).ToList();
+                            var sb = new StringBuilder(); int i = 1; var srcs = new List<string>();
                             foreach (var c in top)
                             {
                                 if (!srcs.Contains(c.Source)) srcs.Add(c.Source);
                                 sb.Append("[מקור " + i + " — " + c.Source + "]\n" + c.Text + "\n\n---\n\n"); i++;
                             }
+                            string ans = await Chat("קטעים מהמדריכים:\n\n" + sb + "=====\nשאלה: " + qtext);
+                            Console.WriteLine("✅ נשלחה תשובה.");
+                            WriteJson(response, new { answer = ans, sources = srcs });
+                        }
+                        else if (path == "/api/upload" && request.HttpMethod == "POST")
+                        {
+                            string bodyText;
+                            using (var reader = new StreamReader(request.InputStream, Encoding.UTF8)) bodyText = await reader.ReadToEndAsync();
+                            var data = js.DeserializeObject(bodyText) as Dictionary<string, object>;
+                            string fname = (data != null && data.ContainsKey("filename")) ? data["filename"] as string : null;
+                            string b64 = (data != null && data.ContainsKey("data")) ? data["data"] as string : null;
 
-                            Console.WriteLine("🤖 שולח את השאלה והמדריכים הרלוונטיים ל-Gemini API...");
-                            string ans = await Chat("קטעים מהמדריכים:\n\n" + sb + "=====\nשאלה: " + q);
+                            if (string.IsNullOrWhiteSpace(fname) || string.IsNullOrWhiteSpace(b64))
+                            { WriteJson(response, new { ok = false, error = "חסר קובץ" }, 400); continue; }
 
-                            Console.WriteLine("✅ התקבלה תשובה מג'מיני!");
+                            fname = Path.GetFileName(fname);
+                            Console.WriteLine("📤 מעלה: " + fname);
+                            string save = Path.Combine(GuidesDir, fname);
+                            File.WriteAllBytes(save, Convert.FromBase64String(b64));
 
-                            response.ContentType = "application/json; charset=utf-8";
-                            byte[] buffer = Encoding.UTF8.GetBytes(js.Serialize(new { answer = ans, sources = srcs }));
-                            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
-                            response.Close();
+                            var secs = await Extract(save);
+                            var chunks = Chunkify(secs);
+                            if (chunks.Count == 0) { WriteJson(response, new { ok = false, error = "לא נמצא תוכן" }); continue; }
+
+                            var vecs = await EmbedBatch(chunks.Select(c => c.Text).ToList());
+                            for (int k = 0; k < chunks.Count; k++) chunks[k].Embedding = vecs[k];
+
+                            int total;
+                            lock (indexLock)
+                            {
+                                index.AddRange(chunks);
+                                File.WriteAllText(IndexPath, js.Serialize(index), new UTF8Encoding(false));
+                                total = index.Count;
+                            }
+                            Console.WriteLine("✅ נוסף: " + fname + " (" + chunks.Count + " קטעים)");
+                            WriteJson(response, new { ok = true, added = chunks.Count, total = total });
+                        }
+                        else if (path == "/api/sources")
+                        {
+                            List<string> srcs; int cnt;
+                            lock (indexLock) { srcs = index.Select(c => c.Source).Distinct().ToList(); cnt = index.Count; }
+                            WriteJson(response, new { sources = srcs, chunks = cnt });
                         }
                         else
                         {
-                            string wwwroot = Path.Combine(BaseDir, "wwwroot");
-                            string filePath = Path.Combine(wwwroot, "index.html");
-
-                            if (File.Exists(filePath))
-                            {
-                                response.ContentType = "text/html; charset=utf-8";
-                                byte[] htmlBuffer = File.ReadAllBytes(filePath);
-                                await response.OutputStream.WriteAsync(htmlBuffer, 0, htmlBuffer.Length);
-                            }
-                            else
-                            {
-                                response.StatusCode = 404;
-                                byte[] fontBuffer = Encoding.UTF8.GetBytes("קובץ index.html לא נמצא בתיקיית wwwroot");
-                                await response.OutputStream.WriteAsync(fontBuffer, 0, fontBuffer.Length);
-                            }
+                            response.ContentType = "text/html; charset=utf-8";
+                            byte[] htmlBuffer = Encoding.UTF8.GetBytes(HTML_PAGE);
+                            await response.OutputStream.WriteAsync(htmlBuffer, 0, htmlBuffer.Length);
                             response.Close();
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("⚠️ שגיאה בטיפול בבקשה: " + ex.Message);
-                    }
+                    catch (Exception ex) { Console.WriteLine("⚠️ שגיאה בבקשה: " + ex.Message); }
                 }
             });
 
             Console.ReadLine();
         }
+
+        static void WriteJson(HttpListenerResponse response, object obj, int status = 200)
+        {
+            try
+            {
+                response.StatusCode = status;
+                response.ContentType = "application/json; charset=utf-8";
+                byte[] buf = Encoding.UTF8.GetBytes(js.Serialize(obj));
+                response.OutputStream.Write(buf, 0, buf.Length);
+                response.Close();
+            }
+            catch { }
+        }
+
         // ===== אינדוקס =====
         static async Task<List<Chunk>> Ingest()
         {
             var exts = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".txt", ".md", ".docx", ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif" };
-            var files = Directory.Exists(GuidesDir) ? Directory.GetFiles(GuidesDir, "*.*", SearchOption.AllDirectories).Where(f => exts.Contains(Path.GetExtension(f))).OrderBy(f => f).ToList() : new List<string>();
+            var files = Directory.Exists(GuidesDir)
+                ? Directory.GetFiles(GuidesDir, "*.*", SearchOption.AllDirectories).Where(f => exts.Contains(Path.GetExtension(f))).OrderBy(f => f).ToList()
+                : new List<string>();
             if (files.Count == 0) return new List<Chunk>();
 
             var sections = new List<Section>();
+            int n = 0;
             foreach (var f in files)
             {
-                try { sections.AddRange(await Extract(f)); } catch { }
+                n++; Console.WriteLine("[" + n + "/" + files.Count + "] " + Path.GetFileName(f));
+                try { sections.AddRange(await Extract(f)); } catch (Exception e) { Console.WriteLine("   שגיאה: " + e.Message); }
             }
 
             var chunks = Chunkify(sections);
             if (chunks.Count == 0) return new List<Chunk>();
-
+            Console.WriteLine("מחשב embeddings ל-" + chunks.Count + " קטעים...");
             var vecs = await EmbedBatch(chunks.Select(c => c.Text).ToList());
             for (int i = 0; i < chunks.Count; i++) chunks[i].Embedding = vecs[i];
 
             File.WriteAllText(IndexPath, js.Serialize(chunks), new UTF8Encoding(false));
+            Console.WriteLine("✅ נשמר אינדקס (" + chunks.Count + " קטעים).");
             return chunks;
         }
 
@@ -197,7 +306,6 @@ namespace Madrich
             string ext = Path.GetExtension(path).ToLowerInvariant();
             string name = Path.GetFileName(path);
             var res = new List<Section>();
-
             if (ext == ".txt" || ext == ".md")
                 res.Add(new Section { Source = name, Text = File.ReadAllText(path, Encoding.UTF8) });
             else if (ext == ".docx")
@@ -233,6 +341,18 @@ namespace Madrich
                             res.Add(new Section { Source = name, Text = sb.ToString().Trim() });
                     }
                 }
+                int idx = 0;
+                foreach (var e in zip.Entries)
+                {
+                    if (!e.FullName.StartsWith("word/media/", StringComparison.OrdinalIgnoreCase)) continue;
+                    string mext = Path.GetExtension(e.Name).ToLowerInvariant();
+                    if (mext != ".png" && mext != ".jpg" && mext != ".jpeg" && mext != ".gif" && mext != ".bmp") continue;
+                    idx++;
+                    byte[] bytes;
+                    using (var es = e.Open()) using (var ms = new MemoryStream()) { es.CopyTo(ms); bytes = ms.ToArray(); }
+                    string desc = await DescribeImage(bytes, MimeFor(mext), VisionPrompt + "\nהקשר: " + name + " תמונה " + idx);
+                    res.Add(new Section { Source = name, Text = "[צילום מסך " + idx + "]\n" + desc });
+                }
             }
             return res;
         }
@@ -248,12 +368,14 @@ namespace Madrich
                 {
                     int len = Math.Min(1500, t.Length - start);
                     outp.Add(new Chunk { Source = s.Source, Text = t.Substring(start, len).Trim() });
+                    if (start + 1500 >= t.Length) break;
                     start += 1250;
                 }
             }
             return outp;
         }
 
+        // ===== Gemini =====
         static async Task<Dictionary<string, object>> Post(string url, object body)
         {
             var req = new HttpRequestMessage(HttpMethod.Post, url);
@@ -264,7 +386,8 @@ namespace Madrich
             if (!resp.IsSuccessStatusCode) throw new Exception(raw);
             return (Dictionary<string, object>)js.DeserializeObject(raw);
         }
-        public static async Task<List<float[]>> EmbedBatch(List<string> texts)
+
+        static async Task<List<float[]>> EmbedBatch(List<string> texts)
         {
             var outv = new List<float[]>();
             for (int i = 0; i < texts.Count; i += 50)
@@ -309,7 +432,8 @@ namespace Madrich
                 } } } }},
                 {"generationConfig", new Dictionary<string,object>{ {"temperature",0.1}, {"maxOutputTokens",1500} }}
             };
-            try { return ReadText(await Post(ApiBase + ChatModel + ":generateContent", body)); } catch (Exception e) { return "[שגיאה: " + e.Message + "]"; }
+            try { return ReadText(await Post(ApiBase + ChatModel + ":generateContent", body)); }
+            catch (Exception e) { return "[שגיאה בתיאור תמונה: " + e.Message + "]"; }
         }
 
         static string ReadText(Dictionary<string, object> root)
@@ -317,14 +441,13 @@ namespace Madrich
             try
             {
                 if (root == null || !root.ContainsKey("candidates")) return "[אין תשובה]";
-                var cands = root["candidates"] as System.Collections.IEnumerable;
-                if (cands == null) return "[אין תשובה]";
-                Dictionary<string, object> c0 = null;
-                foreach (var item in cands) { c0 = item as Dictionary<string, object>; break; }
-                if (c0 == null || !c0.ContainsKey("content")) return "[אין טקסט]";
+                var cands = root["candidates"] as object[];
+                if (cands == null || cands.Length == 0) return "[אין תשובה]";
+                var c0 = cands[0] as Dictionary<string, object>;
+                if (c0 == null || !c0.ContainsKey("content")) return "[אין טקסט בתשובה]";
                 var content = c0["content"] as Dictionary<string, object>;
-                var parts = content["parts"] as System.Collections.IEnumerable;
-                StringBuilder sb = new StringBuilder();
+                var parts = content["parts"] as object[];
+                var sb = new StringBuilder();
                 foreach (var p in parts)
                 {
                     var pd = p as Dictionary<string, object>;
@@ -332,7 +455,7 @@ namespace Madrich
                 }
                 return sb.ToString().Trim();
             }
-            catch { return "[שגיאה בפענוח]"; }
+            catch { return "[שגיאה בפענוח תשובה]"; }
         }
 
         static double Cosine(float[] a, float[] b)
@@ -356,7 +479,7 @@ namespace Madrich
         static void LoadDotEnv()
         {
             string dir = BaseDir;
-            for (int up = 0; up < 4; up++)
+            for (int up = 0; up < 5; up++)
             {
                 string p = Path.Combine(dir, ".env");
                 if (File.Exists(p))
@@ -370,6 +493,7 @@ namespace Madrich
                         string k = t.Substring(0, eq).Trim(), v = t.Substring(eq + 1).Trim();
                         if (Environment.GetEnvironmentVariable(k) == null) Environment.SetEnvironmentVariable(k, v);
                     }
+                    Console.WriteLine("נטען .env מ: " + p);
                     return;
                 }
                 var parent = Directory.GetParent(dir); if (parent == null) break; dir = parent.FullName;
