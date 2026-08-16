@@ -1,1 +1,8 @@
-CHAT_MODEL=gemini-2.5-pro
+📩 שאלה: איך עושים דוח אקטואר?
+⚠️ שגיאה בבקשה: {
+  "error": {
+    "code": 404,
+    "message": "This model models/gemini-2.5-pro is no longer available to new users. Please update your code to use a newer model for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/migrate-to-interactions).",
+    "status": "NOT_FOUND"
+  }
+}
