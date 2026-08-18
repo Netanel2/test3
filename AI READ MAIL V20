@@ -14,12 +14,15 @@ Symbols for the module 'PhoneExtractorApp.exe' were not loaded.
 [אבחון] בודק קובץ: C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\bin\Release\.env -> לא נמצא
 [אבחון] בודק קובץ: C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\bin\Release\.env -> לא נמצא
 [אבחון] בודק קובץ: C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\bin\.env -> לא נמצא
-[אבחון] בודק קובץ: C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\.env -> לא נמצא
-[אבחון] בודק קובץ: C:\Users\netanelma\source\repos\PhoneExtractorApp\.env -> לא נמצא
-[אבחון] לא נמצא קובץ .env באף אחת מהתיקיות שנבדקו.
-[אבחון] GEMINI_API_KEY נטען? לא (ריק/null)
+[אבחון] בודק קובץ: C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\.env -> נמצא
+[אבחון] נטען משתנה בשם: 'GEMINI_API_KEY' (אורך המפתח שנטען: 68 תווים בשורה)
+[אבחון] סה"כ נטענו 1 שורות מ-.env
+[אבחון] GEMINI_API_KEY נטען? כן, מתחיל ב-AQ.A*** ואורכו 53 תווים
 מודל: gemini-2.5-flash
 תיקיות מותרות: (ללא הגבלה)
 
-? אין GEMINI_API_KEY ב-.env
-The program '[28180] PhoneExtractorApp.exe' has exited with code 0 (0x0).
+בונה אינדקס...
+
+?? השרת עלה!  http://localhost:5005/
+The thread 0x678c has exited with code 0 (0x0).
+The program '[32920] PhoneExtractorApp.exe' has exited with code 0 (0x0).
