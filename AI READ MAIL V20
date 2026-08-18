@@ -1,11 +1,1 @@
-המודל לא זמין. בדוק CHAT_MODEL.
-
-
-וזה מה שיש לי בתוך ה ENV
-
-# מפתח מ-Google AI Studio: https://aistudio.google.com/apikey
-GEMINI_API_KEY=AQ.Ab8RN6LzBz_IkwsStx4rbvQBpc6aBzdJ7jPH8mkTsg1kWc3hE
-
 CHAT_MODEL=gemini-2.5-flash-lite
-# אופציונלי:
-# EMBED_MODEL=text-embedding-004
