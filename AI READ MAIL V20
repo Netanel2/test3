@@ -143,6 +143,7 @@ button.send{background:#c8a45e;color:#0d0f14;border:none;border-radius:10px;padd
 if(window.marked){marked.setOptions({breaks:true,gfm:true});}
 var q=document.getElementById('q'),drop=document.getElementById('drop'),fi=document.getElementById('fi');
 var learnMode=false;
+var chatHistory=[];
 function stats(){fetch('/api/sources').then(function(r){return r.json();}).then(function(d){document.getElementById('stats').innerHTML=d.sources.length+' מדריכים · <b>'+d.chunks+'</b> קטעים';});}
 stats();
 function pickFile(){fi.click();}
@@ -170,9 +171,10 @@ if(ij&&ij.kind==='file'){showFileConfirm(d,ij);return;}
 if(ij&&ij.kind==='mail'){showMail(d,ij);return;}
 if(ij&&ij.kind==='sendmail'){showSendConfirm(d,ij);return;}
 }catch(e){}
-try{var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t})});var j=await r.json();
-if(j.answer){render(d.querySelector('.bubble'),j.answer);}else{d.querySelector('.bubble').textContent=j.error||'אין תשובה';}
+try{var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t,history:chatHistory})});var j=await r.json();
+if(j.answer){render(d.querySelector('.bubble'),j.answer);chatHistory.push({role:'user',text:t});chatHistory.push({role:'model',text:j.answer});if(chatHistory.length>12)chatHistory=chatHistory.slice(chatHistory.length-12);}else{d.querySelector('.bubble').textContent=j.error||'אין תשובה';}
 if(j.sources&&j.sources.length){var s=document.createElement('div');s.className='src';s.textContent='📄 '+j.sources.join(' | ');d.appendChild(s);}
+if(j.autoLearned){var al=document.createElement('div');al.style.marginTop='8px';al.style.fontSize='12px';al.style.color='#c8a45e';al.textContent='🧠 נלמד אוטומטית: '+j.autoLearned;d.appendChild(al);}
 }catch(e){d.querySelector('.bubble').textContent='שגיאה: '+e.message;}}
 
 async function showMail(d,intent){var b=d.querySelector('.bubble');b.textContent='קורא מ-Outlook...';
@@ -313,6 +315,7 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                         if (path == "/api/chat" && request.HttpMethod == "POST")
                         {
                             var data = await ReadJson(request); string qtext = (Str(data, "question") ?? "").Trim();
+                            var history = ParseHistory(data);
                             Console.WriteLine("📩 " + qtext);
                             if (qtext.Length == 0) { WriteJson(response, new { error = "שאלה ריקה" }, 400); continue; }
                             List<Chunk> snap; lock (indexLock) snap = new List<Chunk>(index);
@@ -324,7 +327,21 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                                 else { var qv = (await EmbedBatch(new List<string> { qtext }))[0]; chosen = snap.Select(c => new { c, s = Cosine(qv, c.Embedding) }).OrderByDescending(x => x.s).Take(TOP_K).Select(x => x.c).ToList(); }
                                 var sb = new StringBuilder(); int i = 1; var srcs = new List<string>();
                                 foreach (var c in chosen) { if (!srcs.Contains(c.Source)) srcs.Add(c.Source); sb.Append("[מקור " + i + " — " + c.Source + "]\n" + c.Text + "\n\n---\n\n"); i++; }
-                                WriteJson(response, new { answer = await Chat("קטעים מהמדריכים:\n\n" + sb + "=====\nשאלה: " + qtext), sources = srcs });
+                                string answerText = await Chat("קטעים מהמדריכים:\n\n" + sb + "=====\nשאלה: " + qtext, history);
+                                string autoLearned = null;
+                                try
+                                {
+                                    autoLearned = await ExtractLearnableFact(qtext, answerText);
+                                    if (!string.IsNullOrWhiteSpace(autoLearned))
+                                    {
+                                        File.AppendAllText(LearnedPath, "=== נלמד אוטומטית " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " ===\n" + autoLearned.Trim() + "\n\n", new UTF8Encoding(false));
+                                        var chunk = new Chunk { Source = "ידע נלמד אוטומטית", Text = autoLearned.Trim() };
+                                        chunk.Embedding = (await EmbedBatch(new List<string> { chunk.Text }))[0];
+                                        lock (indexLock) { index.Add(chunk); File.WriteAllText(IndexPath, js.Serialize(index), new UTF8Encoding(false)); }
+                                    }
+                                }
+                                catch { }
+                                WriteJson(response, new { answer = answerText, sources = srcs, autoLearned = autoLearned });
                             }
                             catch (Exception ex) { WriteJson(response, new { error = Friendly(ex.Message) }); }
                         }
@@ -415,7 +432,7 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             string prompt =
                 "המשתמש כתב הודעה. סווג אותה והחזר JSON בלבד (בלי טקסט או סימני קוד):\n" +
                 "אם בקשה להעברת/העתקת קבצים: {kind:file, op:copy או move, source:נתיב, dest:נתיב, pattern:* }\n" +
-                "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילות חיפוש בנושא/שולח/גוף המייל או ריק, count:מספר, unreadOnly:true או false, dateFilter:today או yesterday או all, folder:שם תיקייה באאוטלוק לחיפוש בה או ריק לתיבה הנכנסת}\n" +
+                "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילת חיפוש אחת, או כמה מילים/ביטויים נרדפים מופרדים בפסיק אם השאלה היא על קטגוריה ולא מילה מדויקת (למשל 'מה שנכשל' -> 'נכשל,כשל,failed,error,שגיאה,לא הצליח'), או ריק לכל המיילים, count:מספר, unreadOnly:true או false, dateFilter:today או yesterday או all, folder:שם תיקייה באאוטלוק לחיפוש בה או ריק לתיבה הנכנסת}\n" +
                 "אם בקשה לשלוח מייל: {kind:sendmail, to:כתובת/כתובות נמענים מופרדות בפסיק, subject:נושא המייל, body:תוכן המייל}. אל תמציא כתובת מייל אם המשתמש לא נתן אחת מפורשת — במקרה כזה השאר to ריק.\n" +
                 "unreadOnly=true רק אם המשתמש מדבר במפורש על מיילים שלא נקראו/לא נקראו. dateFilter=today אם השאלה על היום, yesterday אם על אתמול, אחרת all.\n" +
                 "חשוב: מילים כמו 'היום', 'אתמול', 'לא נקראו' הן סינון (dateFilter/unreadOnly) ולא טקסט לחיפוש — אל תשים אותן בשדה query.\n" +
@@ -530,7 +547,8 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 if (!string.IsNullOrEmpty(query))
                 {
                     string hay = (subj + " " + from + " " + bodyText).ToLowerInvariant();
-                    if (!hay.Contains(query.ToLowerInvariant())) continue;
+                    var terms = query.Split(',').Select(t => t.Trim().ToLowerInvariant()).Where(t => t.Length > 0).ToArray();
+                    if (terms.Length > 0 && !terms.Any(t => hay.Contains(t))) continue;
                 }
                 string preview = bodyText.Replace("\r", " ").Replace("\n", " ").Trim();
                 if (preview.Length > 200) preview = preview.Substring(0, 200) + "...";
@@ -710,11 +728,56 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             }
             return outv;
         }
-        static async Task<string> Chat(string userPrompt)
+        static List<KeyValuePair<string, string>> ParseHistory(Dictionary<string, object> data)
         {
+            var result = new List<KeyValuePair<string, string>>();
+            try
+            {
+                if (data != null && data.ContainsKey("history") && data["history"] is object[] arr)
+                {
+                    foreach (var item in arr)
+                    {
+                        var d = item as Dictionary<string, object>;
+                        if (d == null) continue;
+                        string role = Str(d, "role"); string text = Str(d, "text");
+                        if (string.IsNullOrWhiteSpace(text)) continue;
+                        role = (role == "assistant" || role == "model") ? "model" : "user";
+                        result.Add(new KeyValuePair<string, string>(role, text));
+                    }
+                }
+            }
+            catch { }
+            if (result.Count > 12) result = result.Skip(result.Count - 12).ToList(); // מגביל ל-6 חילופי דברים אחרונים
+            return result;
+        }
+
+        static async Task<string> ExtractLearnableFact(string question, string answer)
+        {
+            string prompt =
+                "הנה שאלה ותשובה מתוך שיחת תמיכה פנימית.\n" +
+                "אם יש בתשובה עובדה עסקית קונקרטית, נוהל, או פרט שימושי שכדאי לזכור לצמיתות לשם מענה על שאלות עתידיות (ולא סתם שיחה כללית או תשובה שכבר ידועה מהמדריכים) — כתוב אותו בקצרה ובעברית, במשפט או שניים.\n" +
+                "אם אין שום דבר חדש ובר-קיימא ללמוד מכאן, כתוב בדיוק את המילה: NONE\n\n" +
+                "שאלה: " + question + "\nתשובה: " + answer;
+            var body = new Dictionary<string, object> { { "contents", new object[] { new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] { new Dictionary<string, object> { { "text", prompt } } } } } } } };
+            try
+            {
+                string result = ReadText(await Post(ApiBase + ChatModel + ":generateContent", body)).Trim();
+                if (string.IsNullOrWhiteSpace(result) || result.ToUpperInvariant().Contains("NONE")) return null;
+                return result;
+            }
+            catch { return null; }
+        }
+
+        static async Task<string> Chat(string userPrompt, List<KeyValuePair<string, string>> history = null)
+        {
+            var contents = new List<object>();
+            if (history != null)
+                foreach (var h in history)
+                    contents.Add(new Dictionary<string, object> { { "role", h.Key }, { "parts", new object[] { new Dictionary<string, object> { { "text", h.Value } } } } });
+            contents.Add(new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] { new Dictionary<string, object> { { "text", userPrompt } } } } });
             var body = new Dictionary<string, object> {
                 { "systemInstruction", new Dictionary<string, object> { { "parts", new object[] { new Dictionary<string, object> { { "text", SysPrompt } } } } } },
-                { "contents", new object[] { new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] { new Dictionary<string, object> { { "text", userPrompt } } } } } } } };
+                { "contents", contents.ToArray() } };
             return ReadText(await Post(ApiBase + ChatModel + ":generateContent", body));
         }
         static async Task<string> DescribeImage(byte[] bytes, string mime, string prompt)
