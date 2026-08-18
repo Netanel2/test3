@@ -1,5 +1,9 @@
+SQL_SERVER=שם_השרת\שם_המופע
+
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -29,6 +33,7 @@ namespace Madrich
         static string ChatModel = "gemini-2.5-flash";
         static string EmbedModel = "gemini-embedding-001";
         static string[] AllowedDirs = new string[0];
+        static string SqlServer;
         const string ApiBase = "https://generativelanguage.googleapis.com/v1beta/models/";
 
         const int SEND_ALL_THRESHOLD = 30;
@@ -170,6 +175,7 @@ try{var ir=await fetch('/api/intent',{method:'POST',headers:{'Content-Type':'app
 if(ij&&ij.kind==='file'){showFileConfirm(d,ij);return;}
 if(ij&&ij.kind==='mail'){showMail(d,ij);return;}
 if(ij&&ij.kind==='sendmail'){showSendConfirm(d,ij);return;}
+if(ij&&ij.kind==='sqljob'){showSqlJob(d,ij);return;}
 }catch(e){}
 try{var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t,history:chatHistory})});var j=await r.json();
 if(j.answer){render(d.querySelector('.bubble'),j.answer);chatHistory.push({role:'user',text:t});chatHistory.push({role:'model',text:j.answer});if(chatHistory.length>12)chatHistory=chatHistory.slice(chatHistory.length-12);}else{d.querySelector('.bubble').textContent=j.error||'אין תשובה';}
@@ -233,6 +239,35 @@ btns.textContent=j.ok?'✓ נשלח בהצלחה':('⚠️ '+j.error);
 no.onclick=function(){btns.textContent='בוטל.';};
 btns.appendChild(go);btns.appendChild(no);b.appendChild(btns);}
 
+async function showSqlJob(d,intent){var b=d.querySelector('.bubble');
+if(intent.action==='list'){b.textContent='בודק JOBs שנכשלו...';
+try{var r=await fetch('/api/sql/failed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({dateFilter:intent.dateFilter})});var j=await r.json();
+if(!j.ok){b.textContent='⚠️ '+j.error;return;}
+if(!j.jobs||!j.jobs.length){b.textContent='לא נמצאו JOBs שנכשלו.';return;}
+b.textContent='JOBs שנכשלו ('+j.jobs.length+'):';
+j.jobs.forEach(function(jb){
+var el=document.createElement('div');el.className='mail';
+var h=document.createElement('div');h.className='mh';h.textContent=jb.name;
+var meta=document.createElement('div');meta.className='mm';meta.textContent=jb.date+' · '+jb.time;
+var pv=document.createElement('div');pv.className='mp';pv.textContent=jb.message;
+el.appendChild(h);el.appendChild(meta);el.appendChild(pv);b.appendChild(el);});
+}catch(e){b.textContent='שגיאה: '+e.message;}return;}
+if(intent.action==='run'){
+if(!intent.jobName){b.textContent='לא זוהה שם JOB. נסה לציין את השם המדויק.';return;}
+b.textContent='';
+var box=document.createElement('div');box.className='confirm';
+box.innerHTML='הבנתי שאתה רוצה להריץ מחדש את ה-JOB: <b>'+intent.jobName+'</b>';
+b.appendChild(box);
+var btns=document.createElement('div');btns.className='cbtns';
+var go=document.createElement('button');go.className='go';go.textContent='▶ הרץ';
+var no=document.createElement('button');no.className='no';no.textContent='ביטול';
+go.onclick=async function(){go.disabled=true;no.disabled=true;go.textContent='מריץ...';
+try{var r=await fetch('/api/sql/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jobName:intent.jobName})});var j=await r.json();
+btns.textContent=j.ok?'✓ ה-JOB הופעל':('⚠️ '+j.error);
+}catch(e){btns.textContent='שגיאה: '+e.message;}};
+no.onclick=function(){btns.textContent='בוטל.';};
+btns.appendChild(go);btns.appendChild(no);b.appendChild(btns);}}
+
 fi.addEventListener('change',function(){handle(fi.files);fi.value='';});
 var dc=0;window.addEventListener('dragenter',function(e){e.preventDefault();dc++;drop.classList.add('show');});
 window.addEventListener('dragover',function(e){e.preventDefault();});window.addEventListener('dragleave',function(e){e.preventDefault();dc--;if(dc<=0)drop.classList.remove('show');});
@@ -281,6 +316,7 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             }
             var ad = Environment.GetEnvironmentVariable("ALLOWED_DIRS");
             if (!string.IsNullOrWhiteSpace(ad)) AllowedDirs = ad.Split(';').Select(x => x.Trim()).Where(x => x.Length > 0).ToArray();
+            SqlServer = Environment.GetEnvironmentVariable("SQL_SERVER");
 
             Directory.CreateDirectory(GuidesDir); Directory.CreateDirectory(DataDir);
             Console.WriteLine("מודל: " + ChatModel);
@@ -365,6 +401,16 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                             var data = await ReadJson(request);
                             try { WriteJson(response, SendMail(Str(data, "to"), Str(data, "subject"), Str(data, "body"))); } catch (Exception ex) { WriteJson(response, new { ok = false, error = "שגיאת Outlook: " + ex.Message }); }
                         }
+                        else if (path == "/api/sql/failed" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request); string dateFilter = Str(data, "dateFilter"); if (dateFilter != "yesterday") dateFilter = "today";
+                            try { WriteJson(response, ListFailedJobs(dateFilter)); } catch (Exception ex) { WriteJson(response, new { ok = false, error = "שגיאת SQL: " + ex.Message }); }
+                        }
+                        else if (path == "/api/sql/run" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request);
+                            try { WriteJson(response, RunSqlJob(Str(data, "jobName"))); } catch (Exception ex) { WriteJson(response, new { ok = false, error = "שגיאת SQL: " + ex.Message }); }
+                        }
                         else if (path == "/api/learn" && request.HttpMethod == "POST")
                         {
                             var data = await ReadJson(request); string learnText = Str(data, "text");
@@ -431,7 +477,8 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             if (string.IsNullOrWhiteSpace(message)) return new { kind = "none" };
             bool maybeFile = message.Contains("\\") || message.Contains(":");
             bool maybeMail = message.Contains("מייל") || message.Contains("מיילים") || message.Contains("אאוטלוק") || message.Contains("outlook") || message.Contains("דוא") || message.Contains("הודעות") || message.Contains("שלח");
-            if (!maybeFile && !maybeMail) return new { kind = "none" };
+            bool maybeSql = message.Contains("JOB") || message.Contains("job") || message.Contains("Job") || message.Contains("SQL") || message.Contains("sql") || message.Contains("SSMS") || message.Contains("עבודה") || message.Contains("הרץ מחדש") || message.Contains("נכשל");
+            if (!maybeFile && !maybeMail && !maybeSql) return new { kind = "none" };
 
             string prompt =
                 "המשתמש כתב הודעה. סווג אותה והחזר JSON בלבד (בלי טקסט או סימני קוד):\n" +
@@ -439,6 +486,8 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילת חיפוש אחת, או כמה מילים/ביטויים נרדפים מופרדים בפסיק אם השאלה היא על קטגוריה ולא מילה מדויקת (למשל 'מה שנכשל' -> 'נכשל,כשל,failed,error,שגיאה,לא הצליח'), או ריק לכל המיילים, count:מספר, unreadOnly:true או false, dateFilter:today או yesterday או all, folder:שם תיקייה באאוטלוק לחיפוש בה או ריק לתיבה הנכנסת}\n" +
                 "חשוב: אם המשתמש ציין שם תיקייה ספציפית באאוטלוק (folder לא ריק), השאר query ריק — שם התיקייה כבר מסנן, ואין צורך להוסיף עוד מילות חיפוש שרק יצמצמו יתר על המידה או יחמיצו תוצאות רלוונטיות.\n" +
                 "אם בקשה לשלוח מייל: {kind:sendmail, to:כתובת/כתובות נמענים מופרדות בפסיק, subject:נושא המייל, body:תוכן המייל}. אל תמציא כתובת מייל אם המשתמש לא נתן אחת מפורשת — במקרה כזה השאר to ריק.\n" +
+                "אם בקשה לראות אילו JOBs של SQL Agent נכשלו: {kind:sqljob, action:list, dateFilter:today או yesterday}\n" +
+                "אם בקשה להריץ מחדש / להריץ JOB ספציפי בשם: {kind:sqljob, action:run, jobName:השם המדויק של ה-JOB כפי שהמשתמש ציין אותו}\n" +
                 "unreadOnly=true רק אם המשתמש מדבר במפורש על מיילים שלא נקראו/לא נקראו. dateFilter=today אם השאלה על היום, yesterday אם על אתמול, אחרת all.\n" +
                 "חשוב: מילים כמו 'היום', 'אתמול', 'לא נקראו' הן סינון (dateFilter/unreadOnly) ולא טקסט לחיפוש — אל תשים אותן בשדה query.\n" +
                 "אחרת: {kind:none}\n" +
@@ -483,6 +532,13 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                     string subject = Str(d, "subject") ?? "";
                     string mbody = Str(d, "body") ?? "";
                     return new { kind = "sendmail", to = to, subject = subject, body = mbody };
+                }
+                if (kind == "sqljob")
+                {
+                    string action = Str(d, "action"); if (action != "run") action = "list";
+                    string dateFilter2 = Str(d, "dateFilter"); if (dateFilter2 != "yesterday") dateFilter2 = "today";
+                    string jobName = Str(d, "jobName") ?? "";
+                    return new { kind = "sqljob", action = action, dateFilter = dateFilter2, jobName = jobName };
                 }
                 return new { kind = "none" };
             }
@@ -579,6 +635,77 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 return new { ok = true };
             }
             catch (Exception ex) { return new { ok = false, error = "שגיאה בשליחה: " + ex.Message }; }
+        }
+
+        static string SqlConnStr()
+        {
+            if (string.IsNullOrWhiteSpace(SqlServer)) return null;
+            return "Server=" + SqlServer + ";Database=msdb;Integrated Security=True;TrustServerCertificate=True;Connection Timeout=10;";
+        }
+
+        static object ListFailedJobs(string dateFilter)
+        {
+            string cs = SqlConnStr();
+            if (cs == null) return new { ok = false, error = "לא הוגדר SQL_SERVER בקובץ ה-.env." };
+            DateTime day = dateFilter == "yesterday" ? DateTime.Today.AddDays(-1) : DateTime.Today;
+            string dayStr = day.ToString("yyyyMMdd");
+            var jobs = new List<object>();
+            try
+            {
+                using (var conn = new SqlConnection(cs))
+                {
+                    conn.Open();
+                    string sql = @"SELECT j.name AS JobName, h.run_date, h.run_time, h.message
+                                   FROM msdb.dbo.sysjobs j
+                                   JOIN msdb.dbo.sysjobhistory h ON j.job_id = h.job_id
+                                   WHERE h.step_id = 0 AND h.run_status = 0 AND h.run_date = @d
+                                   ORDER BY h.run_date DESC, h.run_time DESC";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@d", dayStr);
+                        using (var r = cmd.ExecuteReader())
+                        {
+                            while (r.Read())
+                            {
+                                string name = r["JobName"] as string ?? "";
+                                int rd = r["run_date"] is int ? (int)r["run_date"] : 0;
+                                int rt = r["run_time"] is int ? (int)r["run_time"] : 0;
+                                string msg = r["message"] as string ?? "";
+                                if (msg.Length > 300) msg = msg.Substring(0, 300) + "...";
+                                string timeStr = rt.ToString("D6");
+                                string dateFmt = rd.ToString().Length == 8 ? (rd.ToString().Substring(6, 2) + "/" + rd.ToString().Substring(4, 2) + "/" + rd.ToString().Substring(0, 4)) : rd.ToString();
+                                jobs.Add(new { name = name, date = dateFmt, time = timeStr.Substring(0, 2) + ":" + timeStr.Substring(2, 2) + ":" + timeStr.Substring(4, 2), message = msg });
+                            }
+                        }
+                    }
+                }
+                Console.WriteLine("🗄️ נמצאו " + jobs.Count + " JOBs שנכשלו.");
+                return new { ok = true, jobs = jobs };
+            }
+            catch (Exception ex) { return new { ok = false, error = "שגיאת SQL: " + ex.Message }; }
+        }
+
+        static object RunSqlJob(string jobName)
+        {
+            string cs = SqlConnStr();
+            if (cs == null) return new { ok = false, error = "לא הוגדר SQL_SERVER בקובץ ה-.env." };
+            if (string.IsNullOrWhiteSpace(jobName)) return new { ok = false, error = "לא צוין שם JOB." };
+            try
+            {
+                using (var conn = new SqlConnection(cs))
+                {
+                    conn.Open();
+                    using (var cmd = new SqlCommand("msdb.dbo.sp_start_job", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@job_name", jobName.Trim());
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                Console.WriteLine("▶️ הופעל JOB: " + jobName);
+                return new { ok = true };
+            }
+            catch (Exception ex) { return new { ok = false, error = "שגיאה בהרצת ה-JOB: " + ex.Message }; }
         }
 
         static bool IsAllowed(string path)
