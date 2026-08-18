@@ -1,2 +1,13 @@
-Severity	Code	Description	Project	File	Line	Suppression State
-Error	CS0012	The type 'ZipArchive' is defined in an assembly that is not referenced. You must add a reference to assembly 'System.IO.Compression, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	545	Active
+תקדמות טובה — עוד רפרנס אחד קטן שחסר: System.IO.Compression עצמו (זה שונה מ-System.IO.Compression.FileSystem שכבר הוספת — צריך את שניהם יחד).
+
+שלבים
+
+קליק ימני על הפרויקט → Add → Reference... → לשונית Assemblies:
+
+חפש: System.IO.Compression → סמן ✔️ → OK
+
+(תוודא שגם System.IO.Compression.FileSystem עדיין מסומן — אתה צריך את שניהם ביחד, זה לא מחליף את זה)
+
+ואז שוב
+Build → Clean Solution
+Build → Rebuild Solution
