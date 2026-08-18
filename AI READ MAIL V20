@@ -1,21 +1,19 @@
-איך זה עובד
-כל כמה דקות, התוכנה בודקת מיילים חדשים (שלא נקראו) בתיבה הנכנסת
-אם המייל הגיע משולח מאושר ומכיל שם JOB מאושר בנושא או בגוף — הוא מפעיל אותו
-שולח לך תשובה מיידית "אושר, הופעל"
-עוקב אחרי ה-JOB ברקע (עד 30 דקות), ושולח מייל נוסף עם התוצאה הסופית (הצליח/נכשל)
-מה חובה להוסיף ל-.env
-AUTO_JOB_ALLOWED_JOBS=DailyStatus
-AUTO_JOB_ALLOWED_SENDERS=your.email@company.com
-AUTO_JOB_POLL_MINUTES=2
-AUTO_JOB_ALLOWED_JOBS — שם/שמות ה-JOB המדויקים שמותר להפעיל (מופרדים בפסיק אם יש כמה)
-AUTO_JOB_ALLOWED_SENDERS — כתובות המייל היחידות שמותר להן להפעיל (מופרדות בפסיק)
-בלי שתי השורות האלה יחד — המאזין כבוי לגמרי, בכוונה
-מגבלה תפעולית חשובה
+מה נוסף
 
-המאזין עובד רק כל עוד התוכנה עצמה פתוחה ורצה (החלון השחור) — אם תסגור אותה בסוף היום, הוא מפסיק להאזין. אם אתה רוצה שזה יעבוד גם כשאתה לא ליד המחשב, זה דורש להשאיר את התוכנה פתוחה כל הזמן (או להריץ אותה כשירות ווינדוס — זה שינוי גדול יותר, נדבר על זה בנפרד אם תרצה).
+1. כמה תיקיות מקור — ב-.env תפריד עם ;:
 
-מה לעשות: Ctrl+A → מחק ב-Program.cs → הדבק את הקובץ → Ctrl+S → תוסיף את שלוש השורות ל-.env → F5. מומלץ לבדוק קודם עם מייל טסט משולח מאושר, על ה-JOB הבדיקה שלך.
+SMS_FILES_DIR=C:\תיקיה1;C:\תיקיה2;D:\תיקיה3
 
+2. העתקה ליעד שהמייל מבקש — אם המייל אומר "תעתיק לי לתיקייה שלי בנתיב X":
+
+אם X נמצא ברשימת ALLOWED_DIRS שלך — הקובץ יועתק לשם, ותישלח לך הודעת אישור
+אם X לא ברשימה — שום דבר לא קורה, לא העתקה, לא מייל, רק רישום שקט ב-console
+אם אין בקשת יעד בכלל — חוזר להתנהגות הקודמת (שליחה כקובץ מצורף בחזרה)
+חשוב לוודא
+
+כדי שההעתקה ליעד תעבוד בכלל, ה-ALLOWED_DIRS שלך חייב לכלול את התיקיות שאתה מצפה שאנשים יבקשו (אם ALLOWED_DIRS ריק לגמרי בקוד המקורי שלך זה אומר "בלי הגבלה" — במקרה כזה כל יעד יעבור, מה שכנראה לא מה שאתה רוצה כאן. כדאי להגדיר בפירוש אילו תיקיות מותרות).
+
+מה לעשות: Ctrl+A → מחק ב-Program.cs → הדבק את הקובץ → Ctrl+S → תעדכן את ה-.env (גם SMS_FILES_DIR וגם ALLOWED_DIRS) → F5.
 
 
 using System;
@@ -46,6 +44,7 @@ namespace Madrich
         static string DataDir = Path.Combine(BaseDir, "data");
         static string IndexPath = Path.Combine(DataDir, "index.json");
         static string LearnedPath = Path.Combine(DataDir, "learned.txt");
+        static string SmsAuditPath = Path.Combine(DataDir, "sms_files_audit.txt");
 
         static string ApiKey;
         static string ChatModel = "gemini-2.5-flash";
@@ -56,6 +55,8 @@ namespace Madrich
         static string[] AutoJobAllowedSenders = new string[0];
         static int AutoJobPollMinutes = 2;
         static readonly HashSet<string> ProcessedMailIds = new HashSet<string>();
+        static string[] SmsFilesDirs = new string[0];
+        static string[] SmsFilesAllowedSenders = new string[0];
         const string ApiBase = "https://generativelanguage.googleapis.com/v1beta/models/";
 
         const int SEND_ALL_THRESHOLD = 30;
@@ -345,6 +346,10 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             if (!string.IsNullOrWhiteSpace(ajs)) AutoJobAllowedSenders = ajs.Split(',').Select(x => x.Trim().ToLowerInvariant()).Where(x => x.Length > 0).ToArray();
             var ajp = Environment.GetEnvironmentVariable("AUTO_JOB_POLL_MINUTES");
             if (!string.IsNullOrWhiteSpace(ajp)) { int ajpv; if (int.TryParse(ajp, out ajpv) && ajpv > 0) AutoJobPollMinutes = ajpv; }
+            var sfd = Environment.GetEnvironmentVariable("SMS_FILES_DIR");
+            if (!string.IsNullOrWhiteSpace(sfd)) SmsFilesDirs = sfd.Split(';').Select(x => x.Trim()).Where(x => x.Length > 0).ToArray();
+            var sfs = Environment.GetEnvironmentVariable("SMS_FILES_ALLOWED_SENDERS");
+            if (!string.IsNullOrWhiteSpace(sfs)) SmsFilesAllowedSenders = sfs.Split(',').Select(x => x.Trim().ToLowerInvariant()).Where(x => x.Length > 0).ToArray();
 
             Directory.CreateDirectory(GuidesDir); Directory.CreateDirectory(DataDir);
             Console.WriteLine("מודל: " + ChatModel);
@@ -370,6 +375,13 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 Task.Run(() => AutoJobListenerLoop());
             }
             else { Console.WriteLine("ℹ️ מאזין אוטומטי למיילים כבוי (חסר AUTO_JOB_ALLOWED_JOBS ו/או AUTO_JOB_ALLOWED_SENDERS ב-.env)."); }
+
+            if (SmsFilesDirs.Length > 0 && SmsFilesAllowedSenders.Length > 0)
+            {
+                Console.WriteLine("📎 מאזין שליחת קבצי הצטרפויות SMS פעיל. תיקיות: " + string.Join(" ; ", SmsFilesDirs) + " | שולחים מותרים: " + string.Join(",", SmsFilesAllowedSenders));
+                Task.Run(() => SmsFilesListenerLoop());
+            }
+            else { Console.WriteLine("ℹ️ מאזין קבצי SMS כבוי (חסר SMS_FILES_DIR ו/או SMS_FILES_ALLOWED_SENDERS ב-.env)."); }
 
             Task.Run(async () =>
             {
@@ -823,6 +835,29 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             try { return mail.SenderEmailAddress; } catch { return null; }
         }
 
+        static async Task<object> ClassifyJobEmailIntent(string subject, string body, string[] allowedJobs)
+        {
+            string jobsList = string.Join(", ", allowedJobs);
+            string prompt =
+                "הנה מייל שהתקבל בתיבת הדואר. הרשימה הבאה היא כל ה-JOBs שמותר להריץ אוטומטית, ואסור לבחור שום JOB מחוץ לרשימה הזו: " + jobsList + ".\n" +
+                "בדוק אם המייל מבקש, מרמז, או מדווח על בעיה שדורשת להריץ אחד מה-JOBs האלה עכשיו.\n" +
+                "בחר JOB רק אם הוא מופיע בדיוק ברשימה שניתנה; אם לא בטוח או שהמייל לא קשור לשום JOB מהרשימה — השאר jobName ריק.\n" +
+                "החזר JSON תקין בלבד (כל שם שדה וערך מילולי במרכאות כפולות): {\"jobName\":\"שם מדויק מהרשימה או ריק\",\"confidence\":\"high\" או \"medium\" או \"low\",\"reason\":\"הסבר קצר בעברית\"}\n\n" +
+                "נושא המייל: " + subject + "\nתוכן המייל: " + body;
+            var b = new Dictionary<string, object> { { "contents", new object[] { new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] { new Dictionary<string, object> { { "text", prompt } } } } } } } };
+            try
+            {
+                string raw = ReadText(await Post(ApiBase + ChatModel + ":generateContent", b)).Replace("```json", "").Replace("```", "").Trim();
+                Dictionary<string, object> d = null;
+                try { d = js.DeserializeObject(raw) as Dictionary<string, object>; } catch { }
+                if (d == null) { try { d = js.DeserializeObject(RepairLooseJson(raw)) as Dictionary<string, object>; } catch { } }
+                if (d == null) return new { jobName = "", confidence = "low", reason = "לא ניתן היה לפענח את תשובת ה-AI" };
+                string jn = Str(d, "jobName") ?? ""; string conf = Str(d, "confidence") ?? "low"; string reason = Str(d, "reason") ?? "";
+                return new { jobName = jn, confidence = conf, reason = reason };
+            }
+            catch (Exception ex) { return new { jobName = "", confidence = "low", reason = "שגיאת AI: " + ex.Message }; }
+        }
+
         static void CheckInboxForJobTriggers()
         {
             var app = new Outlook.Application();
@@ -843,26 +878,46 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 bool senderAllowed = !string.IsNullOrEmpty(senderEmail) && AutoJobAllowedSenders.Contains(senderEmail.ToLowerInvariant());
                 if (!senderAllowed) continue;
 
-                string haystack = (mail.Subject ?? "") + " " + (mail.Body ?? "");
-                string matchedJob = AutoJobAllowedJobs.FirstOrDefault(j => haystack.IndexOf(j, StringComparison.OrdinalIgnoreCase) >= 0);
-                if (matchedJob == null) continue;
-
                 ProcessedMailIds.Add(entryId);
                 try { mail.UnRead = false; mail.Save(); } catch { }
 
-                Console.WriteLine("📨 זוהתה בקשה להרצת JOB '" + matchedJob + "' ממייל של " + senderEmail);
-                string startErr;
-                bool started = TryRunSqlJob(matchedJob, out startErr);
-                DateTime startedAt = DateTime.Now;
-
-                if (started)
+                string subj = mail.Subject ?? ""; string bodyText = mail.Body ?? "";
+                var classification = ClassifyJobEmailIntent(subj, bodyText, AutoJobAllowedJobs).GetAwaiter().GetResult();
+                string jobName = "", confidence = "low", reason = "";
+                try
                 {
-                    SendMail(senderEmail, "אושר: JOB '" + matchedJob + "' הופעל", "התקבלה בקשתך וה-JOB '" + matchedJob + "' הופעל כעת. נעדכן אותך כאן כשתהיה תוצאה סופית.");
-                    Task.Run(() => MonitorJobAndReport(matchedJob, senderEmail, startedAt));
+                    jobName = (string)classification.GetType().GetProperty("jobName").GetValue(classification) ?? "";
+                    confidence = (string)classification.GetType().GetProperty("confidence").GetValue(classification) ?? "low";
+                    reason = (string)classification.GetType().GetProperty("reason").GetValue(classification) ?? "";
+                }
+                catch { }
+
+                if (string.IsNullOrWhiteSpace(jobName)) continue; // המייל לא זוהה כקשור לאף JOB מהרשימה המותרת
+
+                // הגנה כפולה: לוודא שהשם שחזר מה-AI באמת קיים ברשימת המותרים, מילה במילה
+                string matchedJob = AutoJobAllowedJobs.FirstOrDefault(j => string.Equals(j, jobName, StringComparison.OrdinalIgnoreCase));
+                if (matchedJob == null) continue;
+
+                Console.WriteLine("🧭 זיהוי AI: JOB='" + matchedJob + "' ביטחון=" + confidence + " נימוק: " + reason);
+
+                if (confidence == "high")
+                {
+                    string startErr; DateTime startedAt = DateTime.Now;
+                    bool started = TryRunSqlJob(matchedJob, out startErr);
+                    if (started)
+                    {
+                        SendMail(senderEmail, "אושר: JOB '" + matchedJob + "' הופעל אוטומטית", "זיהיתי מהמייל שלך (ברמת ביטחון גבוהה) שצריך להריץ את '" + matchedJob + "', והפעלתי אותו כעת. נעדכן כשתהיה תוצאה סופית.\n\nנימוק הזיהוי: " + reason);
+                        Task.Run(() => MonitorJobAndReport(matchedJob, senderEmail, startedAt));
+                    }
+                    else
+                    {
+                        SendMail(senderEmail, "שגיאה בהפעלת JOB '" + matchedJob + "'", "זיהיתי בקשה להריץ את '" + matchedJob + "' אך ההפעלה נכשלה: " + startErr);
+                    }
                 }
                 else
                 {
-                    SendMail(senderEmail, "שגיאה בהפעלת JOB '" + matchedJob + "'", "לא הצלחנו להפעיל את ה-JOB: " + startErr);
+                    SendMail(senderEmail, "צריך אישור ידני: אולי יש להריץ '" + matchedJob + "'", "קיבלתי מייל שאולי קשור להרצת JOB '" + matchedJob + "', אבל רמת הביטחון שלי נמוכה מדי (" + confidence + ") כדי להריץ אותו לבד.\n\nנימוק: " + reason + "\n\nאם אכן צריך להריץ אותו, תוכל לבקש ממני ידנית דרך הצ'אט: \"תריץ מחדש את JOB '" + matchedJob + "'\".");
+                    Console.WriteLine("📋 נשלחה התראה בלבד (ללא הרצה אוטומטית) עבור JOB '" + matchedJob + "'.");
                 }
             }
         }
@@ -873,6 +928,159 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             {
                 try { CheckInboxForJobTriggers(); }
                 catch (Exception ex) { Console.WriteLine("⚠️ שגיאה במאזין המיילים: " + ex.Message); }
+                System.Threading.Thread.Sleep(AutoJobPollMinutes * 60 * 1000);
+            }
+        }
+
+        static async Task<object> ExtractSmsRequestDetails(string subject, string body)
+        {
+            string prompt =
+                "הנה מייל שמבקש קובץ הצטרפות SMS לפי מספר רצף/סדרה, ולפעמים גם מבקש שהקובץ יועתק לתיקייה מסוימת אצל השולח (נתיב מלא בווינדוס, לדוגמה C:\\Folder\\Sub).\n" +
+                "חלץ שני דברים:\n" +
+                "1) number: המספר המבוקש (ספרות בלבד). אם אין מספר ברור וחד-משמעי — כתוב ריק.\n" +
+                "2) destPath: נתיב תיקייה מלא בווינדוס אם המייל מבקש במפורש להעתיק/לשמור את הקובץ שם. אם לא מוזכר נתיב — השאר ריק (אז ברירת המחדל היא לשלוח כקובץ מצורף במייל חוזר).\n" +
+                "החזר JSON תקין בלבד: {\"number\":\"...\",\"destPath\":\"...\"}\n\n" +
+                "נושא: " + subject + "\nתוכן: " + body;
+            var b = new Dictionary<string, object> { { "contents", new object[] { new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] { new Dictionary<string, object> { { "text", prompt } } } } } } } };
+            try
+            {
+                string raw = ReadText(await Post(ApiBase + ChatModel + ":generateContent", b)).Replace("```json", "").Replace("```", "").Trim();
+                Dictionary<string, object> d = null;
+                try { d = js.DeserializeObject(raw) as Dictionary<string, object>; } catch { }
+                if (d == null) { try { d = js.DeserializeObject(RepairLooseJson(raw)) as Dictionary<string, object>; } catch { } }
+                if (d == null) return new { number = "", destPath = "" };
+                string num = Str(d, "number") ?? ""; num = new string(num.Where(char.IsDigit).ToArray());
+                string dest = Str(d, "destPath") ?? "";
+                return new { number = num, destPath = dest };
+            }
+            catch { return new { number = "", destPath = "" }; }
+        }
+
+        static string FindFileBySequenceNumber(string[] dirs, string number)
+        {
+            var matches = new List<string>();
+            foreach (var dir in dirs)
+            {
+                if (!Directory.Exists(dir)) continue;
+                matches.AddRange(Directory.GetFiles(dir).Where(f => Path.GetFileNameWithoutExtension(f).Contains(number)));
+            }
+            return matches.Count == 1 ? matches[0] : null; // רק אם יש התאמה יחידה וודאית בכל התיקיות ביחד — אחרת לא עושים כלום
+        }
+
+        static bool SendFileByEmail(string to, string subject, string body, string filePath, out string error)
+        {
+            error = null;
+            try
+            {
+                var app = new Outlook.Application();
+                Outlook.MailItem mail = (Outlook.MailItem)app.CreateItem(Outlook.OlItemType.olMailItem);
+                mail.To = to;
+                mail.Subject = subject;
+                mail.Body = body;
+                mail.Attachments.Add(filePath);
+                mail.Send();
+                return true;
+            }
+            catch (Exception ex) { error = ex.Message; return false; }
+        }
+
+        static void CheckInboxForSmsFileRequests()
+        {
+            var app = new Outlook.Application();
+            var ns = app.GetNamespace("MAPI");
+            var inbox = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
+            var items = inbox.Items;
+            items.Sort("[ReceivedTime]", true);
+            int scanned = 0;
+            foreach (object o in items)
+            {
+                scanned++; if (scanned > 100) break;
+                var mail = o as Outlook.MailItem; if (mail == null) continue;
+                if (!mail.UnRead) continue;
+                string entryId; try { entryId = mail.EntryID; } catch { continue; }
+                string dedupKey = "sms:" + entryId;
+                if (ProcessedMailIds.Contains(dedupKey)) continue;
+
+                string senderEmail = ResolveSenderEmail(mail);
+                bool senderAllowed = !string.IsNullOrEmpty(senderEmail) && SmsFilesAllowedSenders.Contains(senderEmail.ToLowerInvariant());
+                if (!senderAllowed) continue; // שולח לא מאושר — לא עושים כלום, בלי תגובה
+
+                ProcessedMailIds.Add(dedupKey);
+                try { mail.UnRead = false; mail.Save(); } catch { }
+
+                string subj = mail.Subject ?? ""; string bodyText = mail.Body ?? "";
+                var details = ExtractSmsRequestDetails(subj, bodyText).GetAwaiter().GetResult();
+                string number = "", destPath = "";
+                try
+                {
+                    number = (string)details.GetType().GetProperty("number").GetValue(details) ?? "";
+                    destPath = (string)details.GetType().GetProperty("destPath").GetValue(details) ?? "";
+                }
+                catch { }
+
+                if (string.IsNullOrWhiteSpace(number))
+                {
+                    Console.WriteLine("📎 לא זוהה מספר רצף במייל מ-" + senderEmail + " — לא נעשה דבר.");
+                    continue;
+                }
+
+                string filePath = FindFileBySequenceNumber(SmsFilesDirs, number);
+                if (filePath == null)
+                {
+                    SendMail(senderEmail, "לא נמצא קובץ עבור מספר " + number, "חיפשתי בתיקיות המוגדרות קובץ תואם למספר " + number + " ולא מצאתי התאמה יחידה וודאית. אנא בדוק את המספר או פנה ידנית.");
+                    Console.WriteLine("📎 לא נמצאה התאמה יחידה למספר " + number + " (מ-" + senderEmail + ").");
+                    continue;
+                }
+
+                if (!string.IsNullOrWhiteSpace(destPath))
+                {
+                    // בקשה להעתיק לנתיב שצוין במייל — מותר רק אם הנתיב בתוך ALLOWED_DIRS, אחרת לא עושים כלום בכוונה
+                    if (!IsAllowed(destPath))
+                    {
+                        Console.WriteLine("⛔ בקשה להעתיק אל נתיב לא מאושר (" + destPath + ") ממייל של " + senderEmail + " — לא בוצעה שום פעולה.");
+                        continue;
+                    }
+                    try
+                    {
+                        Directory.CreateDirectory(destPath);
+                        string target = Path.Combine(destPath, Path.GetFileName(filePath));
+                        if (!File.Exists(target))
+                        {
+                            File.Copy(filePath, target);
+                            try { File.AppendAllText(SmsAuditPath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " | הועתק אל: " + destPath + " | מספר: " + number + " | קובץ: " + Path.GetFileName(filePath) + " | ביקש: " + senderEmail + "\n", new UTF8Encoding(false)); } catch { }
+                            SendMail(senderEmail, "בוצע: הקובץ עבור מספר " + number + " הועתק", "הקובץ הועתק לתיקייה שביקשת: " + destPath);
+                            Console.WriteLine("📎 הועתק קובץ '" + Path.GetFileName(filePath) + "' אל " + destPath + " (ביקש: " + senderEmail + ").");
+                        }
+                        else
+                        {
+                            SendMail(senderEmail, "הקובץ כבר קיים ביעד", "קובץ בשם זה כבר קיים בתיקייה " + destPath + " — לא הוחלף.");
+                        }
+                    }
+                    catch (Exception ex) { Console.WriteLine("⚠️ שגיאה בהעתקה אל " + destPath + ": " + ex.Message); }
+                    continue;
+                }
+
+                // אין נתיב יעד — ברירת המחדל: שליחה כקובץ מצורף בחזרה במייל
+                string sendErr;
+                bool sent = SendFileByEmail(senderEmail, "בקשתך מספר " + number, "מצורף הקובץ המבוקש.", filePath, out sendErr);
+                if (sent)
+                {
+                    try { File.AppendAllText(SmsAuditPath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " | נשלח אל: " + senderEmail + " | מספר: " + number + " | קובץ: " + Path.GetFileName(filePath) + "\n", new UTF8Encoding(false)); } catch { }
+                    Console.WriteLine("📎 נשלח קובץ '" + Path.GetFileName(filePath) + "' אל " + senderEmail + " (מספר " + number + ").");
+                }
+                else
+                {
+                    Console.WriteLine("⚠️ שגיאה בשליחת קובץ אל " + senderEmail + ": " + sendErr);
+                }
+            }
+        }
+
+        static void SmsFilesListenerLoop()
+        {
+            while (true)
+            {
+                try { CheckInboxForSmsFileRequests(); }
+                catch (Exception ex) { Console.WriteLine("⚠️ שגיאה במאזין קבצי SMS: " + ex.Message); }
                 System.Threading.Thread.Sleep(AutoJobPollMinutes * 60 * 1000);
             }
         }
