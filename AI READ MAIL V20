@@ -1,6 +1,22 @@
-Severity	Code	Description	Project	File	Line	Suppression State
-Error	CS0234	The type or namespace name 'Script' does not exist in the namespace 'System.Web' (are you missing an assembly reference?)	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	10	Active
-Error	CS0234	The type or namespace name 'Office' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	12	Active
-Error	CS0246	The type or namespace name 'JavaScriptSerializer' could not be found (are you missing a using directive or an assembly reference?)	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	37	Active
-Error	CS0246	The type or namespace name 'JavaScriptSerializer' could not be found (are you missing a using directive or an assembly reference?)	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	37	Active
-Error	CS0103	The name 'ZipFile' does not exist in the current context	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	545	Active
+אם כל ה-References כבר מוגדרים והשגיאות עדיין מופיעות — כנראה חסר עוד רפרנס אחד ספציפי שקל לפספס: System.IO.Compression.FileSystem. זה מה שגורם לשגיאה על ZipFile (שורה 545). ב-.NET Framework (בניגוד ל-.NET Core) הפקודה הזו לא כלולה אוטומטית — צריך להוסיף אותה בנפרד.
+
+שלבים
+
+1. הוספת הרפרנס החסר
+קליק ימני על הפרויקט → Add → Reference... → לשונית Assemblies → חפש: System.IO.Compression.FileSystem → סמן ✔️ → OK
+
+2. בדיקה שהשניים האחרים באמת שם
+עדיין באותו חלון (Reference Manager), תוודא ששני אלה מסומנים ✔️:
+
+בלשונית Assemblies: System.Web.Extensions
+בלשונית COM: Microsoft Outlook XX.0 Object Library
+
+3. ניקוי ובנייה מחדש (חשוב!)
+לפעמים Visual Studio "נתקע" עם שגיאות ישנות גם אחרי שהוספת רפרנס. לכן:
+
+תפריט Build → Clean Solution
+ואז Build → Rebuild Solution
+
+(לא רק "Build" רגיל — חייב Rebuild אחרי שינוי ברפרנסים)
+
+תנסה את זה ותגיד לי אם עדיין יש שגיאות (ואם כן — איזה בדיוק).
