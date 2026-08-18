@@ -369,7 +369,9 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             string prompt =
                 "המשתמש כתב הודעה. סווג אותה והחזר JSON בלבד (בלי טקסט או סימני קוד):\n" +
                 "אם בקשה להעברת/העתקת קבצים: {kind:file, op:copy או move, source:נתיב, dest:נתיב, pattern:* }\n" +
-                "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילות חיפוש או ריק, count:מספר}\n" +
+                "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילות חיפוש בנושא/שולח/גוף המייל או ריק, count:מספר, unreadOnly:true או false, dateFilter:today או yesterday או all}\n" +
+                "unreadOnly=true רק אם המשתמש מדבר במפורש על מיילים שלא נקראו/לא נקראו. dateFilter=today אם השאלה על היום, yesterday אם על אתמול, אחרת all.\n" +
+                "חשוב: מילים כמו 'היום', 'אתמול', 'לא נקראו' הן סינון (dateFilter/unreadOnly) ולא טקסט לחיפוש — אל תשים אותן בשדה query.\n" +
                 "אחרת: {kind:none}\n" +
                 "op=move רק אם 'העבר'/'תעביר'/'הזז'. אם לא צוין סינון pattern=*. העתק נתיבים בדיוק.\n" +
                 "החזר JSON תקין עם מרכאות כפולות סטנדרטיות.\n\nההודעה: " + message;
@@ -388,17 +390,20 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 }
                 if (kind == "mail")
                 {
-                    string query = Str(d, "query") ?? ""; int count = 10;
+                    string query = Str(d, "query") ?? "";
+                    bool unreadOnly = false; try { unreadOnly = d.ContainsKey("unreadOnly") && Convert.ToBoolean(d["unreadOnly"]); } catch { }
+                    string dateFilter = Str(d, "dateFilter"); if (dateFilter != "today" && dateFilter != "yesterday") dateFilter = "all";
+                    int count = (unreadOnly || dateFilter != "all") ? 50 : 10;
                     try { var cc = Str(d, "count"); if (!string.IsNullOrEmpty(cc)) count = Convert.ToInt32(Convert.ToDouble(cc)); } catch { }
                     if (count < 1) count = 10; if (count > 50) count = 50;
-                    return new { kind = "mail", query = query, count = count };
+                    return new { kind = "mail", query = query, count = count, unreadOnly = unreadOnly, dateFilter = dateFilter };
                 }
                 return new { kind = "none" };
             }
             catch { return new { kind = "none" }; }
         }
 
-        static object ReadMail(string query, int count)
+        static object ReadMail(string query, int count, bool unreadOnly = false, string dateFilter = "all")
         {
             var app = new Outlook.Application();
             var ns = app.GetNamespace("MAPI");
@@ -406,13 +411,25 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             var items = inbox.Items;
             items.Sort("[ReceivedTime]", true);
 
+            bool isFiltering = unreadOnly || dateFilter != "all" || !string.IsNullOrEmpty(query);
+            int scanLimit = isFiltering ? 2000 : 500;
+            DateTime today = DateTime.Today;
+
             var mails = new List<object>();
             int scanned = 0;
             foreach (object o in items)
             {
                 if (mails.Count >= count) break;
-                scanned++; if (scanned > 500) break;
+                scanned++; if (scanned > scanLimit) break;
                 var mail = o as Outlook.MailItem; if (mail == null) continue;
+
+                if (unreadOnly && !mail.UnRead) continue;
+
+                DateTime received = DateTime.MinValue; bool hasDate = true;
+                try { received = mail.ReceivedTime; } catch { hasDate = false; }
+                if (dateFilter == "today" && (!hasDate || received.Date != today)) continue;
+                if (dateFilter == "yesterday" && (!hasDate || received.Date != today.AddDays(-1))) continue;
+
                 string subj = mail.Subject ?? "(ללא נושא)";
                 string from = mail.SenderName ?? "";
                 string bodyText = mail.Body ?? "";
@@ -423,7 +440,7 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 }
                 string preview = bodyText.Replace("\r", " ").Replace("\n", " ").Trim();
                 if (preview.Length > 200) preview = preview.Substring(0, 200) + "...";
-                string date = ""; try { date = mail.ReceivedTime.ToString("dd/MM/yyyy HH:mm"); } catch { }
+                string date = hasDate ? received.ToString("dd/MM/yyyy HH:mm") : "";
                 mails.Add(new { subject = subj, from = from, date = date, preview = preview, unread = mail.UnRead });
             }
             Console.WriteLine("📧 הוחזרו " + mails.Count + " מיילים.");
