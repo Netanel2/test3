@@ -1,18 +1,7 @@
-'SupportChat.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'SupportChat.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Users\netanelma\source\repos\SupportChat\SupportChat\bin\Debug\SupportChat.exe'. Symbols loaded.
-'SupportChat.exe' (CLR v4.0.30319: SupportChat.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Net.Http\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Net.Http.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'SupportChat.exe' (CLR v4.0.30319: SupportChat.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'SupportChat.exe' (CLR v4.0.30319: SupportChat.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'SupportChat.exe' (CLR v4.0.30319: SupportChat.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Web.Extensions\v4.0_4.0.0.0__31bf3856ad364e35\System.Web.Extensions.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'SupportChat.exe' (CLR v4.0.30319: SupportChat.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\System.Web\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Web.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'SupportChat.exe' (CLR v4.0.30319: SupportChat.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'SupportChat.exe' (CLR v4.0.30319: SupportChat.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-Step into: Stepping over non-user code 'Madrich.Program.<>c__DisplayClass19_0..ctor'
-The thread 0x7660 has exited with code 0 (0x0).
-Exception thrown: 'System.Exception' in SupportChat.exe
-Exception thrown: 'System.Exception' in mscorlib.dll
-Exception thrown: 'System.Exception' in mscorlib.dll
-Exception thrown: 'System.Exception' in SupportChat.exe
-Exception thrown: 'System.Exception' in mscorlib.dll
-Exception thrown: 'System.Exception' in mscorlib.dll
-The program '[26048] SupportChat.exe' has exited with code -1073741510 (0xc000013a).
+נטען .env מ: C:\Users\netanelma\source\repos\SupportChat\SupportChat\bin\Debug\.env
+[אבחון] CHAT_MODEL בפועל: 'gemini-2.5-flash-lite' (אורך: 21)
+[אבחון] קודי התווים: 0067 0065 006D 0069 006E 0069 002D 0032 002E 0035 002D 0066 006C 0061 0073 0068 002D 006C 0069 0074 0065
+מודל: gemini-2.5-flash-lite
+תיקיות מותרות: (ללא הגבלה)
+
+נטענו 2 קטעים.
