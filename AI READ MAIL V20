@@ -328,20 +328,24 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                                 var sb = new StringBuilder(); int i = 1; var srcs = new List<string>();
                                 foreach (var c in chosen) { if (!srcs.Contains(c.Source)) srcs.Add(c.Source); sb.Append("[מקור " + i + " — " + c.Source + "]\n" + c.Text + "\n\n---\n\n"); i++; }
                                 string answerText = await Chat("קטעים מהמדריכים:\n\n" + sb + "=====\nשאלה: " + qtext, history);
-                                string autoLearned = null;
-                                try
+                                WriteJson(response, new { answer = answerText, sources = srcs });
+                                // הלמידה האוטומטית רצה ברקע ולא מעכבת את התשובה שכבר נשלחה
+                                _ = Task.Run(async () =>
                                 {
-                                    autoLearned = await ExtractLearnableFact(qtext, answerText);
-                                    if (!string.IsNullOrWhiteSpace(autoLearned))
+                                    try
                                     {
-                                        File.AppendAllText(LearnedPath, "=== נלמד אוטומטית " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " ===\n" + autoLearned.Trim() + "\n\n", new UTF8Encoding(false));
-                                        var chunk = new Chunk { Source = "ידע נלמד אוטומטית", Text = autoLearned.Trim() };
-                                        chunk.Embedding = (await EmbedBatch(new List<string> { chunk.Text }))[0];
-                                        lock (indexLock) { index.Add(chunk); File.WriteAllText(IndexPath, js.Serialize(index), new UTF8Encoding(false)); }
+                                        string autoLearned = await ExtractLearnableFact(qtext, answerText);
+                                        if (!string.IsNullOrWhiteSpace(autoLearned))
+                                        {
+                                            File.AppendAllText(LearnedPath, "=== נלמד אוטומטית " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " ===\n" + autoLearned.Trim() + "\n\n", new UTF8Encoding(false));
+                                            var chunk = new Chunk { Source = "ידע נלמד אוטומטית", Text = autoLearned.Trim() };
+                                            chunk.Embedding = (await EmbedBatch(new List<string> { chunk.Text }))[0];
+                                            lock (indexLock) { index.Add(chunk); File.WriteAllText(IndexPath, js.Serialize(index), new UTF8Encoding(false)); }
+                                            Console.WriteLine("🧠 נלמד אוטומטית (ברקע): " + autoLearned);
+                                        }
                                     }
-                                }
-                                catch { }
-                                WriteJson(response, new { answer = answerText, sources = srcs, autoLearned = autoLearned });
+                                    catch { }
+                                });
                             }
                             catch (Exception ex) { WriteJson(response, new { error = Friendly(ex.Message) }); }
                         }
@@ -433,6 +437,7 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 "המשתמש כתב הודעה. סווג אותה והחזר JSON בלבד (בלי טקסט או סימני קוד):\n" +
                 "אם בקשה להעברת/העתקת קבצים: {kind:file, op:copy או move, source:נתיב, dest:נתיב, pattern:* }\n" +
                 "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילת חיפוש אחת, או כמה מילים/ביטויים נרדפים מופרדים בפסיק אם השאלה היא על קטגוריה ולא מילה מדויקת (למשל 'מה שנכשל' -> 'נכשל,כשל,failed,error,שגיאה,לא הצליח'), או ריק לכל המיילים, count:מספר, unreadOnly:true או false, dateFilter:today או yesterday או all, folder:שם תיקייה באאוטלוק לחיפוש בה או ריק לתיבה הנכנסת}\n" +
+                "חשוב: אם המשתמש ציין שם תיקייה ספציפית באאוטלוק (folder לא ריק), השאר query ריק — שם התיקייה כבר מסנן, ואין צורך להוסיף עוד מילות חיפוש שרק יצמצמו יתר על המידה או יחמיצו תוצאות רלוונטיות.\n" +
                 "אם בקשה לשלוח מייל: {kind:sendmail, to:כתובת/כתובות נמענים מופרדות בפסיק, subject:נושא המייל, body:תוכן המייל}. אל תמציא כתובת מייל אם המשתמש לא נתן אחת מפורשת — במקרה כזה השאר to ריק.\n" +
                 "unreadOnly=true רק אם המשתמש מדבר במפורש על מיילים שלא נקראו/לא נקראו. dateFilter=today אם השאלה על היום, yesterday אם על אתמול, אחרת all.\n" +
                 "חשוב: מילים כמו 'היום', 'אתמול', 'לא נקראו' הן סינון (dateFilter/unreadOnly) ולא טקסט לחיפוש — אל תשים אותן בשדה query.\n" +
