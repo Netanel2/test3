@@ -167,6 +167,7 @@ add('אתה',t,'me');var d=add('עוזר','חושב...');
 try{var ir=await fetch('/api/intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});var ij=await ir.json();
 if(ij&&ij.kind==='file'){showFileConfirm(d,ij);return;}
 if(ij&&ij.kind==='mail'){showMail(d,ij);return;}
+if(ij&&ij.kind==='sendmail'){showSendConfirm(d,ij);return;}
 }catch(e){}
 try{var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t})});var j=await r.json();
 if(j.answer){render(d.querySelector('.bubble'),j.answer);}else{d.querySelector('.bubble').textContent=j.error||'אין תשובה';}
@@ -208,6 +209,26 @@ btns.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped+' ·
 no.onclick=function(){btns.textContent='בוטל.';};
 btns.appendChild(go);btns.appendChild(no);b.appendChild(btns);}
 else{var nf=document.createElement('div');nf.style.color='#8b93a4';nf.style.marginTop='6px';nf.textContent='לא נמצאו קבצים.';b.appendChild(nf);}}
+
+async function showSendConfirm(d,intent){var b=d.querySelector('.bubble');b.textContent='';
+var box=document.createElement('div');box.className='confirm';
+box.textContent='הבנתי שאתה רוצה לשלוח מייל:';
+var l1=document.createElement('div');l1.style.marginTop='6px';l1.innerHTML='<b>אל:</b> '+(intent.to||'<span style=color:#e08a8a>לא צוין נמען — ערוך למטה</span>');
+var l2=document.createElement('div');l2.style.marginTop='4px';l2.innerHTML='<b>נושא:</b> '+(intent.subject||'(ללא נושא)');
+var l3=document.createElement('div');l3.style.marginTop='4px';l3.innerHTML='<b>תוכן:</b>';
+var bodyBox=document.createElement('textarea');bodyBox.value=intent.body||'';bodyBox.rows=5;bodyBox.style.width='100%';bodyBox.style.marginTop='4px';bodyBox.style.background='#0d0f14';bodyBox.style.color='#e7ecf3';bodyBox.style.border='1px solid #2b3340';bodyBox.style.borderRadius='8px';bodyBox.style.padding='8px';bodyBox.style.fontFamily='inherit';
+var toBox=document.createElement('input');toBox.value=intent.to||'';toBox.placeholder='כתובת נמען';toBox.style.width='100%';toBox.style.marginTop='4px';toBox.style.background='#0d0f14';toBox.style.color='#e7ecf3';toBox.style.border='1px solid #2b3340';toBox.style.borderRadius='8px';toBox.style.padding='8px';toBox.style.fontFamily='inherit';toBox.style.direction='ltr';
+box.appendChild(l1);box.appendChild(toBox);box.appendChild(l2);box.appendChild(l3);box.appendChild(bodyBox);
+b.appendChild(box);
+var btns=document.createElement('div');btns.className='cbtns';
+var go=document.createElement('button');go.className='go';go.textContent='✉️ שלח';
+var no=document.createElement('button');no.className='no';no.textContent='ביטול';
+go.onclick=async function(){go.disabled=true;no.disabled=true;go.textContent='שולח...';
+try{var r=await fetch('/api/mail/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:toBox.value,subject:intent.subject,body:bodyBox.value})});var j=await r.json();
+btns.textContent=j.ok?'✓ נשלח בהצלחה':('⚠️ '+j.error);
+}catch(e){btns.textContent='שגיאה: '+e.message;}};
+no.onclick=function(){btns.textContent='בוטל.';};
+btns.appendChild(go);btns.appendChild(no);b.appendChild(btns);}
 
 fi.addEventListener('change',function(){handle(fi.files);fi.value='';});
 var dc=0;window.addEventListener('dragenter',function(e){e.preventDefault();dc++;drop.classList.add('show');});
@@ -306,7 +327,15 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                         {
                             var data = await ReadJson(request); int count = 10;
                             try { var cc = Str(data, "count"); if (!string.IsNullOrEmpty(cc)) count = Convert.ToInt32(Convert.ToDouble(cc)); } catch { }
-                            try { WriteJson(response, ReadMail(Str(data, "query"), count)); } catch (Exception ex) { WriteJson(response, new { ok = false, error = "שגיאת Outlook: " + ex.Message }); }
+                            bool unreadOnly = data != null && data.ContainsKey("unreadOnly") && data["unreadOnly"] is bool && (bool)data["unreadOnly"];
+                            string dateFilter = Str(data, "dateFilter"); if (dateFilter != "today" && dateFilter != "yesterday") dateFilter = "all";
+                            string folder = Str(data, "folder") ?? "";
+                            try { WriteJson(response, ReadMail(Str(data, "query"), count, unreadOnly, dateFilter, folder)); } catch (Exception ex) { WriteJson(response, new { ok = false, error = "שגיאת Outlook: " + ex.Message }); }
+                        }
+                        else if (path == "/api/mail/send" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request);
+                            try { WriteJson(response, SendMail(Str(data, "to"), Str(data, "subject"), Str(data, "body"))); } catch (Exception ex) { WriteJson(response, new { ok = false, error = "שגיאת Outlook: " + ex.Message }); }
                         }
                         else if (path == "/api/learn" && request.HttpMethod == "POST")
                         {
@@ -363,13 +392,14 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
         {
             if (string.IsNullOrWhiteSpace(message)) return new { kind = "none" };
             bool maybeFile = message.Contains("\\") || message.Contains(":");
-            bool maybeMail = message.Contains("מייל") || message.Contains("מיילים") || message.Contains("אאוטלוק") || message.Contains("outlook") || message.Contains("דוא") || message.Contains("הודעות");
+            bool maybeMail = message.Contains("מייל") || message.Contains("מיילים") || message.Contains("אאוטלוק") || message.Contains("outlook") || message.Contains("דוא") || message.Contains("הודעות") || message.Contains("שלח");
             if (!maybeFile && !maybeMail) return new { kind = "none" };
 
             string prompt =
                 "המשתמש כתב הודעה. סווג אותה והחזר JSON בלבד (בלי טקסט או סימני קוד):\n" +
                 "אם בקשה להעברת/העתקת קבצים: {kind:file, op:copy או move, source:נתיב, dest:נתיב, pattern:* }\n" +
-                "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילות חיפוש בנושא/שולח/גוף המייל או ריק, count:מספר, unreadOnly:true או false, dateFilter:today או yesterday או all}\n" +
+                "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילות חיפוש בנושא/שולח/גוף המייל או ריק, count:מספר, unreadOnly:true או false, dateFilter:today או yesterday או all, folder:שם תיקייה באאוטלוק לחיפוש בה או ריק לתיבה הנכנסת}\n" +
+                "אם בקשה לשלוח מייל: {kind:sendmail, to:כתובת/כתובות נמענים מופרדות בפסיק, subject:נושא המייל, body:תוכן המייל}. אל תמציא כתובת מייל אם המשתמש לא נתן אחת מפורשת — במקרה כזה השאר to ריק.\n" +
                 "unreadOnly=true רק אם המשתמש מדבר במפורש על מיילים שלא נקראו/לא נקראו. dateFilter=today אם השאלה על היום, yesterday אם על אתמול, אחרת all.\n" +
                 "חשוב: מילים כמו 'היום', 'אתמול', 'לא נקראו' הן סינון (dateFilter/unreadOnly) ולא טקסט לחיפוש — אל תשים אותן בשדה query.\n" +
                 "אחרת: {kind:none}\n" +
@@ -393,22 +423,60 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                     string query = Str(d, "query") ?? "";
                     bool unreadOnly = false; try { unreadOnly = d.ContainsKey("unreadOnly") && Convert.ToBoolean(d["unreadOnly"]); } catch { }
                     string dateFilter = Str(d, "dateFilter"); if (dateFilter != "today" && dateFilter != "yesterday") dateFilter = "all";
+                    string folder = Str(d, "folder") ?? "";
                     int count = (unreadOnly || dateFilter != "all") ? 50 : 10;
                     try { var cc = Str(d, "count"); if (!string.IsNullOrEmpty(cc)) count = Convert.ToInt32(Convert.ToDouble(cc)); } catch { }
                     if (count < 1) count = 10; if (count > 50) count = 50;
-                    return new { kind = "mail", query = query, count = count, unreadOnly = unreadOnly, dateFilter = dateFilter };
+                    return new { kind = "mail", query = query, count = count, unreadOnly = unreadOnly, dateFilter = dateFilter, folder = folder };
+                }
+                if (kind == "sendmail")
+                {
+                    string to = Str(d, "to") ?? "";
+                    string subject = Str(d, "subject") ?? "";
+                    string mbody = Str(d, "body") ?? "";
+                    return new { kind = "sendmail", to = to, subject = subject, body = mbody };
                 }
                 return new { kind = "none" };
             }
             catch { return new { kind = "none" }; }
         }
 
-        static object ReadMail(string query, int count, bool unreadOnly = false, string dateFilter = "all")
+        static Outlook.MAPIFolder FindFolderByName(Outlook.NameSpace ns, string name)
+        {
+            foreach (Outlook.MAPIFolder store in ns.Folders)
+            {
+                var found = SearchFolderTree(store, name);
+                if (found != null) return found;
+            }
+            return null;
+        }
+        static Outlook.MAPIFolder SearchFolderTree(Outlook.MAPIFolder folder, string name)
+        {
+            try { if (folder.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0) return folder; } catch { }
+            try
+            {
+                foreach (Outlook.MAPIFolder sub in folder.Folders)
+                {
+                    var found = SearchFolderTree(sub, name);
+                    if (found != null) return found;
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        static object ReadMail(string query, int count, bool unreadOnly = false, string dateFilter = "all", string folder = "")
         {
             var app = new Outlook.Application();
             var ns = app.GetNamespace("MAPI");
-            var inbox = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
-            var items = inbox.Items;
+            Outlook.MAPIFolder targetFolder;
+            if (!string.IsNullOrWhiteSpace(folder))
+            {
+                targetFolder = FindFolderByName(ns, folder.Trim());
+                if (targetFolder == null) return new { ok = false, error = "לא נמצאה תיקייה בשם: " + folder };
+            }
+            else { targetFolder = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox); }
+            var items = targetFolder.Items;
             items.Sort("[ReceivedTime]", true);
 
             bool isFiltering = unreadOnly || dateFilter != "all" || !string.IsNullOrEmpty(query);
@@ -445,6 +513,23 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             }
             Console.WriteLine("📧 הוחזרו " + mails.Count + " מיילים.");
             return new { ok = true, mails = mails };
+        }
+
+        static object SendMail(string to, string subject, string body)
+        {
+            if (string.IsNullOrWhiteSpace(to)) return new { ok = false, error = "לא הוגדר נמען (to)." };
+            try
+            {
+                var app = new Outlook.Application();
+                Outlook.MailItem mail = (Outlook.MailItem)app.CreateItem(Outlook.OlItemType.olMailItem);
+                mail.To = to.Trim();
+                mail.Subject = subject ?? "";
+                mail.Body = body ?? "";
+                mail.Send();
+                Console.WriteLine("✉️ נשלח מייל אל: " + to);
+                return new { ok = true };
+            }
+            catch (Exception ex) { return new { ok = false, error = "שגיאה בשליחה: " + ex.Message }; }
         }
 
         static bool IsAllowed(string path)
