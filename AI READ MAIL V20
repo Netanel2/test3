@@ -1,7 +1,15 @@
-This site can’t be reached
-localhost refused to connect.
-Try:
+. תוודא שה-Build בכלל הצליח
 
-Checking the connection
-Checking the proxy and the firewall
-ERR_CONNECTION_REFUSED
+ב-Visual Studio: תפריט View → Output (או Ctrl+Alt+O)
+בתפריט הקטן למעלה בחלון שנפתח, איפה שכתוב "Show output from:", תבחר Build
+תגיד לי: כתוב שם "Build succeeded" או שיש שם שגיאות?
+
+2. תריץ בצורה שתשאיר את החלון פתוח לבדיקה
+
+במקום F5, נסה: Ctrl+F5 (זה "Start Without Debugging" — משאיר את החלון השחור פתוח בסוף עם הודעה "Press any key to continue" במקום לסגור אותו מיד)
+
+תגיד לי:
+
+האם הפעם כן נפתח חלון שחור (ולו לרגע)?
+אם כן — מה כתוב בו בדיוק?
+אם לא נפתח בכלל שום חלון שחור — זה מוזר במיוחד, כי זו תוכנית קונסולה. במקרה כזה תבדוק: קליק ימני על הפרויקט → Properties → יש שם שדה בשם Output type — מה כתוב בו? (אמור להיות כתוב Console Application)
