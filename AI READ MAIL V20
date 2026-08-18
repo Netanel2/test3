@@ -1,3 +1,753 @@
-🌐 השרת עלה!  http://localhost:5005/
-[אבחון] תשובת סיווג כוונה גולמית: {kind:mail, query:JOB, count:10, unreadOnly:false, dateFilter:today, folder:""}
-📩 איזה JOB נכשלו היום? חפש במייל
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web.Script.Serialization;
+using System.Xml;
+using Outlook = Microsoft.Office.Interop.Outlook;
+
+namespace Madrich
+{
+    class Section { public string Source { get; set; } public string Text { get; set; } }
+    public class Chunk { public string Source { get; set; } public string Text { get; set; } public float[] Embedding { get; set; } }
+
+    class Program
+    {
+        static string BaseDir = AppDomain.CurrentDomain.BaseDirectory;
+        static string GuidesDir = Path.Combine(BaseDir, "guides");
+        static string DataDir = Path.Combine(BaseDir, "data");
+        static string IndexPath = Path.Combine(DataDir, "index.json");
+        static string LearnedPath = Path.Combine(DataDir, "learned.txt");
+
+        static string ApiKey;
+        static string ChatModel = "gemini-2.5-flash";
+        static string EmbedModel = "gemini-embedding-001";
+        static string[] AllowedDirs = new string[0];
+        const string ApiBase = "https://generativelanguage.googleapis.com/v1beta/models/";
+
+        const int SEND_ALL_THRESHOLD = 30;
+        const int TOP_K = 8;
+
+        static readonly HttpClient http = new HttpClient();
+        static readonly JavaScriptSerializer js = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+        static readonly object indexLock = new object();
+        static List<Chunk> index = new List<Chunk>();
+
+        const string SysPrompt =
+            "אתה עוזר תמיכה פנימי מומחה. אתה עונה על שאלות לפי קטעי המדריכים והידע הנלמד שסופקו לך.\n" +
+            "כללים:\n- ענה בעברית בלבד, בצורה חדה ומעשית.\n" +
+            "- אם השאלה 'איך עושים X' — תן שלבים ממוספרים לפי המדריך.\n" +
+            "- כשאתה נותן קוד, עטוף בבלוק Markdown עם שלושה גרשים הפוכים וציין שפה.\n" +
+            "- אל תמציא צעדים/מסכים/כפתורים שלא בקטעים.\n" +
+            "- אם אין תשובה ישירה אבל יש מדריך קשור — כתוב 'לא מצאתי תשובה ישירה, אבל יש מדריך רלוונטי: [שם]' ושאל אם להסביר.\n" +
+            "- בסוף ציין מאיזה מדריך התשובה.";
+        const string VisionPrompt =
+            "מולך צילום מסך ממדריך. תאר בעברית: תמלל את כל הטקסט, תאר מיקום כפתורים/תפריטים, והסבר איזו פעולה מוצגת. אל תמציא. עברית בלבד.";
+
+        const string HTML_PAGE = @"<!DOCTYPE html>
+<html lang='he' dir='rtl'><head><meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>מרכז המדריכים</title><style>
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0d0f14;color:#e7ecf3;display:flex;flex-direction:column;height:100vh}
+header{padding:12px 22px;border-bottom:1px solid #262c39;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header .t{font-size:19px;font-weight:600}
+header .r{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stats{font-size:12.5px;color:#8b93a4}.stats b{color:#c8a45e}
+.btn{border:1px solid #8a7440;color:#c8a45e;background:rgba(200,164,94,.1);padding:8px 14px;border-radius:10px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn.on{background:#c8a45e;color:#0d0f14}
+main{flex:1;overflow-y:auto;padding:24px}.wrap{max-width:800px;margin:0 auto}
+.msg{margin-bottom:18px;line-height:1.7}.who{font-size:12px;color:#8b93a4;margin-bottom:4px}
+.bubble{background:#141821;border:1px solid #262c39;border-radius:12px;padding:12px 15px;white-space:pre-wrap;word-wrap:break-word}
+.me .bubble{background:#1b202b}.sys .bubble{background:rgba(46,160,67,.08);border-color:rgba(46,160,67,.4)}
+.learn .bubble{background:rgba(200,164,94,.08);border-color:#8a7440}
+.src{margin-top:8px;font-size:12px;color:#c8a45e}
+.banner{max-width:800px;margin:0 auto 12px;padding:10px 14px;border-radius:10px;background:rgba(200,164,94,.12);border:1px solid #8a7440;color:#c8a45e;font-size:13.5px;display:none}
+.banner.show{display:block}
+footer{border-top:1px solid #262c39;padding:14px;background:#0f1219}
+.row{max-width:800px;margin:0 auto;display:flex;gap:10px}
+textarea{flex:1;background:#141821;color:#e7ecf3;border:1px solid #262c39;border-radius:10px;padding:11px;font-family:inherit;font-size:15px;resize:none}
+button.send{background:#c8a45e;color:#0d0f14;border:none;border-radius:10px;padding:0 22px;font-weight:700;cursor:pointer}
+#drop{position:fixed;inset:0;background:rgba(13,15,20,.92);z-index:50;display:none;align-items:center;justify-content:center;color:#c8a45e;font-size:24px;font-weight:700;border:3px dashed #c8a45e}
+#drop.show{display:flex}
+.bubble h1,.bubble h2,.bubble h3{margin:.6em 0 .3em;color:#e7ecf3}
+.bubble h1{font-size:20px}.bubble h2{font-size:18px}.bubble h3{font-size:16px}
+.bubble p{margin:.5em 0}.bubble ul,.bubble ol{margin:.4em 0;padding-right:22px}
+.bubble li{margin:.25em 0}.bubble strong{color:#f0d79a}.bubble a{color:#c8a45e}
+.bubble code{background:#0d0f14;border:1px solid #2b3340;border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:13.5px;direction:ltr;display:inline-block}
+.codewrap{position:relative;margin:10px 0;direction:ltr}
+.codewrap pre{background:#0b0d12;border:1px solid #2b3340;border-radius:10px;padding:14px;overflow-x:auto;margin:0}
+.codewrap pre code{background:none;border:none;padding:0;font-family:Consolas,monospace;font-size:13.5px;line-height:1.6}
+.copybtn{position:absolute;top:8px;left:8px;background:#1b202b;color:#c8a45e;border:1px solid #8a7440;border-radius:7px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.copybtn:hover{background:#242b38}
+.confirm{background:rgba(200,164,94,.1);border:1px solid #8a7440;border-radius:10px;padding:12px;margin-top:6px}
+.confirm code{background:#0d0f14;border:1px solid #2b3340;border-radius:5px;padding:1px 6px;direction:ltr;display:inline-block;font-family:Consolas,monospace;font-size:12.5px}
+.cbtns{margin-top:10px;display:flex;gap:8px}
+.cbtns button{border:none;border-radius:8px;padding:7px 16px;font-weight:700;cursor:pointer;font-family:inherit;font-size:13.5px}
+.cbtns .go{background:#c8a45e;color:#0d0f14}.cbtns .no{background:#1b202b;color:#8b93a4;border:1px solid #2b3340}
+.mail{border:1px solid #2b3340;border-radius:8px;padding:10px;margin-top:8px;background:#0d0f14}
+.mail .mh{font-weight:600;color:#e7ecf3}.mail .mm{font-size:12px;color:#8b93a4;margin:2px 0 6px}
+.mail .mp{font-size:13px;color:#c9d2de}.mail .unread{color:#c8a45e}
+.fsline{background:rgba(200,164,94,.1);border:1px solid #8a7440;border-radius:8px;padding:11px;margin-top:6px}
+#fsmodal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;display:none;align-items:center;justify-content:center}
+.fscard{background:#141821;border:1px solid #2b3340;border-radius:14px;padding:20px;width:min(680px,94%);max-height:88vh;overflow:auto}
+.fsin{width:100%;background:#0d0f14;color:#e7ecf3;border:1px solid #2b3340;border-radius:8px;padding:9px;font-family:Consolas,monospace;font-size:14px;direction:ltr;margin-top:4px}
+.fslbl{font-size:13px;color:#8b93a4;margin-top:12px;display:block}.fssec{border-top:1px solid #262c39;margin-top:18px;padding-top:14px}.fsout{margin-top:12px;font-size:13.5px}
+.tbl{border-collapse:collapse;margin-top:8px;direction:ltr}
+.tbl th,.tbl td{border:1px solid #2b3340;padding:4px 9px}.tbl th{background:#1b202b;color:#c8a45e}
+</style>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css'>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js'></script>
+</head><body>
+<header><div class='t'>📚 מרכז המדריכים</div>
+<div class='r'><span class='stats' id='stats'></span>
+<button class='btn' onclick='openFs()'>🗂️ קבצים</button>
+<button class='btn' id='learnBtn' onclick='toggleLearn()'>🎓 מצב למידה</button>
+<button class='btn' onclick='pickFile()'>➕ העלה מדריך</button>
+<input type='file' id='fi' multiple style='display:none' accept='.txt,.md,.docx,.png,.jpg,.jpeg,.webp'></div></header>
+<main><div class='wrap'>
+<div class='banner' id='banner'>🎓 מצב למידה פעיל. כתוב שגיאה + פתרון ולחץ שלח. לחץ שוב לצאת.</div>
+<div id='chat'></div></div></main>
+<footer><div class='row'>
+<textarea id='q' rows='1' placeholder='שאל, בקש קבצים, או: תראה מיילים אחרונים / חפש מייל מ...'></textarea>
+<button class='send' id='sendBtn' onclick='send()'>שלח</button></div></footer>
+<div id='drop'>שחרר כאן כדי להעלות מדריך 📄</div>
+
+<div id='fsmodal'><div class='fscard'>
+<div style='display:flex;justify-content:space-between;align-items:center'>
+<div style='font-size:18px;font-weight:700'>🗂️ כלי קבצים</div><button class='btn' onclick='closeFs()'>סגור ✕</button></div>
+<div class='fssec' style='border-top:none;margin-top:14px;padding-top:0'>
+<div style='font-weight:600;color:#c8a45e'>ניתוח / ספירה</div>
+<label class='fslbl'>נתיב תיקייה:</label><input class='fsin' id='fsSource' placeholder='C:\Test\Retro'>
+<label style='font-size:13px;color:#8b93a4;margin-top:8px;display:block'><input type='checkbox' id='fsRec'> כולל תת-תיקיות</label>
+<button class='btn' style='margin-top:12px' onclick='fsAnalyze()'>📊 נתח / ספור</button><div class='fsout' id='fsout'></div></div>
+<div class='fssec'>
+<div style='font-weight:600;color:#c8a45e'>העברה / העתקה</div>
+<label class='fslbl'>מ (מקור):</label><input class='fsin' id='fsMoveSrc' placeholder='C:\Test\Retro'>
+<label class='fslbl'>אל (יעד):</label><input class='fsin' id='fsDest' placeholder='C:\Test\Archive'>
+<label class='fslbl'>סינון:</label><input class='fsin' id='fsPattern' placeholder='*'>
+<label class='fslbl'>פעולה:</label><div style='margin-top:4px'>
+<label style='font-size:14px'><input type='radio' name='fsop' value='copy' checked> העתקה</label>
+<label style='font-size:14px;margin-right:16px'><input type='radio' name='fsop' value='move'> העברה</label></div>
+<button class='btn' style='margin-top:12px' onclick='fsPlanBtn()'>🔎 בדוק תוכנית</button><div class='fsout' id='fsout2'></div></div>
+</div></div>
+
+<script>
+if(window.marked){marked.setOptions({breaks:true,gfm:true});}
+var q=document.getElementById('q'),drop=document.getElementById('drop'),fi=document.getElementById('fi');
+var learnMode=false;
+function stats(){fetch('/api/sources').then(function(r){return r.json();}).then(function(d){document.getElementById('stats').innerHTML=d.sources.length+' מדריכים · <b>'+d.chunks+'</b> קטעים';});}
+stats();
+function pickFile(){fi.click();}
+function toggleLearn(){learnMode=!learnMode;document.getElementById('learnBtn').classList.toggle('on',learnMode);document.getElementById('banner').classList.toggle('show',learnMode);q.placeholder=learnMode?'שגיאה + פתרון...':'שאל, בקש קבצים, או: תראה מיילים אחרונים / חפש מייל מ...';}
+function render(bubble,text){
+if(window.marked){bubble.innerHTML=marked.parse(text);
+bubble.querySelectorAll('pre code').forEach(function(block){
+if(window.hljs){try{hljs.highlightElement(block);}catch(e){}}
+var pre=block.parentElement;var wrap=document.createElement('div');wrap.className='codewrap';pre.parentNode.insertBefore(wrap,pre);wrap.appendChild(pre);
+var btn=document.createElement('button');btn.className='copybtn';btn.textContent='העתק';
+btn.onclick=function(){var txt=block.textContent;if(navigator.clipboard){navigator.clipboard.writeText(txt);}else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}btn.textContent='הועתק';setTimeout(function(){btn.textContent='העתק';},1500);};
+wrap.appendChild(btn);});}else{bubble.textContent=text;}}
+function add(who,text,cls){var w=document.getElementById('chat');var d=document.createElement('div');d.className='msg '+(cls||'');
+var wd=document.createElement('div');wd.className='who';wd.textContent=who;var b=document.createElement('div');b.className='bubble';b.textContent=text;
+d.appendChild(wd);d.appendChild(b);w.appendChild(d);document.querySelector('main').scrollTop=1e9;return d;}
+q.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+
+async function send(){var t=q.value.trim();if(!t)return;q.value='';
+if(learnMode){add('לימוד',t,'me');var dl=add('מערכת','שומר...','learn');
+try{var r=await fetch('/api/learn',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});var j=await r.json();
+if(j.ok){dl.querySelector('.bubble').textContent='נלמד ונשמר ✓';stats();}else{dl.querySelector('.bubble').textContent='שגיאה: '+(j.error||'נכשל');}}catch(e){dl.querySelector('.bubble').textContent='שגיאה: '+e.message;}return;}
+add('אתה',t,'me');var d=add('עוזר','חושב...');
+try{var ir=await fetch('/api/intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});var ij=await ir.json();
+if(ij&&ij.kind==='file'){showFileConfirm(d,ij);return;}
+if(ij&&ij.kind==='mail'){showMail(d,ij);return;}
+if(ij&&ij.kind==='sendmail'){showSendConfirm(d,ij);return;}
+}catch(e){}
+try{var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t})});var j=await r.json();
+if(j.answer){render(d.querySelector('.bubble'),j.answer);}else{d.querySelector('.bubble').textContent=j.error||'אין תשובה';}
+if(j.sources&&j.sources.length){var s=document.createElement('div');s.className='src';s.textContent='📄 '+j.sources.join(' | ');d.appendChild(s);}
+}catch(e){d.querySelector('.bubble').textContent='שגיאה: '+e.message;}}
+
+async function showMail(d,intent){var b=d.querySelector('.bubble');b.textContent='קורא מ-Outlook...';
+try{var r=await fetch('/api/mail/read',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(intent)});var j=await r.json();
+if(!j.ok){b.textContent='⚠️ '+j.error;return;}
+if(!j.mails||!j.mails.length){b.textContent='לא נמצאו מיילים.';return;}
+b.textContent=(intent.query?('תוצאות עבור: '+intent.query):'המיילים האחרונים')+' ('+j.mails.length+'):';
+j.mails.forEach(function(m){
+var el=document.createElement('div');el.className='mail';
+var h=document.createElement('div');h.className='mh';h.textContent=m.subject;
+var meta=document.createElement('div');meta.className='mm';meta.textContent='מאת: '+m.from+' · '+m.date+(m.unread?' · לא נקרא':'');
+var pv=document.createElement('div');pv.className='mp';pv.textContent=m.preview;
+el.appendChild(h);el.appendChild(meta);el.appendChild(pv);b.appendChild(el);});
+}catch(e){b.textContent='שגיאה: '+e.message;}}
+
+async function showFileConfirm(d,intent){var b=d.querySelector('.bubble');
+var plan;try{var r=await fetch('/api/fs/plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(intent)});plan=await r.json();}catch(e){b.textContent='שגיאה: '+e.message;return;}
+if(!plan.ok){b.textContent='⚠️ '+plan.error;return;}
+var opText=plan.op==='move'?'להעביר (מוחק מהמקור)':'להעתיק';
+b.textContent='';
+var box=document.createElement('div');box.className='confirm';
+box.textContent='הבנתי שאתה רוצה '+opText+' '+plan.count+' קבצים ('+plan.size+'):';
+var l1=document.createElement('div');l1.textContent='מ: '+plan.source;
+var l2=document.createElement('div');l2.textContent='אל: '+plan.dest+(plan.destExists?'':' (ייווצר)');
+box.appendChild(l1);box.appendChild(l2);
+if(plan.sample&&plan.sample.length){var s=document.createElement('div');s.style.fontSize='12px';s.style.color='#8b93a4';s.style.marginTop='6px';s.textContent='דוגמאות: '+plan.sample.join(', ')+(plan.count>20?' ...':'');box.appendChild(s);}
+b.appendChild(box);
+if(plan.count>0){var btns=document.createElement('div');btns.className='cbtns';
+var go=document.createElement('button');go.className='go';go.textContent='▶ בצע';
+var no=document.createElement('button');no.className='no';no.textContent='ביטול';
+go.onclick=async function(){go.disabled=true;no.disabled=true;go.textContent='מבצע...';
+try{var r=await fetch('/api/fs/execute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(intent)});var j=await r.json();
+btns.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped+' · מתוך '+j.total):('⚠️ '+j.error);
+}catch(e){btns.textContent='שגיאה: '+e.message;}};
+no.onclick=function(){btns.textContent='בוטל.';};
+btns.appendChild(go);btns.appendChild(no);b.appendChild(btns);}
+else{var nf=document.createElement('div');nf.style.color='#8b93a4';nf.style.marginTop='6px';nf.textContent='לא נמצאו קבצים.';b.appendChild(nf);}}
+
+async function showSendConfirm(d,intent){var b=d.querySelector('.bubble');b.textContent='';
+var box=document.createElement('div');box.className='confirm';
+box.textContent='הבנתי שאתה רוצה לשלוח מייל:';
+var l1=document.createElement('div');l1.style.marginTop='6px';l1.innerHTML='<b>אל:</b> '+(intent.to||'<span style=color:#e08a8a>לא צוין נמען — ערוך למטה</span>');
+var l2=document.createElement('div');l2.style.marginTop='4px';l2.innerHTML='<b>נושא:</b> '+(intent.subject||'(ללא נושא)');
+var l3=document.createElement('div');l3.style.marginTop='4px';l3.innerHTML='<b>תוכן:</b>';
+var bodyBox=document.createElement('textarea');bodyBox.value=intent.body||'';bodyBox.rows=5;bodyBox.style.width='100%';bodyBox.style.marginTop='4px';bodyBox.style.background='#0d0f14';bodyBox.style.color='#e7ecf3';bodyBox.style.border='1px solid #2b3340';bodyBox.style.borderRadius='8px';bodyBox.style.padding='8px';bodyBox.style.fontFamily='inherit';
+var toBox=document.createElement('input');toBox.value=intent.to||'';toBox.placeholder='כתובת נמען';toBox.style.width='100%';toBox.style.marginTop='4px';toBox.style.background='#0d0f14';toBox.style.color='#e7ecf3';toBox.style.border='1px solid #2b3340';toBox.style.borderRadius='8px';toBox.style.padding='8px';toBox.style.fontFamily='inherit';toBox.style.direction='ltr';
+box.appendChild(l1);box.appendChild(toBox);box.appendChild(l2);box.appendChild(l3);box.appendChild(bodyBox);
+b.appendChild(box);
+var btns=document.createElement('div');btns.className='cbtns';
+var go=document.createElement('button');go.className='go';go.textContent='✉️ שלח';
+var no=document.createElement('button');no.className='no';no.textContent='ביטול';
+go.onclick=async function(){go.disabled=true;no.disabled=true;go.textContent='שולח...';
+try{var r=await fetch('/api/mail/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:toBox.value,subject:intent.subject,body:bodyBox.value})});var j=await r.json();
+btns.textContent=j.ok?'✓ נשלח בהצלחה':('⚠️ '+j.error);
+}catch(e){btns.textContent='שגיאה: '+e.message;}};
+no.onclick=function(){btns.textContent='בוטל.';};
+btns.appendChild(go);btns.appendChild(no);b.appendChild(btns);}
+
+fi.addEventListener('change',function(){handle(fi.files);fi.value='';});
+var dc=0;window.addEventListener('dragenter',function(e){e.preventDefault();dc++;drop.classList.add('show');});
+window.addEventListener('dragover',function(e){e.preventDefault();});window.addEventListener('dragleave',function(e){e.preventDefault();dc--;if(dc<=0)drop.classList.remove('show');});
+window.addEventListener('drop',function(e){e.preventDefault();dc=0;drop.classList.remove('show');if(e.dataTransfer.files.length)handle(e.dataTransfer.files);});
+function b64(file){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(r.result.split(',')[1]);};r.onerror=function(){rej(new Error('קריאה נכשלה'));};r.readAsDataURL(file);});}
+async function handle(files){for(var i=0;i<files.length;i++){var f=files[i];var d=add('מערכת','מעלה: '+f.name+' ...','sys');
+try{var data=await b64(f);var r=await fetch('/api/upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:f.name,data:data})});var j=await r.json();
+if(j.ok){d.querySelector('.bubble').textContent='נוסף: '+f.name+' ('+j.added+' קטעים) ✓';stats();}else{d.querySelector('.bubble').textContent='שגיאה: '+(j.error||'נכשל');}}catch(e){d.querySelector('.bubble').textContent='שגיאה: '+e.message;}}}
+
+function openFs(){document.getElementById('fsmodal').style.display='flex';}
+function closeFs(){document.getElementById('fsmodal').style.display='none';}
+async function fsAnalyze(){var p=document.getElementById('fsSource').value.trim();var rec=document.getElementById('fsRec').checked;var out=document.getElementById('fsout');out.textContent='מנתח...';
+try{var r=await fetch('/api/fs/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:p,recursive:rec})});var j=await r.json();if(!j.ok){out.textContent='⚠️ '+j.error;return;}
+out.textContent='';var head=document.createElement('div');head.innerHTML='<b>סה\u05f4כ '+j.total+' · '+j.totalSize+'</b>';out.appendChild(head);
+if(j.types.length){var tb=document.createElement('table');tb.className='tbl';var hr=tb.insertRow();['סוג','כמות','גודל'].forEach(function(x){var th=document.createElement('th');th.textContent=x;hr.appendChild(th);});
+j.types.forEach(function(t){var row=tb.insertRow();[t.ext,String(t.count),t.size].forEach(function(v){var td=row.insertCell();td.textContent=v;});});out.appendChild(tb);}
+}catch(e){out.textContent='שגיאה: '+e.message;}}
+var fsPlanData=null;
+async function fsPlanBtn(){var s=document.getElementById('fsMoveSrc').value.trim();var d=document.getElementById('fsDest').value.trim();var pat=document.getElementById('fsPattern').value.trim()||'*';var op=document.querySelector('input[name=fsop]:checked').value;var out=document.getElementById('fsout2');out.textContent='בודק...';
+try{var r=await fetch('/api/fs/plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source:s,dest:d,pattern:pat,op:op})});var j=await r.json();if(!j.ok){out.textContent='⚠️ '+j.error;return;}
+fsPlanData={source:s,dest:d,pattern:pat,op:op};out.textContent='';
+var box=document.createElement('div');box.className='fsline';box.textContent=(j.op==='move'?'העברה':'העתקה')+' של '+j.count+' קבצים ('+j.size+')';
+var l1=document.createElement('div');l1.textContent='מ: '+j.source;var l2=document.createElement('div');l2.textContent='אל: '+j.dest;box.appendChild(l1);box.appendChild(l2);out.appendChild(box);
+if(j.count>0){var go=document.createElement('button');go.className='btn on';go.style.marginTop='10px';go.textContent='▶ בצע '+j.count;go.onclick=fsExec;out.appendChild(go);}
+}catch(e){out.textContent='שגיאה: '+e.message;}}
+async function fsExec(){if(!fsPlanData)return;var out=document.getElementById('fsout2');out.textContent='מבצע...';
+try{var r=await fetch('/api/fs/execute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fsPlanData)});var j=await r.json();
+out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('⚠️ '+j.error);fsPlanData=null;}catch(e){out.textContent='שגיאה: '+e.message;}}
+</script></body></html>";
+
+        static void Main(string[] args)
+        {
+            try { Console.OutputEncoding = Encoding.UTF8; } catch { }
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            http.Timeout = TimeSpan.FromMinutes(3);
+
+            LoadDotEnv();
+            ApiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY");
+            var em = Environment.GetEnvironmentVariable("EMBED_MODEL"); if (!string.IsNullOrWhiteSpace(em)) EmbedModel = em;
+            var cm = Environment.GetEnvironmentVariable("CHAT_MODEL"); if (!string.IsNullOrWhiteSpace(cm)) ChatModel = cm;
+            {
+                var codes = new StringBuilder();
+                foreach (char ch in ChatModel) codes.Append(((int)ch).ToString("X4") + " ");
+                Console.WriteLine("[אבחון] CHAT_MODEL בפועל: '" + ChatModel + "' (אורך: " + ChatModel.Length + ")");
+                Console.WriteLine("[אבחון] קודי התווים: " + codes.ToString());
+            }
+            var ad = Environment.GetEnvironmentVariable("ALLOWED_DIRS");
+            if (!string.IsNullOrWhiteSpace(ad)) AllowedDirs = ad.Split(';').Select(x => x.Trim()).Where(x => x.Length > 0).ToArray();
+
+            Directory.CreateDirectory(GuidesDir); Directory.CreateDirectory(DataDir);
+            Console.WriteLine("מודל: " + ChatModel);
+            Console.WriteLine("תיקיות מותרות: " + (AllowedDirs.Length == 0 ? "(ללא הגבלה)" : string.Join(" ; ", AllowedDirs)));
+            Console.WriteLine();
+
+            if (string.IsNullOrWhiteSpace(ApiKey)) { Console.WriteLine("❌ אין GEMINI_API_KEY ב-.env"); Console.ReadLine(); return; }
+
+            if (File.Exists(IndexPath)) { try { index = js.Deserialize<List<Chunk>>(File.ReadAllText(IndexPath, Encoding.UTF8)) ?? new List<Chunk>(); } catch { index = new List<Chunk>(); } Console.WriteLine("נטענו " + index.Count + " קטעים."); }
+            else { Console.WriteLine("בונה אינדקס..."); try { index = Ingest().GetAwaiter().GetResult(); } catch (Exception e) { Console.WriteLine("שגיאה: " + e.Message); } }
+
+            HttpListener listener = new HttpListener();
+            try
+            {
+                listener.Prefixes.Add("http://localhost:5005/"); listener.Start();
+                Console.WriteLine("\n🌐 השרת עלה!  http://localhost:5005/"); OpenInChrome("http://localhost:5005/");
+            }
+            catch (Exception ex) { Console.WriteLine("❌ כשל: " + ex.Message); Console.ReadLine(); return; }
+
+            Task.Run(async () =>
+            {
+                while (listener.IsListening)
+                {
+                    try
+                    {
+                        var context = await listener.GetContextAsync();
+                        var request = context.Request; var response = context.Response;
+                        response.Headers.Add("Access-Control-Allow-Origin", "*"); response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
+                        if (request.HttpMethod == "OPTIONS") { response.StatusCode = 200; response.Close(); continue; }
+                        string path = request.Url.AbsolutePath;
+
+                        if (path == "/api/chat" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request); string qtext = (Str(data, "question") ?? "").Trim();
+                            Console.WriteLine("📩 " + qtext);
+                            if (qtext.Length == 0) { WriteJson(response, new { error = "שאלה ריקה" }, 400); continue; }
+                            List<Chunk> snap; lock (indexLock) snap = new List<Chunk>(index);
+                            if (snap.Count == 0) { WriteJson(response, new { error = "אין מדריכים עדיין." }, 400); continue; }
+                            try
+                            {
+                                List<Chunk> chosen;
+                                if (snap.Count <= SEND_ALL_THRESHOLD) chosen = snap;
+                                else { var qv = (await EmbedBatch(new List<string> { qtext }))[0]; chosen = snap.Select(c => new { c, s = Cosine(qv, c.Embedding) }).OrderByDescending(x => x.s).Take(TOP_K).Select(x => x.c).ToList(); }
+                                var sb = new StringBuilder(); int i = 1; var srcs = new List<string>();
+                                foreach (var c in chosen) { if (!srcs.Contains(c.Source)) srcs.Add(c.Source); sb.Append("[מקור " + i + " — " + c.Source + "]\n" + c.Text + "\n\n---\n\n"); i++; }
+                                WriteJson(response, new { answer = await Chat("קטעים מהמדריכים:\n\n" + sb + "=====\nשאלה: " + qtext), sources = srcs });
+                            }
+                            catch (Exception ex) { WriteJson(response, new { error = Friendly(ex.Message) }); }
+                        }
+                        else if (path == "/api/intent" && request.HttpMethod == "POST")
+                        { var data = await ReadJson(request); try { WriteJson(response, await DetectIntent(Str(data, "message"))); } catch { WriteJson(response, new { kind = "none" }); } }
+                        else if (path == "/api/mail/read" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request); int count = 10;
+                            try { var cc = Str(data, "count"); if (!string.IsNullOrEmpty(cc)) count = Convert.ToInt32(Convert.ToDouble(cc)); } catch { }
+                            bool unreadOnly = data != null && data.ContainsKey("unreadOnly") && data["unreadOnly"] is bool && (bool)data["unreadOnly"];
+                            string dateFilter = Str(data, "dateFilter"); if (dateFilter != "today" && dateFilter != "yesterday") dateFilter = "all";
+                            string folder = Str(data, "folder") ?? "";
+                            try { WriteJson(response, ReadMail(Str(data, "query"), count, unreadOnly, dateFilter, folder)); } catch (Exception ex) { WriteJson(response, new { ok = false, error = "שגיאת Outlook: " + ex.Message }); }
+                        }
+                        else if (path == "/api/mail/send" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request);
+                            try { WriteJson(response, SendMail(Str(data, "to"), Str(data, "subject"), Str(data, "body"))); } catch (Exception ex) { WriteJson(response, new { ok = false, error = "שגיאת Outlook: " + ex.Message }); }
+                        }
+                        else if (path == "/api/learn" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request); string learnText = Str(data, "text");
+                            if (string.IsNullOrWhiteSpace(learnText)) { WriteJson(response, new { ok = false, error = "טקסט ריק" }, 400); continue; }
+                            try
+                            {
+                                File.AppendAllText(LearnedPath, "=== נלמד " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " ===\n" + learnText.Trim() + "\n\n", new UTF8Encoding(false));
+                                var chunk = new Chunk { Source = "ידע נלמד", Text = learnText.Trim() }; chunk.Embedding = (await EmbedBatch(new List<string> { chunk.Text }))[0];
+                                int total; lock (indexLock) { index.Add(chunk); File.WriteAllText(IndexPath, js.Serialize(index), new UTF8Encoding(false)); total = index.Count; }
+                                WriteJson(response, new { ok = true, total = total });
+                            }
+                            catch (Exception ex) { WriteJson(response, new { ok = false, error = Friendly(ex.Message) }); }
+                        }
+                        else if (path == "/api/upload" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request); string fname = Str(data, "filename"); string b64 = Str(data, "data");
+                            if (string.IsNullOrWhiteSpace(fname) || string.IsNullOrWhiteSpace(b64)) { WriteJson(response, new { ok = false, error = "חסר קובץ" }, 400); continue; }
+                            try
+                            {
+                                fname = Path.GetFileName(fname); File.WriteAllBytes(Path.Combine(GuidesDir, fname), Convert.FromBase64String(b64));
+                                var secs = await Extract(Path.Combine(GuidesDir, fname)); var chunks = Chunkify(secs);
+                                if (chunks.Count == 0) { WriteJson(response, new { ok = false, error = "לא נמצא תוכן" }); continue; }
+                                var vecs = await EmbedBatch(chunks.Select(c => c.Text).ToList()); for (int k = 0; k < chunks.Count; k++) chunks[k].Embedding = vecs[k];
+                                int total; lock (indexLock) { index.AddRange(chunks); File.WriteAllText(IndexPath, js.Serialize(index), new UTF8Encoding(false)); total = index.Count; }
+                                WriteJson(response, new { ok = true, added = chunks.Count, total = total });
+                            }
+                            catch (Exception ex) { WriteJson(response, new { ok = false, error = Friendly(ex.Message) }); }
+                        }
+                        else if (path == "/api/fs/analyze" && request.HttpMethod == "POST")
+                        {
+                            var data = await ReadJson(request); bool rec = data != null && data.ContainsKey("recursive") && data["recursive"] is bool && (bool)data["recursive"];
+                            try { WriteJson(response, FsAnalyze(Str(data, "path"), rec)); } catch (Exception ex) { WriteJson(response, new { ok = false, error = ex.Message }); }
+                        }
+                        else if (path == "/api/fs/plan" && request.HttpMethod == "POST")
+                        { var data = await ReadJson(request); try { WriteJson(response, FsPlan(Str(data, "source"), Str(data, "dest"), Str(data, "pattern"), Str(data, "op"))); } catch (Exception ex) { WriteJson(response, new { ok = false, error = ex.Message }); } }
+                        else if (path == "/api/fs/execute" && request.HttpMethod == "POST")
+                        { var data = await ReadJson(request); try { WriteJson(response, FsExecute(Str(data, "source"), Str(data, "dest"), Str(data, "pattern"), Str(data, "op"))); } catch (Exception ex) { WriteJson(response, new { ok = false, error = ex.Message }); } }
+                        else if (path == "/api/sources")
+                        { List<string> srcs; int cnt; lock (indexLock) { srcs = index.Select(c => c.Source).Distinct().ToList(); cnt = index.Count; } WriteJson(response, new { sources = srcs, chunks = cnt }); }
+                        else { response.ContentType = "text/html; charset=utf-8"; byte[] hb = Encoding.UTF8.GetBytes(HTML_PAGE); await response.OutputStream.WriteAsync(hb, 0, hb.Length); response.Close(); }
+                    }
+                    catch (Exception ex) { Console.WriteLine("⚠️ " + ex.Message); }
+                }
+            });
+            Console.ReadLine();
+        }
+
+        static async Task<Dictionary<string, object>> ReadJson(HttpListenerRequest request)
+        { string b; using (var r = new StreamReader(request.InputStream, Encoding.UTF8)) b = await r.ReadToEndAsync(); return js.DeserializeObject(b) as Dictionary<string, object>; }
+        static string Str(Dictionary<string, object> d, string k) { return (d != null && d.ContainsKey(k) && d[k] != null) ? d[k].ToString() : null; }
+
+        static string RepairLooseJson(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return s;
+            // מוסיף מרכאות לשמות שדות שלא במרכאות: {kind:  או  ,query:
+            s = Regex.Replace(s, @"([\{,]\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:", "$1\"$2\":");
+            // מוסיף מרכאות לערכים מילוליים "חשופים" (לא true/false/null/מספר), לפני פסיק או סוגר
+            s = Regex.Replace(s, @":\s*(?!"")(?!true\b)(?!false\b)(?!null\b)([A-Za-z_][A-Za-z0-9_.\-]*)\s*(?=[,}])", ": \"$1\"");
+            return s;
+        }
+
+        static async Task<object> DetectIntent(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message)) return new { kind = "none" };
+            bool maybeFile = message.Contains("\\") || message.Contains(":");
+            bool maybeMail = message.Contains("מייל") || message.Contains("מיילים") || message.Contains("אאוטלוק") || message.Contains("outlook") || message.Contains("דוא") || message.Contains("הודעות") || message.Contains("שלח");
+            if (!maybeFile && !maybeMail) return new { kind = "none" };
+
+            string prompt =
+                "המשתמש כתב הודעה. סווג אותה והחזר JSON בלבד (בלי טקסט או סימני קוד):\n" +
+                "אם בקשה להעברת/העתקת קבצים: {kind:file, op:copy או move, source:נתיב, dest:נתיב, pattern:* }\n" +
+                "אם בקשה לקרוא/לחפש מיילים ב-Outlook: {kind:mail, query:מילות חיפוש בנושא/שולח/גוף המייל או ריק, count:מספר, unreadOnly:true או false, dateFilter:today או yesterday או all, folder:שם תיקייה באאוטלוק לחיפוש בה או ריק לתיבה הנכנסת}\n" +
+                "אם בקשה לשלוח מייל: {kind:sendmail, to:כתובת/כתובות נמענים מופרדות בפסיק, subject:נושא המייל, body:תוכן המייל}. אל תמציא כתובת מייל אם המשתמש לא נתן אחת מפורשת — במקרה כזה השאר to ריק.\n" +
+                "unreadOnly=true רק אם המשתמש מדבר במפורש על מיילים שלא נקראו/לא נקראו. dateFilter=today אם השאלה על היום, yesterday אם על אתמול, אחרת all.\n" +
+                "חשוב: מילים כמו 'היום', 'אתמול', 'לא נקראו' הן סינון (dateFilter/unreadOnly) ולא טקסט לחיפוש — אל תשים אותן בשדה query.\n" +
+                "אחרת: {kind:none}\n" +
+                "op=move רק אם 'העבר'/'תעביר'/'הזז'. אם לא צוין סינון pattern=*. העתק נתיבים בדיוק.\n" +
+                "החזר JSON תקין עם מרכאות כפולות סטנדרטיות סביב כל שם שדה וכל ערך מילולי — לדוגמה בדיוק כך: {\"kind\":\"mail\",\"query\":\"JOB\",\"count\":10,\"unreadOnly\":false,\"dateFilter\":\"today\",\"folder\":\"\"}\n\nההודעה: " + message;
+            var body = new Dictionary<string, object> { { "contents", new object[] { new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] { new Dictionary<string, object> { { "text", prompt } } } } } } } };
+            string raw = ReadText(await Post(ApiBase + ChatModel + ":generateContent", body)).Replace("```json", "").Replace("```", "").Trim();
+            Console.WriteLine("[אבחון] תשובת סיווג כוונה גולמית: " + raw);
+            try
+            {
+                Dictionary<string, object> d = null;
+                try { d = js.DeserializeObject(raw) as Dictionary<string, object>; } catch { }
+                if (d == null)
+                {
+                    string repaired = RepairLooseJson(raw);
+                    Console.WriteLine("[אבחון] JSON לא תקין, מנסה לתקן ל: " + repaired);
+                    try { d = js.DeserializeObject(repaired) as Dictionary<string, object>; } catch { }
+                }
+                if (d == null) return new { kind = "none" };
+                string kind = Str(d, "kind");
+                if (kind == "file")
+                {
+                    string op = Str(d, "op"); if (op != "move") op = "copy";
+                    string src = Str(d, "source"), dst = Str(d, "dest"), pat = Str(d, "pattern"); if (string.IsNullOrWhiteSpace(pat)) pat = "*";
+                    if (string.IsNullOrWhiteSpace(src) || string.IsNullOrWhiteSpace(dst)) return new { kind = "none" };
+                    return new { kind = "file", op = op, source = src, dest = dst, pattern = pat };
+                }
+                if (kind == "mail")
+                {
+                    string query = Str(d, "query") ?? "";
+                    bool unreadOnly = false; try { unreadOnly = d.ContainsKey("unreadOnly") && Convert.ToBoolean(d["unreadOnly"]); } catch { }
+                    string dateFilter = Str(d, "dateFilter"); if (dateFilter != "today" && dateFilter != "yesterday") dateFilter = "all";
+                    string folder = Str(d, "folder") ?? "";
+                    int count = (unreadOnly || dateFilter != "all") ? 50 : 10;
+                    try { var cc = Str(d, "count"); if (!string.IsNullOrEmpty(cc)) count = Convert.ToInt32(Convert.ToDouble(cc)); } catch { }
+                    if (count < 1) count = 10; if (count > 50) count = 50;
+                    return new { kind = "mail", query = query, count = count, unreadOnly = unreadOnly, dateFilter = dateFilter, folder = folder };
+                }
+                if (kind == "sendmail")
+                {
+                    string to = Str(d, "to") ?? "";
+                    string subject = Str(d, "subject") ?? "";
+                    string mbody = Str(d, "body") ?? "";
+                    return new { kind = "sendmail", to = to, subject = subject, body = mbody };
+                }
+                return new { kind = "none" };
+            }
+            catch { return new { kind = "none" }; }
+        }
+
+        static Outlook.MAPIFolder FindFolderByName(Outlook.NameSpace ns, string name)
+        {
+            foreach (Outlook.MAPIFolder store in ns.Folders)
+            {
+                var found = SearchFolderTree(store, name);
+                if (found != null) return found;
+            }
+            return null;
+        }
+        static Outlook.MAPIFolder SearchFolderTree(Outlook.MAPIFolder folder, string name)
+        {
+            try { if (folder.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0) return folder; } catch { }
+            try
+            {
+                foreach (Outlook.MAPIFolder sub in folder.Folders)
+                {
+                    var found = SearchFolderTree(sub, name);
+                    if (found != null) return found;
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        static object ReadMail(string query, int count, bool unreadOnly = false, string dateFilter = "all", string folder = "")
+        {
+            var app = new Outlook.Application();
+            var ns = app.GetNamespace("MAPI");
+            Outlook.MAPIFolder targetFolder;
+            if (!string.IsNullOrWhiteSpace(folder))
+            {
+                targetFolder = FindFolderByName(ns, folder.Trim());
+                if (targetFolder == null) return new { ok = false, error = "לא נמצאה תיקייה בשם: " + folder };
+            }
+            else { targetFolder = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox); }
+            var items = targetFolder.Items;
+            items.Sort("[ReceivedTime]", true);
+
+            bool isFiltering = unreadOnly || dateFilter != "all" || !string.IsNullOrEmpty(query);
+            int scanLimit = isFiltering ? 2000 : 500;
+            DateTime today = DateTime.Today;
+
+            var mails = new List<object>();
+            int scanned = 0;
+            foreach (object o in items)
+            {
+                if (mails.Count >= count) break;
+                scanned++; if (scanned > scanLimit) break;
+                var mail = o as Outlook.MailItem; if (mail == null) continue;
+
+                if (unreadOnly && !mail.UnRead) continue;
+
+                DateTime received = DateTime.MinValue; bool hasDate = true;
+                try { received = mail.ReceivedTime; } catch { hasDate = false; }
+                if (dateFilter == "today" && (!hasDate || received.Date != today)) continue;
+                if (dateFilter == "yesterday" && (!hasDate || received.Date != today.AddDays(-1))) continue;
+
+                string subj = mail.Subject ?? "(ללא נושא)";
+                string from = mail.SenderName ?? "";
+                string bodyText = mail.Body ?? "";
+                if (!string.IsNullOrEmpty(query))
+                {
+                    string hay = (subj + " " + from + " " + bodyText).ToLowerInvariant();
+                    if (!hay.Contains(query.ToLowerInvariant())) continue;
+                }
+                string preview = bodyText.Replace("\r", " ").Replace("\n", " ").Trim();
+                if (preview.Length > 200) preview = preview.Substring(0, 200) + "...";
+                string date = hasDate ? received.ToString("dd/MM/yyyy HH:mm") : "";
+                mails.Add(new { subject = subj, from = from, date = date, preview = preview, unread = mail.UnRead });
+            }
+            Console.WriteLine("📧 הוחזרו " + mails.Count + " מיילים.");
+            return new { ok = true, mails = mails };
+        }
+
+        static object SendMail(string to, string subject, string body)
+        {
+            if (string.IsNullOrWhiteSpace(to)) return new { ok = false, error = "לא הוגדר נמען (to)." };
+            try
+            {
+                var app = new Outlook.Application();
+                Outlook.MailItem mail = (Outlook.MailItem)app.CreateItem(Outlook.OlItemType.olMailItem);
+                mail.To = to.Trim();
+                mail.Subject = subject ?? "";
+                mail.Body = body ?? "";
+                mail.Send();
+                Console.WriteLine("✉️ נשלח מייל אל: " + to);
+                return new { ok = true };
+            }
+            catch (Exception ex) { return new { ok = false, error = "שגיאה בשליחה: " + ex.Message }; }
+        }
+
+        static bool IsAllowed(string path)
+        {
+            if (AllowedDirs == null || AllowedDirs.Length == 0) return true;
+            string full; try { full = Path.GetFullPath(path).TrimEnd('\\') + "\\"; } catch { return false; }
+            foreach (var d in AllowedDirs) { string bd; try { bd = Path.GetFullPath(d).TrimEnd('\\') + "\\"; } catch { continue; } if (full.StartsWith(bd, StringComparison.OrdinalIgnoreCase)) return true; }
+            return false;
+        }
+        static string Human(long b) { string[] u = { "B", "KB", "MB", "GB", "TB" }; double s = b; int i = 0; while (s >= 1024 && i < u.Length - 1) { s /= 1024; i++; } return s.ToString("0.##") + " " + u[i]; }
+        static object FsAnalyze(string path, bool recursive)
+        {
+            if (string.IsNullOrWhiteSpace(path)) return new { ok = false, error = "נתיב ריק" };
+            if (!IsAllowed(path)) return new { ok = false, error = "מחוץ לתיקיות המותרות." };
+            if (!Directory.Exists(path)) return new { ok = false, error = "התיקייה לא קיימת: " + path };
+            var files = Directory.GetFiles(path, "*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            long total = 0; var byExt = new Dictionary<string, long[]>();
+            foreach (var f in files) { long len = 0; try { len = new FileInfo(f).Length; } catch { } total += len; string ext = Path.GetExtension(f).ToLowerInvariant(); if (ext == "") ext = "(ללא)"; if (!byExt.ContainsKey(ext)) byExt[ext] = new long[2]; byExt[ext][0]++; byExt[ext][1] += len; }
+            var types = byExt.OrderByDescending(k => k.Value[1]).Select(k => new { ext = k.Key, count = k.Value[0], size = Human(k.Value[1]) }).ToList();
+            return new { ok = true, total = files.Length, totalSize = Human(total), types = types };
+        }
+        static object FsPlan(string source, string dest, string pattern, string op)
+        {
+            if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(dest)) return new { ok = false, error = "חסר מקור או יעד" };
+            if (!IsAllowed(source)) return new { ok = false, error = "המקור מחוץ לתיקיות המותרות." };
+            if (!IsAllowed(dest)) return new { ok = false, error = "היעד מחוץ לתיקיות המותרות." };
+            if (!Directory.Exists(source)) return new { ok = false, error = "תיקיית המקור לא קיימת: " + source };
+            if (string.IsNullOrWhiteSpace(pattern)) pattern = "*";
+            var files = Directory.GetFiles(source, pattern, SearchOption.TopDirectoryOnly);
+            long size = 0; var names = new List<string>(); foreach (var f in files) { try { size += new FileInfo(f).Length; } catch { } names.Add(Path.GetFileName(f)); }
+            return new { ok = true, op = (op == "move" ? "move" : "copy"), count = files.Length, size = Human(size), source = source, dest = dest, destExists = Directory.Exists(dest), sample = names.Take(20).ToList() };
+        }
+        static object FsExecute(string source, string dest, string pattern, string op)
+        {
+            if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(dest)) return new { ok = false, error = "חסר מקור או יעד" };
+            if (!IsAllowed(source)) return new { ok = false, error = "המקור מחוץ לתיקיות המותרות." };
+            if (!IsAllowed(dest)) return new { ok = false, error = "היעד מחוץ לתיקיות המותרות." };
+            if (!Directory.Exists(source)) return new { ok = false, error = "המקור לא קיים." };
+            if (string.IsNullOrWhiteSpace(pattern)) pattern = "*";
+            Directory.CreateDirectory(dest); bool move = op == "move";
+            var files = Directory.GetFiles(source, pattern, SearchOption.TopDirectoryOnly);
+            int done = 0, skipped = 0; var errors = new List<string>();
+            foreach (var f in files)
+            {
+                string target = Path.Combine(dest, Path.GetFileName(f));
+                try { if (File.Exists(target)) { skipped++; continue; } if (move) File.Move(f, target); else File.Copy(f, target); done++; }
+                catch (Exception e) { errors.Add(Path.GetFileName(f) + ": " + e.Message); }
+            }
+            Console.WriteLine("🗂️ " + (move ? "הועברו " : "הועתקו ") + done);
+            return new { ok = true, op = (move ? "move" : "copy"), done = done, skipped = skipped, errors = errors, total = files.Length };
+        }
+
+        static void OpenInChrome(string url)
+        {
+            string[] paths = { Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Google", "Chrome", "Application", "chrome.exe"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Google", "Chrome", "Application", "chrome.exe"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Google", "Chrome", "Application", "chrome.exe") };
+            foreach (var p in paths) if (File.Exists(p)) { try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = p, Arguments = url, UseShellExecute = false }); return; } catch { } }
+            try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = "chrome", Arguments = url, UseShellExecute = true }); } catch { Console.WriteLine("פתח ידנית: " + url); }
+        }
+        static string Friendly(string raw)
+        {
+            if (string.IsNullOrEmpty(raw)) return "אירעה שגיאה.";
+            if (raw.Contains("503") || raw.Contains("UNAVAILABLE")) return "המודל עמוס. נסה שוב בעוד רגע.";
+            if (raw.Contains("429") || raw.Contains("quota")) return "הגעת למכסה. חכה דקה.";
+            if (raw.Contains("401") || raw.Contains("403") || raw.Contains("API_KEY")) return "בעיה במפתח ה-API.";
+            if (raw.Contains("404") || raw.Contains("NOT_FOUND")) return "המודל לא זמין. בדוק CHAT_MODEL.";
+            return "שגיאה: " + (raw.Length > 200 ? raw.Substring(0, 200) : raw);
+        }
+        static void WriteJson(HttpListenerResponse response, object obj, int status = 200)
+        { try { response.StatusCode = status; response.ContentType = "application/json; charset=utf-8"; byte[] buf = Encoding.UTF8.GetBytes(js.Serialize(obj)); response.OutputStream.Write(buf, 0, buf.Length); response.Close(); } catch { } }
+
+        static async Task<List<Chunk>> Ingest()
+        {
+            var exts = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".txt", ".md", ".docx", ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif" };
+            var files = Directory.Exists(GuidesDir) ? Directory.GetFiles(GuidesDir, "*.*", SearchOption.AllDirectories).Where(f => exts.Contains(Path.GetExtension(f))).OrderBy(f => f).ToList() : new List<string>();
+            if (files.Count == 0) return new List<Chunk>();
+            var sections = new List<Section>(); int n = 0;
+            foreach (var f in files) { n++; Console.WriteLine("[" + n + "/" + files.Count + "] " + Path.GetFileName(f)); try { sections.AddRange(await Extract(f)); } catch (Exception e) { Console.WriteLine("   שגיאה: " + e.Message); } }
+            var chunks = Chunkify(sections); if (chunks.Count == 0) return new List<Chunk>();
+            Console.WriteLine("מחשב embeddings ל-" + chunks.Count + "...");
+            var vecs = await EmbedBatch(chunks.Select(c => c.Text).ToList()); for (int i = 0; i < chunks.Count; i++) chunks[i].Embedding = vecs[i];
+            File.WriteAllText(IndexPath, js.Serialize(chunks), new UTF8Encoding(false)); Console.WriteLine("✅ נשמר (" + chunks.Count + ")"); return chunks;
+        }
+        static async Task<List<Section>> Extract(string path)
+        {
+            string ext = Path.GetExtension(path).ToLowerInvariant(); string name = Path.GetFileName(path); var res = new List<Section>();
+            if (ext == ".txt" || ext == ".md") res.Add(new Section { Source = name, Text = File.ReadAllText(path, Encoding.UTF8) });
+            else if (ext == ".docx") res.AddRange(await FromDocx(path, name));
+            else { byte[] bytes = File.ReadAllBytes(path); res.Add(new Section { Source = name, Text = await DescribeImage(bytes, MimeFor(ext), VisionPrompt + "\nהקשר: " + name) }); }
+            return res;
+        }
+        static async Task<List<Section>> FromDocx(string path, string name)
+        {
+            var res = new List<Section>();
+            using (var zip = ZipFile.OpenRead(path))
+            {
+                var doc = zip.GetEntry("word/document.xml");
+                if (doc != null) using (var s = doc.Open())
+                    {
+                        var sb = new StringBuilder(); using (var r = XmlReader.Create(s, new XmlReaderSettings { IgnoreWhitespace = false }))
+                            while (r.Read()) if (r.NodeType == XmlNodeType.Element) { if (r.LocalName == "t") sb.Append(r.ReadElementContentAsString()); else if (r.LocalName == "p" || r.LocalName == "br") sb.Append('\n'); }
+                        if (sb.ToString().Trim().Length > 0) res.Add(new Section { Source = name, Text = sb.ToString().Trim() });
+                    }
+                int idx = 0;
+                foreach (var e in zip.Entries)
+                {
+                    if (!e.FullName.StartsWith("word/media/", StringComparison.OrdinalIgnoreCase)) continue;
+                    string mext = Path.GetExtension(e.Name).ToLowerInvariant(); if (mext != ".png" && mext != ".jpg" && mext != ".jpeg" && mext != ".gif" && mext != ".bmp") continue;
+                    idx++; byte[] bytes; using (var es = e.Open()) using (var ms = new MemoryStream()) { es.CopyTo(ms); bytes = ms.ToArray(); }
+                    res.Add(new Section { Source = name, Text = "[צילום מסך " + idx + "]\n" + await DescribeImage(bytes, MimeFor(mext), VisionPrompt + "\nהקשר: " + name + " תמונה " + idx) });
+                }
+            }
+            return res;
+        }
+        static List<Chunk> Chunkify(List<Section> secs)
+        {
+            var outp = new List<Chunk>();
+            foreach (var s in secs)
+            {
+                string t = (s.Text ?? "").Trim(); if (t.Length == 0) continue; int start = 0;
+                while (start < t.Length) { int len = Math.Min(1500, t.Length - start); outp.Add(new Chunk { Source = s.Source, Text = t.Substring(start, len).Trim() }); if (start + 1500 >= t.Length) break; start += 1250; }
+            }
+            return outp;
+        }
+        static async Task<Dictionary<string, object>> Post(string url, object body)
+        {
+            int[] delays = { 1000, 2000, 4000, 8000 };
+            for (int attempt = 0; ; attempt++)
+            {
+                var req = new HttpRequestMessage(HttpMethod.Post, url); req.Headers.Add("x-goog-api-key", ApiKey);
+                req.Content = new StringContent(js.Serialize(body), Encoding.UTF8, "application/json");
+                HttpResponseMessage resp = null; string raw = null;
+                try { resp = await http.SendAsync(req); raw = await resp.Content.ReadAsStringAsync(); }
+                catch (Exception ex) { if (attempt < delays.Length) { await Task.Delay(delays[attempt]); continue; } throw new Exception("שגיאת רשת: " + ex.Message); }
+                if (resp.IsSuccessStatusCode) return (Dictionary<string, object>)js.DeserializeObject(raw);
+                int code = (int)resp.StatusCode;
+                if ((code == 429 || code == 500 || code == 502 || code == 503 || code == 504) && attempt < delays.Length) { Console.WriteLine("   ⏳ " + code); await Task.Delay(delays[attempt]); continue; }
+                Console.WriteLine("[אבחון] תשובת שגיאה מגוגל (קוד " + code + "): " + raw);
+                throw new Exception(raw);
+            }
+        }
+        static async Task<List<float[]>> EmbedBatch(List<string> texts)
+        {
+            var outv = new List<float[]>();
+            for (int i = 0; i < texts.Count; i += 50)
+            {
+                var slice = texts.Skip(i).Take(50).ToList(); var reqs = new List<object>();
+                foreach (var t in slice) reqs.Add(new Dictionary<string, object> { { "model", "models/" + EmbedModel }, { "content", new Dictionary<string, object> { { "parts", new object[] { new Dictionary<string, object> { { "text", t } } } } } } });
+                var root = await Post(ApiBase + EmbedModel + ":batchEmbedContents", new Dictionary<string, object> { { "requests", reqs } });
+                foreach (var e in (object[])root["embeddings"]) { var vals = (object[])((Dictionary<string, object>)e)["values"]; var arr = new float[vals.Length]; for (int k = 0; k < vals.Length; k++) arr[k] = Convert.ToSingle(vals[k]); outv.Add(arr); }
+            }
+            return outv;
+        }
+        static async Task<string> Chat(string userPrompt)
+        {
+            var body = new Dictionary<string, object> {
+                { "systemInstruction", new Dictionary<string, object> { { "parts", new object[] { new Dictionary<string, object> { { "text", SysPrompt } } } } } },
+                { "contents", new object[] { new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] { new Dictionary<string, object> { { "text", userPrompt } } } } } } } };
+            return ReadText(await Post(ApiBase + ChatModel + ":generateContent", body));
+        }
+        static async Task<string> DescribeImage(byte[] bytes, string mime, string prompt)
+        {
+            string b64 = Convert.ToBase64String(bytes);
+            var body = new Dictionary<string, object> { { "contents", new object[] { new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] {
+                new Dictionary<string, object> { { "text", prompt } }, new Dictionary<string, object> { { "inlineData", new Dictionary<string, object> { { "mimeType", mime }, { "data", b64 } } } } } } } } } };
+            try { return ReadText(await Post(ApiBase + ChatModel + ":generateContent", body)); } catch (Exception e) { return "[שגיאה בתיאור תמונה: " + e.Message + "]"; }
+        }
+        static string ReadText(Dictionary<string, object> root)
+        {
+            try
+            {
+                if (root == null || !root.ContainsKey("candidates")) return "[לא התקבלה תשובה]";
+                var cands = root["candidates"] as object[]; if (cands == null || cands.Length == 0) return "[לא התקבלה תשובה]";
+                var c0 = cands[0] as Dictionary<string, object>; if (c0 == null || !c0.ContainsKey("content")) return "[אין טקסט]";
+                var content = c0["content"] as Dictionary<string, object>; var parts = content["parts"] as object[]; var sb = new StringBuilder();
+                foreach (var p in parts) { var pd = p as Dictionary<string, object>; if (pd != null && pd.ContainsKey("text")) sb.Append(pd["text"] as string); }
+                return sb.ToString().Trim();
+            }
+            catch { return "[שגיאה בפענוח]"; }
+        }
+        static double Cosine(float[] a, float[] b) { if (a == null || b == null || a.Length != b.Length) return 0; double dot = 0, na = 0, nb = 0; for (int i = 0; i < a.Length; i++) { dot += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; } return (na == 0 || nb == 0) ? 0 : dot / (Math.Sqrt(na) * Math.Sqrt(nb)); }
+        static string MimeFor(string ext) { ext = ext.ToLowerInvariant(); if (ext == ".png") return "image/png"; if (ext == ".gif") return "image/gif"; if (ext == ".webp") return "image/webp"; if (ext == ".bmp") return "image/bmp"; return "image/jpeg"; }
+        static void LoadDotEnv()
+        {
+            string dir = BaseDir;
+            for (int up = 0; up < 5; up++)
+            {
+                string p = Path.Combine(dir, ".env");
+                if (File.Exists(p)) { foreach (var line in File.ReadAllLines(p)) { string t = line.Trim(); if (t.Length == 0 || t.StartsWith("#")) continue; int eq = t.IndexOf('='); if (eq <= 0) continue; string k = t.Substring(0, eq).Trim(), v = t.Substring(eq + 1).Trim(); if (Environment.GetEnvironmentVariable(k) == null) Environment.SetEnvironmentVariable(k, v); } Console.WriteLine("נטען .env מ: " + p); return; }
+                var parent = Directory.GetParent(dir); if (parent == null) break; dir = parent.FullName;
+            }
+        }
+    }
+}
