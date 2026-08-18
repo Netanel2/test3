@@ -1,13 +1,1 @@
-לא קורה כלום זה רק פותח את החלון השחור וכותב 
-נטען .env מ: C:\Users\netanelma\source\repos\SupportChat\SupportChat\bin\Debug\.env
-[אבחון] CHAT_MODEL בפועל: 'gemini-3.5-flash-lite' (אורך: 21)
-[אבחון] קודי התווים: 0067 0065 006D 0069 006E 0069 002D 0033 002E 0035 002D 0066 006C 0061 0073 0068 002D 006C 0069 0074 0065
-מודל: gemini-3.5-flash-lite
-תיקיות מותרות: (ללא הגבלה)
-
-נטענו 8 קטעים.
-
-🌐 השרת עלה!  http://localhost:5005/
-👂 מאזין אוטומטי למיילים פעיל. JOBs מותרים: DailyStatus | שולחים מותרים: netanelma@altshul.co.il | בדיקה כל 1 דק'.
-ℹ️ מאזין קבצי SMS כבוי (חסר SMS_FILES_DIR ו/או SMS_FILES_ALLOWED_SENDERS ב-.env).
-
+תעתיק לי את קבצי TIS של ה 17.08 לכאן C:\Users\netanelma\Desktop\New folder
