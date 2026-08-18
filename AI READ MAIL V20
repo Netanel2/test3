@@ -1,18 +1,1 @@
-
-🌐 השרת עלה!  http://localhost:5005/
-[אבחון] תשובת שגיאה מגוגל (קוד 404): {
-  "error": {
-    "code": 404,
-    "message": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements.",
-    "status": "NOT_FOUND"
-  }
-}
-
-📩 איזה JOB נכשלו היום? חפש במייל
-[אבחון] תשובת שגיאה מגוגל (קוד 404): {
-  "error": {
-    "code": 404,
-    "message": "This model models/gemini-2.5-flash-lite is no longer available to new users. Please update your code to use models/gemini-3.5-flash-lite for the latest features and improvements.",
-    "status": "NOT_FOUND"
-  }
-}
+CHAT_MODEL=gemini-3.5-flash-lite
