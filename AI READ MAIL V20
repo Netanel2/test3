@@ -1,5 +1,3 @@
-EMAIL_LEARNING_ENABLED=true
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1271,6 +1269,9 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 if (ProcessedEmailTopics.Contains(topic)) continue;
                 var msgs = kv.Value;
                 if (msgs.Count < 2) { continue; } // צריך לפחות הודעה ראשונה + תגובה כדי שיהיה "בעיה+פתרון"
+
+                int distinctSenders = msgs.Select(m => { try { return (ResolveSenderEmail(m) ?? "").ToLowerInvariant(); } catch { return ""; } }).Where(s => s.Length > 0).Distinct().Count();
+                if (distinctSenders < 2) continue; // אותו שולח בלבד (למשל דוח אוטומטי חוזר) — לא התכתבות אמיתית, מדלגים בלי לסמן כמעובד
 
                 ProcessedEmailTopics.Add(topic);
                 try { File.AppendAllText(LearnedEmailTopicsPath, topic + "\n", new UTF8Encoding(false)); } catch { }
