@@ -1263,16 +1263,25 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 if (!groups.ContainsKey(topic)) groups[topic] = new List<Outlook.MailItem>();
                 groups[topic].Add(mail);
             }
+            Console.WriteLine("[אבחון-למידה] נסרקו " + scanned + " מיילים, נמצאו " + groups.Count + " שרשורים (נושאים) שונים.");
+            int candidateCount = 0, newCount = 0, multiMsgCount = 0, multiSenderCount = 0;
             int processedThisCycle = 0;
             foreach (var kv in groups)
             {
-                if (processedThisCycle >= 5) break; // הגבלה כדי לא להעמיס יותר מדי קריאות AI בבת אחת ולהיתקע במכסה
                 string topic = kv.Key;
-                if (ProcessedEmailTopics.Contains(topic)) continue;
                 var msgs = kv.Value;
+                bool isNew = !ProcessedEmailTopics.Contains(topic);
+                if (isNew) newCount++;
+                if (msgs.Count >= 2) multiMsgCount++;
+                int distinctSendersDbg = msgs.Select(m => { try { return (ResolveSenderEmail(m) ?? "").ToLowerInvariant(); } catch { return ""; } }).Where(s => s.Length > 0).Distinct().Count();
+                if (msgs.Count >= 2 && distinctSendersDbg >= 2) multiSenderCount++;
+                if (isNew && msgs.Count >= 2 && distinctSendersDbg >= 2) candidateCount++;
+
+                if (processedThisCycle >= 5) continue; // ממשיכים לספור לאבחון גם אם עברנו את המכסה, אבל לא מעבדים בפועל
+                if (!isNew) continue;
                 if (msgs.Count < 2) { continue; } // צריך לפחות הודעה ראשונה + תגובה כדי שיהיה "בעיה+פתרון"
 
-                int distinctSenders = msgs.Select(m => { try { return (ResolveSenderEmail(m) ?? "").ToLowerInvariant(); } catch { return ""; } }).Where(s => s.Length > 0).Distinct().Count();
+                int distinctSenders = distinctSendersDbg;
                 if (distinctSenders < 2) continue; // אותו שולח בלבד (למשל דוח אוטומטי חוזר) — לא התכתבות אמיתית, מדלגים בלי לסמן כמעובד
 
                 ProcessedEmailTopics.Add(topic);
@@ -1283,7 +1292,9 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 string problem = sorted[0].Body ?? "";
                 string solution = sorted[sorted.Count - 1].Body ?? "";
 
+                Console.WriteLine("[אבחון-למידה] מעבד שרשור: '" + topic + "' (" + msgs.Count + " הודעות, " + distinctSenders + " שולחים שונים)");
                 string fact = ExtractSupportFact(problem, solution).GetAwaiter().GetResult();
+                Console.WriteLine("[אבחון-למידה] תוצאת AI עבור '" + topic + "': " + (fact ?? "(NONE / לא נמצא ערך ללמידה)"));
                 if (string.IsNullOrWhiteSpace(fact)) continue;
 
                 try
@@ -1296,6 +1307,7 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 }
                 catch (Exception ex) { Console.WriteLine("⚠️ שגיאה בשמירת למידה ממייל: " + ex.Message); }
             }
+            Console.WriteLine("[אבחון-למידה] סיכום: " + groups.Count + " שרשורים סה\"כ | " + newCount + " חדשים (לא מעובדים) | " + multiMsgCount + " עם 2+ הודעות | " + multiSenderCount + " עם 2+ שולחים שונים | " + candidateCount + " מועמדים חדשים שעומדים בכל התנאים.");
         }
 
         static void EmailLearningLoop()
