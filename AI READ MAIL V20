@@ -1,3 +1,5 @@
+EMAIL_LEARNING_ENABLED=true
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,6 +29,9 @@ namespace Madrich
         static string IndexPath = Path.Combine(DataDir, "index.json");
         static string LearnedPath = Path.Combine(DataDir, "learned.txt");
         static string SmsAuditPath = Path.Combine(DataDir, "sms_files_audit.txt");
+        static string LearnedEmailTopicsPath = Path.Combine(DataDir, "learned_email_topics.txt");
+        static readonly HashSet<string> ProcessedEmailTopics = new HashSet<string>();
+        static bool EmailLearningEnabled = false;
 
         static string ApiKey;
         static string ChatModel = "gemini-2.5-flash";
@@ -356,6 +361,9 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             if (!string.IsNullOrWhiteSpace(sfs)) SmsFilesAllowedSenders = sfs.Split(',').Select(x => x.Trim().ToLowerInvariant()).Where(x => x.Length > 0).ToArray();
 
             Directory.CreateDirectory(GuidesDir); Directory.CreateDirectory(DataDir);
+            var ele = Environment.GetEnvironmentVariable("EMAIL_LEARNING_ENABLED");
+            EmailLearningEnabled = string.Equals(ele, "true", StringComparison.OrdinalIgnoreCase);
+            if (File.Exists(LearnedEmailTopicsPath)) { try { foreach (var line in File.ReadAllLines(LearnedEmailTopicsPath)) { var t = line.Trim(); if (t.Length > 0) ProcessedEmailTopics.Add(t); } } catch { } }
             Console.WriteLine("מודל: " + ChatModel);
             Console.WriteLine("תיקיות מותרות: " + (AllowedDirs.Length == 0 ? "(ללא הגבלה)" : string.Join(" ; ", AllowedDirs)));
             Console.WriteLine();
@@ -386,6 +394,13 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
                 Task.Run(() => SmsFilesListenerLoop());
             }
             else { Console.WriteLine("ℹ️ מאזין קבצי SMS כבוי (חסר SMS_FILES_DIR ו/או SMS_FILES_ALLOWED_SENDERS ב-.env)."); }
+
+            if (EmailLearningEnabled)
+            {
+                Console.WriteLine("🧠📧 למידה אוטומטית ממיילי תמיכה בתיבה הנכנסת פעילה.");
+                Task.Run(() => EmailLearningLoop());
+            }
+            else { Console.WriteLine("ℹ️ למידה אוטומטית ממיילים כבויה (EMAIL_LEARNING_ENABLED לא מוגדר ל-true ב-.env)."); }
 
             Task.Run(async () =>
             {
@@ -1207,6 +1222,85 @@ out.textContent=j.ok?('✓ בוצע: '+j.done+' · דולגו: '+j.skipped):('�
             {
                 try { CheckInboxForSmsFileRequests(); }
                 catch (Exception ex) { Console.WriteLine("⚠️ שגיאה במאזין קבצי SMS: " + ex.Message); }
+                System.Threading.Thread.Sleep(AutoJobPollMinutes * 60 * 1000);
+            }
+        }
+
+        static async Task<string> ExtractSupportFact(string problemText, string solutionText)
+        {
+            string prompt =
+                "הנה שרשור מייל תמיכה: תיאור בעיה שדווחה, ותשובת פתרון שנשלחה בהמשך אותו שרשור.\n" +
+                "אם יש כאן עיקרון טכני כללי שכדאי לזכור לצמיתות לשם מענה על שאלות עתידיות דומות (מה גרם לבעיה, מה הפתרון) — כתוב אותו בעברית, בקצרה.\n" +
+                "חשוב מאוד: אסור בהחלט לכלול בתשובה שום שם פרטי, שם משפחה, מספר לקוח, ת\"ז, כתובת מייל, שם חברה של לקוח, או כל פרט מזהה אחר — רק את העיקרון הטכני הכללי, כמו נוהל פנימי.\n" +
+                "אם זו לא באמת תקלה עם פתרון בעל ערך ללמידה (למשל שיחת חולין, תיאום פגישה, או שאין תשובה ברורה) — כתוב בדיוק את המילה: NONE\n\n" +
+                "תיאור הבעיה: " + problemText + "\n\nתשובת הפתרון: " + solutionText;
+            var b = new Dictionary<string, object> { { "contents", new object[] { new Dictionary<string, object> { { "role", "user" }, { "parts", new object[] { new Dictionary<string, object> { { "text", prompt } } } } } } } };
+            try
+            {
+                string result = ReadText(await Post(ApiBase + ChatModel + ":generateContent", b)).Trim();
+                if (string.IsNullOrWhiteSpace(result) || result.ToUpperInvariant().Contains("NONE")) return null;
+                return result;
+            }
+            catch { return null; }
+        }
+
+        static void ScanInboxForLearnableExchanges()
+        {
+            var app = new Outlook.Application();
+            var ns = app.GetNamespace("MAPI");
+            var inbox = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
+            var items = inbox.Items;
+            items.Sort("[ReceivedTime]", true);
+            var groups = new Dictionary<string, List<Outlook.MailItem>>();
+            int scanned = 0;
+            foreach (object o in items)
+            {
+                scanned++; if (scanned > 300) break;
+                var mail = o as Outlook.MailItem; if (mail == null) continue;
+                string topic = ""; try { topic = mail.ConversationTopic; } catch { }
+                if (string.IsNullOrWhiteSpace(topic)) { try { topic = mail.Subject; } catch { } }
+                if (string.IsNullOrWhiteSpace(topic)) continue;
+                if (!groups.ContainsKey(topic)) groups[topic] = new List<Outlook.MailItem>();
+                groups[topic].Add(mail);
+            }
+            int processedThisCycle = 0;
+            foreach (var kv in groups)
+            {
+                if (processedThisCycle >= 5) break; // הגבלה כדי לא להעמיס יותר מדי קריאות AI בבת אחת ולהיתקע במכסה
+                string topic = kv.Key;
+                if (ProcessedEmailTopics.Contains(topic)) continue;
+                var msgs = kv.Value;
+                if (msgs.Count < 2) { continue; } // צריך לפחות הודעה ראשונה + תגובה כדי שיהיה "בעיה+פתרון"
+
+                ProcessedEmailTopics.Add(topic);
+                try { File.AppendAllText(LearnedEmailTopicsPath, topic + "\n", new UTF8Encoding(false)); } catch { }
+                processedThisCycle++;
+
+                var sorted = msgs.OrderBy(m => { try { return m.ReceivedTime; } catch { return DateTime.MinValue; } }).ToList();
+                string problem = sorted[0].Body ?? "";
+                string solution = sorted[sorted.Count - 1].Body ?? "";
+
+                string fact = ExtractSupportFact(problem, solution).GetAwaiter().GetResult();
+                if (string.IsNullOrWhiteSpace(fact)) continue;
+
+                try
+                {
+                    File.AppendAllText(LearnedPath, "=== נלמד ממייל תמיכה " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " ===\n" + fact.Trim() + "\n\n", new UTF8Encoding(false));
+                    var chunk = new Chunk { Source = "ידע נלמד ממיילי תמיכה", Text = fact.Trim() };
+                    chunk.Embedding = EmbedBatch(new List<string> { chunk.Text }).GetAwaiter().GetResult()[0];
+                    lock (indexLock) { index.Add(chunk); File.WriteAllText(IndexPath, js.Serialize(index), new UTF8Encoding(false)); }
+                    Console.WriteLine("🧠📧 נלמד ממייל תמיכה (נושא: " + topic + "): " + fact);
+                }
+                catch (Exception ex) { Console.WriteLine("⚠️ שגיאה בשמירת למידה ממייל: " + ex.Message); }
+            }
+        }
+
+        static void EmailLearningLoop()
+        {
+            while (true)
+            {
+                try { ScanInboxForLearnableExchanges(); }
+                catch (Exception ex) { Console.WriteLine("⚠️ שגיאה בסריקת מיילים ללמידה: " + ex.Message); }
                 System.Threading.Thread.Sleep(AutoJobPollMinutes * 60 * 1000);
             }
         }
