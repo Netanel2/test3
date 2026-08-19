@@ -1,6 +1,38 @@
-Severity	Code	Description	Project	File	Line	Suppression State
-Warning	CS8321	The local function 'Main' is declared but never used	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	15	Active
-Error	CS8370	Feature 'top-level statements' is not available in C# 7.3. Please use language version 9.0 or greater.	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	15	Active
-Error	CS0106	The modifier 'public' is not valid for this item	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	15	Active
-Error	CS0103	The name 'Dts' does not exist in the current context	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	81	Active
-Error	CS0103	The name 'ScriptResults' does not exist in the current context	PhoneExtractorApp	C:\Users\netanelma\source\repos\PhoneExtractorApp\PhoneExtractorApp\Program.cs	81	Active
+גם מהמייל וגם בצקט זה לא עובד.. למה?< עבד פעם אחת וזהו
+
+נטען.env מ: C:\Users\netanelma\source\repos\SupportChat\SupportChat\bin\Debug\.env
+[אבחון] CHAT_MODEL בפועל: 'gemini-3.5-flash-lite' (אורך: 21)
+[אבחון] קודי התווים: 0067 0065 006D 0069 006E 0069 002D 0033 002E 0035 002D 0066 006C 0061 0073 0068 002D 006C 0069 0074 0065
+מודל: gemini-3.5-flash-lite
+תיקיות מותרות: (ללא הגבלה)
+
+נטענו 9 קטעים.
+
+🌐 השרת עלה!  http://localhost:5005/
+👂 מאזין אוטומטי למיילים פעיל. JOBs מותרים: DailyStatus | שולחים מותרים: netanelma@altshul.co.il | בדיקה כל 1 דק'.
+📎 מאזין שליחת קבצי הצטרפויות SMS פעיל. תיקיות: \\psrs\TIS\Archive | שולחים מותרים: netanelma@altshul.co.il
+📩 מה זה TIS איזה נתיב זה?
+🧠 נלמד אוטומטית (ברקע): הנתיב של מערכת TIS הוא `\\psrs\TIS\Archive`.
+[אבחון] תשובת סיווג כוונה גולמית: {"kind":"file","op":"copy","source":"\\psrs\\TIS\\Archive","dest":"C:\\Users\\netanelma\\Desktop\\New folder","pattern":"*","dateHint":"1508"}
+[אבחון] ResolveSourceWithDateHint: source='\psrs\TIS\Archive' dateHint='1508'
+[אבחון] ספרות שחולצו מה-dateHint: '1508'
+[אבחון] המקור '\psrs\TIS\Archive' לא נגיש/לא קיים כפי שהוא.
+
+
+
+
+אתה
+מה זה TIS איזה נתיב זה?
+עוזר
+הנתיב של מערכת TIS הוא:
+\\psrs\TIS\Archive
+
+
+מקור: ידע נלמד
+
+
+📄 מדריך לכוס מים.txt | ידע נלמד | ידע נלמד אוטומטית
+אתה
+תביא לי קובץ של תאריך 15.8 שים לי אותו כאןC:\Users\netanelma\Desktop\New folder
+עוזר
+⚠️ תיקיית המקור לא קיימת ולא נמצאה תיקייה תואמת לתאריך: \psrs\TIS\Archive
