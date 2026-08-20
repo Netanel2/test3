@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,7 +11,6 @@ class Program
 {
     static string baseFolder = @"\\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל";
 
-    // --- כלים ברמת מערכת ההפעלה, כדי לבצע לחיצת עכבר "אמיתית" ---
     [DllImport("user32.dll")]
     static extern bool SetCursorPos(int x, int y);
 
@@ -27,13 +27,11 @@ class Program
     {
         string exePath = @"C:\Users\netanelma\Desktop\מנוע דוחות.exe";
 
-        Console.WriteLine("מחפש את תיקיית היום בתוך: " + baseFolder);
+        Console.WriteLine("מחפש את תיקיית היום...");
         string todayFolder = FindTodayFolder(baseFolder);
         string xmlFilePath = null;
-
         if (todayFolder != null)
         {
-            Console.WriteLine("מצאתי תיקיית היום: " + todayFolder);
             string[] xmlFiles = Directory.GetFiles(todayFolder, "*.xml", SearchOption.AllDirectories);
             if (xmlFiles.Length > 0)
             {
@@ -58,49 +56,51 @@ class Program
         SelectItemInside(reportWindow, "lstReports", "קליטת מעברים מXML");
         Thread.Sleep(500);
 
+        // *** צילום "לפני" הלחיצה על בחירת דוח ***
+        var handlesBefore1 = GetWindowHandlesForProcess(proc.Id);
         Console.WriteLine("לוחץ על 'בחירת דוח'...");
         ClickButton(reportWindow, "btnChooseReport");
 
-        Thread.Sleep(2000);
-        AutomationElement nextWindow = FindNewWindow(proc.Id, "בחירת דוח", 20);
+        AutomationElement nextWindow = FindNewWindowByHandle(proc.Id, handlesBefore1, 20);
         if (nextWindow == null) { Console.WriteLine("לא נפתח חלון נוסף."); Console.ReadLine(); return; }
         Console.WriteLine("נמצא חלון: '" + nextWindow.Current.Name + "'");
 
         Console.WriteLine("ממלא סיסמה...");
         SetTextValue(nextWindow, "Password", "951753");
 
-        // מביאים את החלון קדימה לפני שמנסים ללחוץ עליו פיזית
         BringToFront(nextWindow);
         Thread.Sleep(300);
+
+        // *** צילום "לפני" הלחיצה על פתיחת קובץ ***
+        var handlesBefore2 = GetWindowHandlesForProcess(proc.Id);
 
         Console.WriteLine("לוחץ על 'פתיחת קובץ' (ניסיון רגיל)...");
         ClickButton(nextWindow, "btnExcel");
         Thread.Sleep(1500);
 
-        AutomationElement fileWindow = FindNewWindow(proc.Id, nextWindow.Current.Name, 5);
+        AutomationElement fileWindow = FindNewWindowByHandle(proc.Id, handlesBefore2, 4);
 
         if (fileWindow == null)
         {
-            Console.WriteLine("לא נפתח חלון - מנסה לחיצת עכבר אמיתית...");
+            Console.WriteLine("לא נמצא עדיין - מנסה לחיצת עכבר אמיתית...");
             AutomationElement btn = nextWindow.FindFirst(TreeScope.Descendants,
                 new PropertyCondition(AutomationElement.AutomationIdProperty, "btnExcel"));
 
             if (btn != null)
             {
                 RealClick(btn);
-                Console.WriteLine("בוצעה לחיצה פיזית. ממתין שייפתח חלון...");
-                Thread.Sleep(1500);
-                fileWindow = FindNewWindow(proc.Id, nextWindow.Current.Name, 15);
+                Console.WriteLine("בוצעה לחיצה פיזית. ממתין...");
+                fileWindow = FindNewWindowByHandle(proc.Id, handlesBefore2, 15);
             }
         }
 
         if (fileWindow == null)
         {
-            Console.WriteLine("עדיין לא נפתח חלון נוסף - נצטרך לחשוב על גישה אחרת.");
+            Console.WriteLine("עדיין לא נמצא חלון חדש.");
         }
         else
         {
-            Console.WriteLine("נמצא חלון: '" + fileWindow.Current.Name + "'");
+            Console.WriteLine("נמצא חלון חדש: '" + fileWindow.Current.Name + "'");
             Console.WriteLine(new string('-', 60));
             AutomationElementCollection allControls = fileWindow.FindAll(TreeScope.Descendants, Condition.TrueCondition);
             foreach (AutomationElement el in allControls)
@@ -115,13 +115,49 @@ class Program
         Console.ReadLine();
     }
 
-    // לחיצת עכבר אמיתית במיקום המדויק של אלמנט על המסך
+    // מצלם "תמונת מצב" של כל החלונות (לפי handle אמיתי) ששייכים לתהליך מסוים
+    static HashSet<IntPtr> GetWindowHandlesForProcess(int pid)
+    {
+        var set = new HashSet<IntPtr>();
+        AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+        foreach (AutomationElement win in windows)
+        {
+            int wpid = 0;
+            try { wpid = win.Current.ProcessId; } catch { continue; }
+            if (wpid != pid) continue;
+            try { set.Add(new IntPtr(win.Current.NativeWindowHandle)); } catch { }
+        }
+        return set;
+    }
+
+    // מחפש חלון חדש (handle שלא היה קיים ב"תמונת המצב" הקודמת)
+    static AutomationElement FindNewWindowByHandle(int pid, HashSet<IntPtr> knownHandles, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+                if (wpid != pid) continue;
+
+                IntPtr h;
+                try { h = new IntPtr(win.Current.NativeWindowHandle); } catch { continue; }
+
+                if (!knownHandles.Contains(h))
+                    return win;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
     static void RealClick(AutomationElement element)
     {
         var rect = element.Current.BoundingRectangle;
         int x = (int)(rect.Left + rect.Width / 2);
         int y = (int)(rect.Top + rect.Height / 2);
-
         SetCursorPos(x, y);
         Thread.Sleep(150);
         mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
@@ -168,24 +204,6 @@ class Program
                 int wpid = 0;
                 try { wpid = win.Current.ProcessId; } catch { continue; }
                 if (wpid == pid) return win;
-            }
-            Thread.Sleep(500);
-        }
-        return null;
-    }
-
-    static AutomationElement FindNewWindow(int pid, string oldWindowName, int timeoutSeconds)
-    {
-        for (int i = 0; i < timeoutSeconds * 2; i++)
-        {
-            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
-            foreach (AutomationElement win in windows)
-            {
-                int wpid = 0;
-                try { wpid = win.Current.ProcessId; } catch { continue; }
-                string name = win.Current.Name;
-                if (wpid == pid && !string.IsNullOrWhiteSpace(name) && name != oldWindowName)
-                    return win;
             }
             Thread.Sleep(500);
         }
