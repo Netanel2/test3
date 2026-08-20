@@ -1,34 +1,127 @@
-פותח את התוכנה...
-מחפש את חלון 'בחירת דוח'...
-נמצא חלון: 'בחירת דוח'
-------------------------------------------------------------
-אלה כל הכפתורים/תפריטים/רשימות בתוך החלון:
-------------------------------------------------------------
-סוג: ControlType.Pane                    | שם: 'תת קטגוריה:' | מזהה: 'PicLogo'
-סוג: ControlType.Text                    | שם: 'תת קטגוריה:' | מזהה: 'Label2'
-סוג: ControlType.ComboBox                | שם: 'תת קטגוריה:' | מזהה: 'cmbSubCategory'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: 'מסלקה API' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'הכל ללא סינון' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.StatusBar               | שם: 'קטגוריה:' | מזהה: 'StatusStrip1'
-סוג: ControlType.Pane                    | שם: 'קטגוריה:' | מזהה: '787380'
-סוג: ControlType.Edit                    | שם: 'ברוך הבא נתנאל  מנשורי' | מזהה: 'StatusBar.Pane0'
-סוג: ControlType.Text                    | שם: 'קטגוריה:' | מזהה: 'Label1'
-סוג: ControlType.ComboBox                | שם: 'קטגוריה:' | מזהה: 'cmbCategory'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: 'מיכון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'עדכונים-תפעול' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.List                    | שם: 'קטגוריה:' | מזהה: 'lstReports'
-סוג: ControlType.ListItem                | שם: 'השבתת לולאות API מול טופז' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'בחירת דוח' | מזהה: 'btnChooseReport'
-סוג: ControlType.TitleBar                | שם: 'בחירת דוח' | מזהה: 'TitleBar'
-סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmReports'
-סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
-סוג: ControlType.Button                  | שם: 'Minimize' | מזהה: 'Minimize'
-סוג: ControlType.Button                  | שם: 'Maximize' | מזהה: 'Maximize'
-סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
-------------------------------------------------------------
-סיימתי. תעתיק לי את כל הרשימה למעלה (או צילום מסך).
-לחץ Enter לסגירה (זה לא יסגור את התוכנה עצמה)...
+using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Windows.Automation;
+
+class Program
+{
+    static void Main()
+    {
+        // *** תזכורת: תשים כאן את הנתיב האמיתי שכבר מצאת אצלך ***
+        string exePath = @"C:\Users\netanelma\Desktop\מנוע דוחות.exe";
+
+        Console.WriteLine("פותח את התוכנה...");
+        Process proc = Process.Start(exePath);
+        try { proc.WaitForInputIdle(5000); } catch { }
+
+        Console.WriteLine("מחפש את חלון 'בחירת דוח'...");
+        AutomationElement reportWindow = FindWindowByProcessId(proc.Id, 15);
+
+        if (reportWindow == null)
+        {
+            Console.WriteLine("לא מצאתי את החלון. תגיד לי ונבדוק.");
+            Console.ReadLine();
+            return;
+        }
+
+        Console.WriteLine("נמצא. בוחר קטגוריה 'עדכונים-תפעול'...");
+        SelectItemInside(reportWindow, "cmbCategory", "עדכונים-תפעול");
+
+        // נותנים לרשימה למטה זמן להתרענן אחרי שינוי הקטגוריה
+        Thread.Sleep(1500);
+
+        Console.WriteLine("בוחר את הדוח 'קליטת מעברים XML'...");
+        SelectItemInside(reportWindow, "lstReports", "קליטת מעברים XML");
+
+        Thread.Sleep(500);
+
+        Console.WriteLine("לוחץ על הכפתור 'בחירת דוח'...");
+        ClickButton(reportWindow, "btnChooseReport");
+
+        Console.WriteLine();
+        Console.WriteLine("בוצע! לחץ Enter לסגירה של החלון השחור הזה (התוכנה עצמה תישאר פתוחה)...");
+        Console.ReadLine();
+    }
+
+    // מחפש חלון עליון ששייך לתהליך שפתחנו
+    static AutomationElement FindWindowByProcessId(int pid, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(
+                TreeScope.Children, Condition.TrueCondition);
+
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+                if (wpid == pid) return win;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    // מחפש בתוך "מיכל" (קומבו-בוקס או רשימה) לפי המזהה שלו,
+    // ואז מחפש בתוכו פריט עם שם מסוים ובוחר אותו
+    static void SelectItemInside(AutomationElement parentWindow, string containerAutomationId, string itemName)
+    {
+        AutomationElement container = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, containerAutomationId));
+
+        if (container == null)
+        {
+            Console.WriteLine("   (!) לא נמצא: " + containerAutomationId);
+            return;
+        }
+
+        AutomationElement item = null;
+
+        // מנסים כמה פעמים - יש רשימות שמתעדכנות עם עיכוב קטן
+        for (int i = 0; i < 10 && item == null; i++)
+        {
+            item = container.FindFirst(TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.NameProperty, itemName));
+
+            if (item == null) Thread.Sleep(300);
+        }
+
+        if (item == null)
+        {
+            Console.WriteLine("   (!) לא נמצא פריט בשם: " + itemName);
+            return;
+        }
+
+        object pattern;
+        if (item.TryGetCurrentPattern(SelectionItemPattern.Pattern, out pattern))
+        {
+            ((SelectionItemPattern)pattern).Select();
+        }
+        else if (item.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
+        {
+            ((InvokePattern)pattern).Invoke();
+        }
+        else
+        {
+            Console.WriteLine("   (!) הפריט '" + itemName + "' לא תומך בבחירה אוטומטית");
+        }
+    }
+
+    static void ClickButton(AutomationElement parentWindow, string buttonAutomationId)
+    {
+        AutomationElement button = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, buttonAutomationId));
+
+        if (button == null)
+        {
+            Console.WriteLine("   (!) לא נמצא כפתור: " + buttonAutomationId);
+            return;
+        }
+
+        object pattern;
+        if (button.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
+        {
+            ((InvokePattern)pattern).Invoke();
+        }
+    }
+}
