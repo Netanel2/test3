@@ -1,58 +1,206 @@
-פותח את התוכנה...
-מחפש את חלון 'בחירת דוח'...
-נמצא. בוחר קטגוריה 'עדכונים-תפעול'...
-בוחר את הדוח 'קליטת מעברים XML'...
-   (!) לא נמצא פריט בשם: קליטת מעברים XML
-לוחץ על הכפתור 'בחירת דוח'...
-ממתין שהחלון הבא ייפתח...
-נמצא חלון חדש: 'דוח 1152 - קליטת מעברים מXML'
-------------------------------------------------------------
-אלה כל השדות/כפתורים בחלון הזה:
-------------------------------------------------------------
-סוג: ControlType.CheckBox                | שם: 'תזמון הרצה' | מזהה: 'chkRepRunTime'
-סוג: ControlType.CheckBox                | שם: 'שמירה בסיום' | מזהה: 'chkSaveFileAtEnd'
-סוג: ControlType.CheckBox                | שם: 'מייל בסיום' | מזהה: 'chkSendMailAtEnd'
-סוג: ControlType.Text                    | שם: '' | מזהה: 'lblBtnShowRepInf'
-סוג: ControlType.StatusBar               | שם: '' | מזהה: 'StatusStrip1'
-סוג: ControlType.Pane                    | שם: '' | מזהה: '591198'
-סוג: ControlType.Edit                    | שם: '' | מזהה: 'StatusBar.Pane0'
-סוג: ControlType.Edit                    | שם: '' | מזהה: 'StatusBar.Pane1'
-סוג: ControlType.Edit                    | שם: '' | מזהה: 'StatusBar.Pane2'
-סוג: ControlType.Button                  | שם: 'יצוא לאקסל' | מזהה: 'btnExportExcel'
-סוג: ControlType.Text                    | שם: 'קליטת מעברים מXML' | מזהה: 'lblRepMame'
-סוג: ControlType.Text                    | שם: 'לפני הפעלת הדוח יש לקלוט את הקובץ העדכני באמצעות תוכנת קליטת הXML, ולאמת את תקינותו מול הXSD.' | מזהה: 'lblDynRepDescription'
-סוג: ControlType.Button                  | שם: 'פתיחת קובץ' | מזהה: 'btnExcel'
-סוג: ControlType.Text                    | שם: 'יבוא XML' | מזהה: '590930'
-סוג: ControlType.Edit                    | שם: 'קליטת מעברים מXML' | מזהה: 'Password'
-סוג: ControlType.Text                    | שם: 'סיסמא' | מזהה: '4522296'
-סוג: ControlType.ComboBox                | שם: 'סיסמא' | מזהה: 'Kupa'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: 'אלטשולר שחם' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'חברה מנהלת' | מזהה: '4326212'
-סוג: ControlType.ComboBox                | שם: 'חברה מנהלת' | מזהה: 'bExecute'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: 'לא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'כן' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'קליטה בפועל' | מזהה: '787390'
-סוג: ControlType.ComboBox                | שם: 'קליטה בפועל' | מזהה: 'ShowTypeNo'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: 'כל הגליונות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'רק טבלאות לקליטה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'רק שגיאות וסטטוס קליטה' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'הצגת גליונות' | מזהה: '852934'
-סוג: ControlType.Text                    | שם: '15' | מזהה: 'lblNumTz'
-סוג: ControlType.Text                    | שם: 'כמות ת.ז.' | מזהה: '787502'
-סוג: ControlType.CheckBox                | שם: '15' | מזהה: 'AddDescription'
-סוג: ControlType.Text                    | שם: 'הוספת תיאור' | מזהה: 'lblAutoName_AddDescription'
-סוג: ControlType.TitleBar                | שם: 'דוח 1152 - קליטת מעברים מXML' | מזהה: 'TitleBar'
-סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmFilterRep'
-סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
-סוג: ControlType.Button                  | שם: 'Minimize' | מזהה: 'Minimize'
-סוג: ControlType.Button                  | שם: 'Maximize' | מזהה: 'Maximize'
-סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
-------------------------------------------------------------
-תעתיק לי את כל הרשימה למעלה.
-לחץ Enter לסגירה...
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Windows.Automation;
+
+class Program
+{
+    // *** הנתיב לתיקייה שבה נוצרת תיקייה חדשה כל יום ***
+    static string baseFolder = @"\\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל";
+
+    static void Main()
+    {
+        string exePath = @"C:\Users\netanelma\Desktop\מנוע דוחות.exe";
+
+        // ----- שלב 0: לפני הכל, נבדוק לבד איזו תיקייה נוצרה היום (בלי לגעת ב-GUI) -----
+        Console.WriteLine("מחפש את תיקיית היום בתוך: " + baseFolder);
+        string todayFolder = FindTodayFolder(baseFolder);
+
+        if (todayFolder == null)
+        {
+            Console.WriteLine("(!) לא מצאתי תיקייה שנוצרה היום. אולי הנתיב לא נגיש, או שהתיקייה עוד לא נוצרה.");
+        }
+        else
+        {
+            Console.WriteLine("מצאתי תיקיית היום: " + todayFolder);
+
+            string xmlFile = Directory.GetFiles(todayFolder, "*.xml").FirstOrDefault();
+            if (xmlFile == null)
+                Console.WriteLine("(!) לא מצאתי קובץ XML בתוך התיקייה הזו.");
+            else
+                Console.WriteLine("מצאתי קובץ XML: " + xmlFile);
+        }
+        Console.WriteLine(new string('=', 60));
+
+        // ----- שלב 1: פתיחת התוכנה ובחירת הדוח (כמו קודם, עם התיקון) -----
+        Console.WriteLine("פותח את התוכנה...");
+        Process proc = Process.Start(exePath);
+        try { proc.WaitForInputIdle(5000); } catch { }
+
+        AutomationElement reportWindow = FindWindowByProcessId(proc.Id, 15);
+        if (reportWindow == null) { Console.WriteLine("לא מצאתי חלון."); Console.ReadLine(); return; }
+
+        Console.WriteLine("בוחר קטגוריה 'עדכונים-תפעול'...");
+        SelectItemInside(reportWindow, "cmbCategory", "עדכונים-תפעול");
+        Thread.Sleep(1500);
+
+        Console.WriteLine("בוחר את הדוח 'קליטת מעברים מXML'...");
+        SelectItemInside(reportWindow, "lstReports", "קליטת מעברים מXML"); // <-- התיקון כאן
+        Thread.Sleep(500);
+
+        Console.WriteLine("לוחץ על 'בחירת דוח'...");
+        ClickButton(reportWindow, "btnChooseReport");
+
+        // ----- שלב 2: מחכים לחלון הדוח החדש -----
+        Thread.Sleep(2000);
+        AutomationElement nextWindow = FindNewWindow(proc.Id, "בחירת דוח", 20);
+
+        if (nextWindow == null) { Console.WriteLine("לא נפתח חלון נוסף."); Console.ReadLine(); return; }
+        Console.WriteLine("נמצא חלון: '" + nextWindow.Current.Name + "'");
+
+        // ----- שלב 3: ממלאים את הסיסמה -----
+        Console.WriteLine("ממלא סיסמה...");
+        SetTextValue(nextWindow, "Password", "951753");
+
+        // ----- שלב 4: לוחצים על 'פתיחת קובץ' ומגלים מה יש בחלון שנפתח -----
+        Console.WriteLine("לוחץ על 'פתיחת קובץ'...");
+        ClickButton(nextWindow, "btnExcel");
+
+        Thread.Sleep(1500);
+        AutomationElement fileWindow = FindNewWindow(proc.Id, nextWindow.Current.Name, 15);
+
+        if (fileWindow == null)
+        {
+            Console.WriteLine("לא נפתח חלון נוסף אחרי הלחיצה על 'פתיחת קובץ'.");
+        }
+        else
+        {
+            Console.WriteLine("נמצא חלון: '" + fileWindow.Current.Name + "'");
+            Console.WriteLine(new string('-', 60));
+            Console.WriteLine("אלה כל השדות/כפתורים בחלון הזה:");
+            Console.WriteLine(new string('-', 60));
+
+            AutomationElementCollection allControls = fileWindow.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+            foreach (AutomationElement el in allControls)
+            {
+                string type = el.Current.ControlType.ProgrammaticName;
+                string name = el.Current.Name;
+                string autoId = el.Current.AutomationId;
+                Console.WriteLine($"סוג: {type,-35} | שם: '{name}' | מזהה: '{autoId}'");
+            }
+        }
+
+        Console.WriteLine(new string('=', 60));
+        Console.WriteLine("תעתיק לי הכל מלמעלה (כולל תיקיית/קובץ היום שנמצאו למעלה בהתחלה).");
+        Console.WriteLine("לחץ Enter לסגירה...");
+        Console.ReadLine();
+    }
+
+    // מחפש בתוך תיקייה נתונה תת-תיקייה שנוצרה/עודכנה היום
+    static string FindTodayFolder(string parentFolder)
+    {
+        try
+        {
+            var dirs = Directory.GetDirectories(parentFolder);
+            var todayDirs = dirs
+                .Select(d => new DirectoryInfo(d))
+                .Where(d => d.LastWriteTime.Date == DateTime.Today || d.CreationTime.Date == DateTime.Today)
+                .OrderByDescending(d => d.LastWriteTime)
+                .ToList();
+
+            return todayDirs.FirstOrDefault()?.FullName;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("(!) שגיאה בגישה לתיקייה: " + ex.Message);
+            return null;
+        }
+    }
+
+    static AutomationElement FindWindowByProcessId(int pid, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+                if (wpid == pid) return win;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    // מחפש חלון חדש מאותו תהליך, ששמו שונה מהחלון שכבר היה פתוח
+    static AutomationElement FindNewWindow(int pid, string oldWindowName, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+
+                string name = win.Current.Name;
+                if (wpid == pid && !string.IsNullOrWhiteSpace(name) && name != oldWindowName)
+                    return win;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    static void SelectItemInside(AutomationElement parentWindow, string containerAutomationId, string itemName)
+    {
+        AutomationElement container = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, containerAutomationId));
+        if (container == null) { Console.WriteLine("   (!) לא נמצא: " + containerAutomationId); return; }
+
+        AutomationElement item = null;
+        for (int i = 0; i < 10 && item == null; i++)
+        {
+            item = container.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, itemName));
+            if (item == null) Thread.Sleep(300);
+        }
+        if (item == null) { Console.WriteLine("   (!) לא נמצא פריט בשם: " + itemName); return; }
+
+        object pattern;
+        if (item.TryGetCurrentPattern(SelectionItemPattern.Pattern, out pattern))
+            ((SelectionItemPattern)pattern).Select();
+        else if (item.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
+            ((InvokePattern)pattern).Invoke();
+    }
+
+    static void ClickButton(AutomationElement parentWindow, string buttonAutomationId)
+    {
+        AutomationElement button = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, buttonAutomationId));
+        if (button == null) { Console.WriteLine("   (!) לא נמצא כפתור: " + buttonAutomationId); return; }
+
+        object pattern;
+        if (button.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
+            ((InvokePattern)pattern).Invoke();
+    }
+
+    static void SetTextValue(AutomationElement parentWindow, string automationId, string text)
+    {
+        AutomationElement field = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+        if (field == null) { Console.WriteLine("   (!) לא נמצא שדה: " + automationId); return; }
+
+        object pattern;
+        if (field.TryGetCurrentPattern(ValuePattern.Pattern, out pattern))
+        {
+            ((ValuePattern)pattern).SetValue(text);
+        }
+        else
+        {
+            Console.WriteLine("   (!) השדה '" + automationId + "' לא תומך במילוי ישיר - נצטרך גישה אחרת.");
+        }
+    }
+}
