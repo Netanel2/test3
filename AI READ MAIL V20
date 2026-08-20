@@ -7,7 +7,6 @@ class Program
 {
     static void Main()
     {
-        // *** תזכורת: תשים כאן את הנתיב האמיתי שכבר מצאת אצלך ***
         string exePath = @"C:\Users\netanelma\Desktop\מנוע דוחות.exe";
 
         Console.WriteLine("פותח את התוכנה...");
@@ -19,31 +18,76 @@ class Program
 
         if (reportWindow == null)
         {
-            Console.WriteLine("לא מצאתי את החלון. תגיד לי ונבדוק.");
+            Console.WriteLine("לא מצאתי את החלון.");
             Console.ReadLine();
             return;
         }
 
         Console.WriteLine("נמצא. בוחר קטגוריה 'עדכונים-תפעול'...");
         SelectItemInside(reportWindow, "cmbCategory", "עדכונים-תפעול");
-
-        // נותנים לרשימה למטה זמן להתרענן אחרי שינוי הקטגוריה
         Thread.Sleep(1500);
 
         Console.WriteLine("בוחר את הדוח 'קליטת מעברים XML'...");
         SelectItemInside(reportWindow, "lstReports", "קליטת מעברים XML");
-
         Thread.Sleep(500);
 
         Console.WriteLine("לוחץ על הכפתור 'בחירת דוח'...");
         ClickButton(reportWindow, "btnChooseReport");
 
-        Console.WriteLine();
-        Console.WriteLine("בוצע! לחץ Enter לסגירה של החלון השחור הזה (התוכנה עצמה תישאר פתוחה)...");
+        // *** החלק החדש: מחכים שהחלון הבא ('1152 - קליטת מעברים XML') ייפתח, ומדפיסים מה יש בו ***
+        Console.WriteLine("ממתין שהחלון הבא ייפתח...");
+        Thread.Sleep(2000);
+
+        AutomationElement nextWindow = null;
+        for (int i = 0; i < 20 && nextWindow == null; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(
+                TreeScope.Children, Condition.TrueCondition);
+
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+
+                // מחפשים חלון חדש מאותו תהליך, שהוא לא חלון "בחירת דוח" עצמו
+                if (wpid == proc.Id && win.Current.Name != "בחירת דוח" && !string.IsNullOrWhiteSpace(win.Current.Name))
+                {
+                    nextWindow = win;
+                    break;
+                }
+            }
+            if (nextWindow == null) Thread.Sleep(500);
+        }
+
+        if (nextWindow == null)
+        {
+            Console.WriteLine("לא נפתח חלון נוסף. אולי צריך יותר זמן המתנה - תגיד לי.");
+            Console.ReadLine();
+            return;
+        }
+
+        Console.WriteLine("נמצא חלון חדש: '" + nextWindow.Current.Name + "'");
+        Console.WriteLine(new string('-', 60));
+        Console.WriteLine("אלה כל השדות/כפתורים בחלון הזה:");
+        Console.WriteLine(new string('-', 60));
+
+        AutomationElementCollection allControls = nextWindow.FindAll(
+            TreeScope.Descendants, Condition.TrueCondition);
+
+        foreach (AutomationElement el in allControls)
+        {
+            string type = el.Current.ControlType.ProgrammaticName;
+            string name = el.Current.Name;
+            string autoId = el.Current.AutomationId;
+            Console.WriteLine($"סוג: {type,-35} | שם: '{name}' | מזהה: '{autoId}'");
+        }
+
+        Console.WriteLine(new string('-', 60));
+        Console.WriteLine("תעתיק לי את כל הרשימה למעלה.");
+        Console.WriteLine("לחץ Enter לסגירה...");
         Console.ReadLine();
     }
 
-    // מחפש חלון עליון ששייך לתהליך שפתחנו
     static AutomationElement FindWindowByProcessId(int pid, int timeoutSeconds)
     {
         for (int i = 0; i < timeoutSeconds * 2; i++)
@@ -62,8 +106,6 @@ class Program
         return null;
     }
 
-    // מחפש בתוך "מיכל" (קומבו-בוקס או רשימה) לפי המזהה שלו,
-    // ואז מחפש בתוכו פריט עם שם מסוים ובוחר אותו
     static void SelectItemInside(AutomationElement parentWindow, string containerAutomationId, string itemName)
     {
         AutomationElement container = parentWindow.FindFirst(TreeScope.Descendants,
@@ -76,13 +118,10 @@ class Program
         }
 
         AutomationElement item = null;
-
-        // מנסים כמה פעמים - יש רשימות שמתעדכנות עם עיכוב קטן
         for (int i = 0; i < 10 && item == null; i++)
         {
             item = container.FindFirst(TreeScope.Descendants,
                 new PropertyCondition(AutomationElement.NameProperty, itemName));
-
             if (item == null) Thread.Sleep(300);
         }
 
@@ -100,10 +139,6 @@ class Program
         else if (item.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
         {
             ((InvokePattern)pattern).Invoke();
-        }
-        else
-        {
-            Console.WriteLine("   (!) הפריט '" + itemName + "' לא תומך בבחירה אוטומטית");
         }
     }
 
