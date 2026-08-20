@@ -1,162 +1,58 @@
-using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows.Automation;
-
-class Program
-{
-    static void Main()
-    {
-        string exePath = @"C:\Users\netanelma\Desktop\מנוע דוחות.exe";
-
-        Console.WriteLine("פותח את התוכנה...");
-        Process proc = Process.Start(exePath);
-        try { proc.WaitForInputIdle(5000); } catch { }
-
-        Console.WriteLine("מחפש את חלון 'בחירת דוח'...");
-        AutomationElement reportWindow = FindWindowByProcessId(proc.Id, 15);
-
-        if (reportWindow == null)
-        {
-            Console.WriteLine("לא מצאתי את החלון.");
-            Console.ReadLine();
-            return;
-        }
-
-        Console.WriteLine("נמצא. בוחר קטגוריה 'עדכונים-תפעול'...");
-        SelectItemInside(reportWindow, "cmbCategory", "עדכונים-תפעול");
-        Thread.Sleep(1500);
-
-        Console.WriteLine("בוחר את הדוח 'קליטת מעברים XML'...");
-        SelectItemInside(reportWindow, "lstReports", "קליטת מעברים XML");
-        Thread.Sleep(500);
-
-        Console.WriteLine("לוחץ על הכפתור 'בחירת דוח'...");
-        ClickButton(reportWindow, "btnChooseReport");
-
-        // *** החלק החדש: מחכים שהחלון הבא ('1152 - קליטת מעברים XML') ייפתח, ומדפיסים מה יש בו ***
-        Console.WriteLine("ממתין שהחלון הבא ייפתח...");
-        Thread.Sleep(2000);
-
-        AutomationElement nextWindow = null;
-        for (int i = 0; i < 20 && nextWindow == null; i++)
-        {
-            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(
-                TreeScope.Children, Condition.TrueCondition);
-
-            foreach (AutomationElement win in windows)
-            {
-                int wpid = 0;
-                try { wpid = win.Current.ProcessId; } catch { continue; }
-
-                // מחפשים חלון חדש מאותו תהליך, שהוא לא חלון "בחירת דוח" עצמו
-                if (wpid == proc.Id && win.Current.Name != "בחירת דוח" && !string.IsNullOrWhiteSpace(win.Current.Name))
-                {
-                    nextWindow = win;
-                    break;
-                }
-            }
-            if (nextWindow == null) Thread.Sleep(500);
-        }
-
-        if (nextWindow == null)
-        {
-            Console.WriteLine("לא נפתח חלון נוסף. אולי צריך יותר זמן המתנה - תגיד לי.");
-            Console.ReadLine();
-            return;
-        }
-
-        Console.WriteLine("נמצא חלון חדש: '" + nextWindow.Current.Name + "'");
-        Console.WriteLine(new string('-', 60));
-        Console.WriteLine("אלה כל השדות/כפתורים בחלון הזה:");
-        Console.WriteLine(new string('-', 60));
-
-        AutomationElementCollection allControls = nextWindow.FindAll(
-            TreeScope.Descendants, Condition.TrueCondition);
-
-        foreach (AutomationElement el in allControls)
-        {
-            string type = el.Current.ControlType.ProgrammaticName;
-            string name = el.Current.Name;
-            string autoId = el.Current.AutomationId;
-            Console.WriteLine($"סוג: {type,-35} | שם: '{name}' | מזהה: '{autoId}'");
-        }
-
-        Console.WriteLine(new string('-', 60));
-        Console.WriteLine("תעתיק לי את כל הרשימה למעלה.");
-        Console.WriteLine("לחץ Enter לסגירה...");
-        Console.ReadLine();
-    }
-
-    static AutomationElement FindWindowByProcessId(int pid, int timeoutSeconds)
-    {
-        for (int i = 0; i < timeoutSeconds * 2; i++)
-        {
-            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(
-                TreeScope.Children, Condition.TrueCondition);
-
-            foreach (AutomationElement win in windows)
-            {
-                int wpid = 0;
-                try { wpid = win.Current.ProcessId; } catch { continue; }
-                if (wpid == pid) return win;
-            }
-            Thread.Sleep(500);
-        }
-        return null;
-    }
-
-    static void SelectItemInside(AutomationElement parentWindow, string containerAutomationId, string itemName)
-    {
-        AutomationElement container = parentWindow.FindFirst(TreeScope.Descendants,
-            new PropertyCondition(AutomationElement.AutomationIdProperty, containerAutomationId));
-
-        if (container == null)
-        {
-            Console.WriteLine("   (!) לא נמצא: " + containerAutomationId);
-            return;
-        }
-
-        AutomationElement item = null;
-        for (int i = 0; i < 10 && item == null; i++)
-        {
-            item = container.FindFirst(TreeScope.Descendants,
-                new PropertyCondition(AutomationElement.NameProperty, itemName));
-            if (item == null) Thread.Sleep(300);
-        }
-
-        if (item == null)
-        {
-            Console.WriteLine("   (!) לא נמצא פריט בשם: " + itemName);
-            return;
-        }
-
-        object pattern;
-        if (item.TryGetCurrentPattern(SelectionItemPattern.Pattern, out pattern))
-        {
-            ((SelectionItemPattern)pattern).Select();
-        }
-        else if (item.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
-        {
-            ((InvokePattern)pattern).Invoke();
-        }
-    }
-
-    static void ClickButton(AutomationElement parentWindow, string buttonAutomationId)
-    {
-        AutomationElement button = parentWindow.FindFirst(TreeScope.Descendants,
-            new PropertyCondition(AutomationElement.AutomationIdProperty, buttonAutomationId));
-
-        if (button == null)
-        {
-            Console.WriteLine("   (!) לא נמצא כפתור: " + buttonAutomationId);
-            return;
-        }
-
-        object pattern;
-        if (button.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
-        {
-            ((InvokePattern)pattern).Invoke();
-        }
-    }
-}
+פותח את התוכנה...
+מחפש את חלון 'בחירת דוח'...
+נמצא. בוחר קטגוריה 'עדכונים-תפעול'...
+בוחר את הדוח 'קליטת מעברים XML'...
+   (!) לא נמצא פריט בשם: קליטת מעברים XML
+לוחץ על הכפתור 'בחירת דוח'...
+ממתין שהחלון הבא ייפתח...
+נמצא חלון חדש: 'דוח 1152 - קליטת מעברים מXML'
+------------------------------------------------------------
+אלה כל השדות/כפתורים בחלון הזה:
+------------------------------------------------------------
+סוג: ControlType.CheckBox                | שם: 'תזמון הרצה' | מזהה: 'chkRepRunTime'
+סוג: ControlType.CheckBox                | שם: 'שמירה בסיום' | מזהה: 'chkSaveFileAtEnd'
+סוג: ControlType.CheckBox                | שם: 'מייל בסיום' | מזהה: 'chkSendMailAtEnd'
+סוג: ControlType.Text                    | שם: '' | מזהה: 'lblBtnShowRepInf'
+סוג: ControlType.StatusBar               | שם: '' | מזהה: 'StatusStrip1'
+סוג: ControlType.Pane                    | שם: '' | מזהה: '591198'
+סוג: ControlType.Edit                    | שם: '' | מזהה: 'StatusBar.Pane0'
+סוג: ControlType.Edit                    | שם: '' | מזהה: 'StatusBar.Pane1'
+סוג: ControlType.Edit                    | שם: '' | מזהה: 'StatusBar.Pane2'
+סוג: ControlType.Button                  | שם: 'יצוא לאקסל' | מזהה: 'btnExportExcel'
+סוג: ControlType.Text                    | שם: 'קליטת מעברים מXML' | מזהה: 'lblRepMame'
+סוג: ControlType.Text                    | שם: 'לפני הפעלת הדוח יש לקלוט את הקובץ העדכני באמצעות תוכנת קליטת הXML, ולאמת את תקינותו מול הXSD.' | מזהה: 'lblDynRepDescription'
+סוג: ControlType.Button                  | שם: 'פתיחת קובץ' | מזהה: 'btnExcel'
+סוג: ControlType.Text                    | שם: 'יבוא XML' | מזהה: '590930'
+סוג: ControlType.Edit                    | שם: 'קליטת מעברים מXML' | מזהה: 'Password'
+סוג: ControlType.Text                    | שם: 'סיסמא' | מזהה: '4522296'
+סוג: ControlType.ComboBox                | שם: 'סיסמא' | מזהה: 'Kupa'
+סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
+סוג: ControlType.ListItem                | שם: 'אלטשולר שחם' | מזהה: ''
+סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
+סוג: ControlType.Text                    | שם: 'חברה מנהלת' | מזהה: '4326212'
+סוג: ControlType.ComboBox                | שם: 'חברה מנהלת' | מזהה: 'bExecute'
+סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
+סוג: ControlType.ListItem                | שם: 'לא' | מזהה: ''
+סוג: ControlType.ListItem                | שם: 'כן' | מזהה: ''
+סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
+סוג: ControlType.Text                    | שם: 'קליטה בפועל' | מזהה: '787390'
+סוג: ControlType.ComboBox                | שם: 'קליטה בפועל' | מזהה: 'ShowTypeNo'
+סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
+סוג: ControlType.ListItem                | שם: 'כל הגליונות' | מזהה: ''
+סוג: ControlType.ListItem                | שם: 'רק טבלאות לקליטה' | מזהה: ''
+סוג: ControlType.ListItem                | שם: 'רק שגיאות וסטטוס קליטה' | מזהה: ''
+סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
+סוג: ControlType.Text                    | שם: 'הצגת גליונות' | מזהה: '852934'
+סוג: ControlType.Text                    | שם: '15' | מזהה: 'lblNumTz'
+סוג: ControlType.Text                    | שם: 'כמות ת.ז.' | מזהה: '787502'
+סוג: ControlType.CheckBox                | שם: '15' | מזהה: 'AddDescription'
+סוג: ControlType.Text                    | שם: 'הוספת תיאור' | מזהה: 'lblAutoName_AddDescription'
+סוג: ControlType.TitleBar                | שם: 'דוח 1152 - קליטת מעברים מXML' | מזהה: 'TitleBar'
+סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmFilterRep'
+סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
+סוג: ControlType.Button                  | שם: 'Minimize' | מזהה: 'Minimize'
+סוג: ControlType.Button                  | שם: 'Maximize' | מזהה: 'Maximize'
+סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
+------------------------------------------------------------
+תעתיק לי את כל הרשימה למעלה.
+לחץ Enter לסגירה...
