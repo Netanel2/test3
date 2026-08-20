@@ -1,41 +1,122 @@
-מחפש את תיקיית היום...
-מצאתי קובץ XML: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2026-20-08--11-30\SubFolder1\257422e6-0102-42b1-8e64-8001971585ad_2026-25-03--11-30-09_PJ.xml
-============================================================
-פותח את התוכנה...
-בוחר קטגוריה 'עדכונים-תפעול'...
-בוחר את הדוח 'קליטת מעברים מXML'...
-לוחץ על 'בחירת דוח'...
-נמצא חלון: 'דוח 1152 - קליטת מעברים מXML'
-ממלא סיסמה...
-לוחץ על 'פתיחת קובץ'...
-נמצא חלון: 'בדיקת XML וטעינתו למערכת'
-ממלא את נתיב קובץ ה-XML...
-מצאתי קובץ XSD: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\XSD_Amit_20220216.xsd
-ממלא את נתיב קובץ ה-XSD...
-לוחץ על 'בדיקה מול XSD'...
-ממתין לחלון אישור אפשרי...
-   נמצא חלון: 'בדיקת XML וטעינתו למערכת' - לוחץ על אישור...
-לוחץ על 'עדכון דוח 816-עמיתים'...
-ממתין לחלון 'כן/לא'...
-   נמצא חלון: 'בדיקת XML וטעינתו למערכת' - לוחץ על אישור...
-ממתין לחלון אישור נוסף...
-   נמצא חלון: 'בדיקת XML וטעינתו למערכת' - לוחץ על אישור...
-מסמן 'שמירה בסיום' במסך הקודם...
-לוחץ על 'יצוא לאקסל' (מריץ את הדוח בפועל)...
-ממתין לחלון 'שמירה בסיום'...
-(!) לא נמצא חלון בשם 'שמירה בסיום הרצה'.
-    הנה כל שמות החלונות שכן קיימים כרגע - חפש שם משהו דומה:
-------------------------------------------------------------
-    חלונות עצמאיים:
-       - 'Loading...'
-       - 'דוח 1152 - קליטת מעברים מXML'
-       - 'C:\Users\netanelma\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe'
-       - 'ConsoleApp1 (Running) - Microsoft Visual Studio '
-       - 'מנוע דוחות Properties'
-       - 'New Text Document - Notepad'
-       - 'Program Manager'
-    חלונות פנימיים בתוך 'דוח 1152':
-       - 'שמירה בסיום ההרצה'
-============================================================
-תעתיק לי הכל מלמעלה.
-לחץ Enter לסגירה...
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Automation;
+using System.Windows.Forms;
+
+class Recorder
+{
+    delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+    static IntPtr hookId = IntPtr.Zero;
+    static LowLevelMouseProc hookProc = HookCallback;
+    static StreamWriter log;
+
+    [DllImport("user32.dll")]
+    static extern IntPtr SetWindowsHookEx(int idHook, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
+    [DllImport("user32.dll")]
+    static extern bool UnhookWindowsHookEx(IntPtr hhk);
+    [DllImport("user32.dll")]
+    static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+    [DllImport("kernel32.dll")]
+    static extern IntPtr GetModuleHandle(string lpModuleName);
+
+    const int WH_MOUSE_LL = 14;
+    const int WM_LBUTTONDOWN = 0x0201;
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct POINT { public int x; public int y; }
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct MSLLHOOKSTRUCT
+    {
+        public POINT pt;
+        public uint mouseData;
+        public uint flags;
+        public uint time;
+        public IntPtr dwExtraInfo;
+    }
+
+    [STAThread]
+    static void Main()
+    {
+        string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "recording_log.txt");
+        log = new StreamWriter(logPath, false);
+        log.AutoFlush = true;
+
+        Console.WriteLine("=== מקליט ===");
+        Console.WriteLine("עכשיו תעשה את כל התהליך בעצמך עם העכבר, שלב אחרי שלב, בדיוק כמו שאתה רוצה שהתוכנה תעשה.");
+        Console.WriteLine("כל לחיצה שלך תירשם אוטומטית.");
+        Console.WriteLine("קובץ הרישום נשמר לשולחן העבודה בשם: recording_log.txt");
+        Console.WriteLine();
+        Console.WriteLine("כשתסיים את כל התהליך (כולל השמירה בסוף) - חזור לכאן ולחץ Enter.");
+        Console.WriteLine(new string('-', 60));
+
+        hookId = SetWindowsHookEx(WH_MOUSE_LL, hookProc, GetModuleHandle(null), 0);
+
+        // מריצים לולאת הודעות ברקע - נדרש כדי שה-hook יתפוס לחיצות
+        System.Threading.Thread appThread = new System.Threading.Thread(() => Application.Run());
+        appThread.SetApartmentState(System.Threading.ApartmentState.STA);
+        appThread.IsBackground = true;
+        appThread.Start();
+
+        Console.ReadLine();
+
+        UnhookWindowsHookEx(hookId);
+        log.Close();
+
+        Console.WriteLine();
+        Console.WriteLine("ההקלטה נשמרה. שלח לי את התוכן של הקובץ:");
+        Console.WriteLine(logPath);
+        Console.WriteLine("לחץ Enter לסגירה...");
+        Console.ReadLine();
+    }
+
+    static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if (nCode >= 0 && wParam == (IntPtr)WM_LBUTTONDOWN)
+        {
+            MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<MSLLHOOKSTRUCT>(lParam);
+
+            try
+            {
+                var point = new System.Windows.Point(hookStruct.pt.x, hookStruct.pt.y);
+                AutomationElement el = AutomationElement.FromPoint(point);
+
+                if (el != null)
+                {
+                    var current = el.Current;
+
+                    // מנסים למצוא את שם החלון שמכיל את מה שנלחץ
+                    string windowTitle = FindContainingWindowName(el);
+
+                    string line = $"[קליק] חלון='{windowTitle}' | סוג={current.ControlType.ProgrammaticName} | שם='{current.Name}' | מזהה='{current.AutomationId}'";
+                    Console.WriteLine(line);
+                    log.WriteLine(line);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.WriteLine("(שגיאה בזיהוי לחיצה: " + ex.Message + ")");
+            }
+        }
+        return CallNextHookEx(hookId, nCode, wParam, lParam);
+    }
+
+    static string FindContainingWindowName(AutomationElement el)
+    {
+        try
+        {
+            AutomationElement current = el;
+            while (current != null)
+            {
+                if (current.Current.ControlType == ControlType.Window)
+                    return current.Current.Name;
+
+                current = TreeWalker.ControlViewWalker.GetParent(current);
+            }
+        }
+        catch { }
+        return "?";
+    }
+}
