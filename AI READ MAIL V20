@@ -28,7 +28,7 @@ class Program
     [STAThread]
     static void Main()
     {
-        string exePath = @"C:\Users\netanelma\Desktop\מנוע דוחות.exe";
+        string exePath = @"E:\Root\HomeFolder\Shared\IT\Utils\ReportsEngine\Exe\ReportsEngine.exe";
 
         Console.WriteLine("מחפש את תיקיית היום...");
         string todayFolder = FindTodayFolder(baseFolder);
@@ -399,7 +399,7 @@ class Program
         Console.WriteLine("=== שלב 2: פותח את התוכנה הבאה ===");
 
         // *** תשים כאן את הנתיב האמיתי לתוכנה השנייה ***
-        string exePath2 = @"C:\PUT\PATH\HERE\Program2.exe";
+        string exePath2 = @""C:\Program Files\Archive\Archive.exe" -auto";
 
         Console.WriteLine("פותח את התוכנה השנייה...");
         Process proc2 = Process.Start(exePath2);
