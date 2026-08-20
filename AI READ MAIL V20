@@ -74,35 +74,37 @@ class Program
         ClickButton(nextWindow, "btnExcel");
         Thread.Sleep(1500);
 
-        // *** חיפוש ישיר לפי השם המדויק של החלון, בלי diff ***
+        // *** השינוי המרכזי: בלי סינון לפי תהליך (pid) בכלל ***
         string targetTitle = "בדיקת XML וטעינתו למערכת";
-        AutomationElement fileWindow = FindWindowByTitle(nextWindow, proc.Id, targetTitle, 6);
+        AutomationElement fileWindow = FindWindowByTitleAnyProcess(nextWindow, targetTitle, 6);
 
         if (fileWindow == null)
         {
-            Console.WriteLine("לא נמצא לפי שם - מנסה גם לחיצת עכבר אמיתית ליתר ביטחון...");
+            Console.WriteLine("לא נמצא לפי שם - מנסה גם לחיצת עכבר אמיתית...");
             AutomationElement btn = nextWindow.FindFirst(TreeScope.Descendants,
                 new PropertyCondition(AutomationElement.AutomationIdProperty, "btnExcel"));
             if (btn != null)
             {
                 RealClick(btn);
                 Thread.Sleep(1000);
-                fileWindow = FindWindowByTitle(nextWindow, proc.Id, targetTitle, 8);
+                fileWindow = FindWindowByTitleAnyProcess(nextWindow, targetTitle, 8);
             }
         }
 
         if (fileWindow == null)
         {
-            Console.WriteLine("עדיין לא נמצא. תגיד לי אם שם החלון בתמונה שונה במדויק ממה שחיפשתי: '" + targetTitle + "'");
+            Console.WriteLine("עדיין לא נמצא. תגיד לי בדיוק איך כתוב שם החלון אצלך.");
         }
         else
         {
             Console.WriteLine("נמצא חלון: '" + fileWindow.Current.Name + "'");
             Console.WriteLine(new string('-', 60));
             AutomationElementCollection allControls = fileWindow.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+            int idx = 0;
             foreach (AutomationElement el in allControls)
             {
-                Console.WriteLine($"סוג: {el.Current.ControlType.ProgrammaticName,-35} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
+                idx++;
+                Console.WriteLine($"[{idx}] סוג: {el.Current.ControlType.ProgrammaticName,-35} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
             }
         }
 
@@ -112,28 +114,21 @@ class Program
         Console.ReadLine();
     }
 
-    // מחפש חלון (עצמאי או פנימי) לפי השם המדויק שלו
-    static AutomationElement FindWindowByTitle(AutomationElement innerSearchRoot, int pid, string title, int timeoutSeconds)
+    // מחפש חלון לפי השם המדויק שלו - בלי קשר לאיזה תהליך (process) פתח אותו
+    static AutomationElement FindWindowByTitleAnyProcess(AutomationElement innerSearchRoot, string title, int timeoutSeconds)
     {
         for (int i = 0; i < timeoutSeconds * 2; i++)
         {
-            // חיפוש בין חלונות עצמאיים
-            AutomationElementCollection topWindows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
-            foreach (AutomationElement w in topWindows)
-            {
-                int wpid = 0;
-                try { wpid = w.Current.ProcessId; } catch { continue; }
-                if (wpid == pid && w.Current.Name == title) return w;
-            }
+            AutomationElement top = AutomationElement.RootElement.FindFirst(TreeScope.Children,
+                new PropertyCondition(AutomationElement.NameProperty, title));
+            if (top != null) return top;
 
-            // חיפוש בין חלונות פנימיים (MDI) בתוך innerSearchRoot
             if (innerSearchRoot != null)
             {
                 AutomationElement inner = innerSearchRoot.FindFirst(TreeScope.Descendants,
                     new PropertyCondition(AutomationElement.NameProperty, title));
                 if (inner != null) return inner;
             }
-
             Thread.Sleep(500);
         }
         return null;
