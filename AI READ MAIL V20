@@ -1,73 +1,34 @@
-using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows.Automation;
-
-class Program
-{
-    static void Main()
-    {
-        // *** שנה כאן לנתיב האמיתי של הקובץ מנוע דוחות.exe אצלך ***
-        string exePath = @"C:\Users\YourUserName\Desktop\מנוע דוחות.exe";
-
-        Console.WriteLine("פותח את התוכנה...");
-        Process proc = Process.Start(exePath);
-
-        try { proc.WaitForInputIdle(5000); } catch { }
-
-        Console.WriteLine("מחפש את חלון 'בחירת דוח'...");
-
-        // מחפשים את החלון הראשי של התהליך שפתחנו, עד 15 שניות
-        AutomationElement reportWindow = null;
-        for (int i = 0; i < 30 && reportWindow == null; i++)
-        {
-            Thread.Sleep(500);
-
-            AutomationElementCollection topWindows = AutomationElement.RootElement.FindAll(
-                TreeScope.Children, Condition.TrueCondition);
-
-            foreach (AutomationElement win in topWindows)
-            {
-                int pid = 0;
-                try { pid = win.Current.ProcessId; } catch { continue; }
-
-                if (pid == proc.Id)
-                {
-                    reportWindow = win;
-                    break;
-                }
-            }
-        }
-
-        if (reportWindow == null)
-        {
-            Console.WriteLine("לא מצאתי את החלון. נסה להריץ שוב, או תגיד לי ואבדוק אחרת.");
-            Console.WriteLine("לחץ Enter לסגירה...");
-            Console.ReadLine();
-            return;
-        }
-
-        Console.WriteLine("נמצא חלון: '" + reportWindow.Current.Name + "'");
-        Console.WriteLine(new string('-', 60));
-        Console.WriteLine("אלה כל הכפתורים/תפריטים/רשימות בתוך החלון:");
-        Console.WriteLine(new string('-', 60));
-
-        // עוברים על כל מה שיש בתוך החלון הזה בלבד
-        AutomationElementCollection allControls = reportWindow.FindAll(
-            TreeScope.Descendants, Condition.TrueCondition);
-
-        foreach (AutomationElement el in allControls)
-        {
-            string type = el.Current.ControlType.ProgrammaticName;
-            string name = el.Current.Name;
-            string autoId = el.Current.AutomationId;
-
-            Console.WriteLine($"סוג: {type,-35} | שם: '{name}' | מזהה: '{autoId}'");
-        }
-
-        Console.WriteLine(new string('-', 60));
-        Console.WriteLine("סיימתי. תעתיק לי את כל הרשימה למעלה (או צילום מסך).");
-        Console.WriteLine("לחץ Enter לסגירה (זה לא יסגור את התוכנה עצמה)...");
-        Console.ReadLine();
-    }
-}
+פותח את התוכנה...
+מחפש את חלון 'בחירת דוח'...
+נמצא חלון: 'בחירת דוח'
+------------------------------------------------------------
+אלה כל הכפתורים/תפריטים/רשימות בתוך החלון:
+------------------------------------------------------------
+סוג: ControlType.Pane                    | שם: 'תת קטגוריה:' | מזהה: 'PicLogo'
+סוג: ControlType.Text                    | שם: 'תת קטגוריה:' | מזהה: 'Label2'
+סוג: ControlType.ComboBox                | שם: 'תת קטגוריה:' | מזהה: 'cmbSubCategory'
+סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
+סוג: ControlType.ListItem                | שם: 'מסלקה API' | מזהה: ''
+סוג: ControlType.ListItem                | שם: 'הכל ללא סינון' | מזהה: ''
+סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
+סוג: ControlType.StatusBar               | שם: 'קטגוריה:' | מזהה: 'StatusStrip1'
+סוג: ControlType.Pane                    | שם: 'קטגוריה:' | מזהה: '787380'
+סוג: ControlType.Edit                    | שם: 'ברוך הבא נתנאל  מנשורי' | מזהה: 'StatusBar.Pane0'
+סוג: ControlType.Text                    | שם: 'קטגוריה:' | מזהה: 'Label1'
+סוג: ControlType.ComboBox                | שם: 'קטגוריה:' | מזהה: 'cmbCategory'
+סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
+סוג: ControlType.ListItem                | שם: 'מיכון' | מזהה: ''
+סוג: ControlType.ListItem                | שם: 'עדכונים-תפעול' | מזהה: ''
+סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
+סוג: ControlType.List                    | שם: 'קטגוריה:' | מזהה: 'lstReports'
+סוג: ControlType.ListItem                | שם: 'השבתת לולאות API מול טופז' | מזהה: ''
+סוג: ControlType.Button                  | שם: 'בחירת דוח' | מזהה: 'btnChooseReport'
+סוג: ControlType.TitleBar                | שם: 'בחירת דוח' | מזהה: 'TitleBar'
+סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmReports'
+סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
+סוג: ControlType.Button                  | שם: 'Minimize' | מזהה: 'Minimize'
+סוג: ControlType.Button                  | שם: 'Maximize' | מזהה: 'Maximize'
+סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
+------------------------------------------------------------
+סיימתי. תעתיק לי את כל הרשימה למעלה (או צילום מסך).
+לחץ Enter לסגירה (זה לא יסגור את התוכנה עצמה)...
