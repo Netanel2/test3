@@ -366,6 +366,36 @@ class Program
         }
 
         Console.WriteLine(new string('=', 60));
+        Console.WriteLine("מנקה: סוגר את 'מנוע דוחות' ופותח את התיקייה הראשית להצגה...");
+
+        try
+        {
+            if (!proc.HasExited)
+            {
+                proc.CloseMainWindow();
+                if (!proc.WaitForExit(5000))
+                {
+                    Console.WriteLine("   סגירה רגילה לא הספיקה, סוגר בכוח...");
+                    proc.Kill();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("   (!) בעיה בסגירת התוכנה: " + ex.Message);
+        }
+
+        try
+        {
+            if (todayFolder != null)
+                Process.Start("explorer.exe", todayFolder);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("   (!) בעיה בפתיחת התיקייה: " + ex.Message);
+        }
+
+        Console.WriteLine(new string('=', 60));
         Console.WriteLine("תעתיק לי הכל מלמעלה.");
         Console.WriteLine("לחץ Enter לסגירה...");
         Console.ReadLine();
