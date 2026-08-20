@@ -227,34 +227,28 @@ class Program
 
                 if (editBox != null)
                 {
-                    Console.WriteLine("מצאתי את תיבת 'File name'. מקליד את השם...");
-                    // התיקייה כבר נכונה מעצמה - כותבים רק את שם הקובץ (בלי נתיב, בלי סיומת)
-                    RealClick(editBox);
-                    Thread.Sleep(400);
-                    SendKeys.SendWait("^a");
-                    Thread.Sleep(150);
-                    SendKeys.SendWait("אחרי בפועל");
-                    Thread.Sleep(400);
-
-                    AutomationElement saveBtn = browseDialog.FindFirst(TreeScope.Descendants,
-                        new PropertyCondition(AutomationElement.NameProperty, "Save"));
-
-                    if (saveBtn != null)
-                    {
-                        object p2;
-                        if (saveBtn.TryGetCurrentPattern(InvokePattern.Pattern, out p2))
-                            ((InvokePattern)p2).Invoke();
-                        else
-                            RealClick(saveBtn);
-                        Console.WriteLine("לחצתי על Save.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("לא מצאתי כפתור Save - שולח Enter.");
-                        SendKeys.SendWait("{ENTER}");
-                    }
-                    Thread.Sleep(1000);
+                    Console.WriteLine("מצאתי תיבת עריכה בתוך תיבת ה-1148.");
                 }
+                else
+                {
+                    Console.WriteLine("(!) לא מצאתי תיבת עריכה בתוך 1148.");
+                }
+
+                Console.WriteLine("אלה כל השדות בחלון הסייר (כולל מיקום מדויק):");
+                Console.WriteLine(new string('-', 60));
+                AutomationElementCollection browseControls2 = browseDialog.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+                int bidx2 = 0;
+                foreach (AutomationElement el in browseControls2)
+                {
+                    bidx2++;
+                    var r = el.Current.BoundingRectangle;
+                    bool enabled = el.Current.IsEnabled;
+                    Console.WriteLine($"[{bidx2}] סוג: {el.Current.ControlType.ProgrammaticName,-30} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}' | מיקום: {r.X:0},{r.Y:0} {r.Width:0}x{r.Height:0} | פעיל:{enabled}");
+                }
+                Console.WriteLine(new string('-', 60));
+                Console.WriteLine("(עוצר כאן - תעתיק לי את כל הרשימה הזו)");
+                Console.ReadLine();
+                return;
                 else
                 {
                     Console.WriteLine("(!) לא מצאתי את תיבת File name לפי מזהה 1148.");
