@@ -1,10 +1,19 @@
-מצוין שיש לך את החלון הזה פתוח - יש שם בדיוק הפתרון! תראה את התיבה המסומנת ✔ "Break when this exception type is thrown" - זו הסיבה שVisual Studio עוצר, למרות שיש לנו כבר try/catch בקוד שתופס את זה.
-
-פתרון מיידי (הכי קל):
-פשוט תבטל את הסימון ✔ שליד "Break when this exception type is thrown" בחלון הזה עכשיו, ואז תלחץ Continue (או F5) להמשיך את הריצה. מרגע שתבטל את זה, זה לא יעצור שוב על ההודעה הזו.
-
-כדי שזה לא יקרה שוב בהרצות הבאות:
-
-לחץ על Continue עכשיו כדי לצאת מהעצירה הנוכחית
-בתפריט: Debug → Windows → Exception Settings
-חפש שם "NonComVisibleBaseClass" תחת "Managed Debugging Assistants" ותבטל שם את הסימון לצמיתות
+------------------------------------------------------------
+אלה כל השדות/כפתורים בחלון הזה (11 נמצאו):
+------------------------------------------------------------
+סוג: ControlType.Edit                    | שם: '' | מזהה: 'txtUser'
+סוג: ControlType.Button                  | שם: 'ביטול' | מזהה: 'Cancel'
+סוג: ControlType.Button                  | שם: 'אישור' | מזהה: 'OK'
+סוג: ControlType.Edit                    | שם: 'בחר בעלים:' | מזהה: 'txtPassword'
+סוג: ControlType.Text                    | שם: 'שם משתמש:' | מזהה: 'Label1'
+סוג: ControlType.Text                    | שם: 'סיסמא:' | מזהה: 'PasswordLabel'
+סוג: ControlType.Pane                    | שם: 'בחר בעלים:' | מזהה: 'LogoPictureBox'
+סוג: ControlType.TitleBar                | שם: '' | מזהה: 'TitleBar'
+סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmLogin'
+סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
+סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
+------------------------------------------------------------
+תעתיק לי את הרשימה הזו - נזהה לפיה את שדות שם המשתמש והסיסמה.
+============================================================
+תעתיק לי הכל מלמעלה.
+לחץ Enter לסגירה...
