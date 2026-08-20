@@ -1,1 +1,2 @@
-System.ComponentModel.Win32Exception: 'The system cannot find the file specified'
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0012	The type 'Rect' is defined in an assembly that is not referenced. You must add a reference to assembly 'WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.	MAVARIM	\\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\גיבוי לדוגמה מנתנאל\MAVARIM\MAVARIM\Program.cs	295	Active
