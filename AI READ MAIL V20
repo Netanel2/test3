@@ -202,20 +202,71 @@ class Program
                 Console.WriteLine("נמצא חלון סייר: '" + browseDialog.Current.Name + "'");
                 Console.WriteLine("ממלא את שם הקובץ: " + desiredFullPath);
 
-                Console.WriteLine("אלה כל השדות בחלון הסייר:");
-                Console.WriteLine(new string('-', 60));
-                AutomationElementCollection browseControls = browseDialog.FindAll(TreeScope.Descendants, Condition.TrueCondition);
-                int bidx = 0;
-                foreach (AutomationElement el in browseControls)
+                // תיבת "File name" בחלונות סטנדרטיים של Windows יש לה מזהה קבוע: 1148
+                AutomationElement fileNameCombo = browseDialog.FindFirst(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.AutomationIdProperty, "1148"));
+
+                AutomationElement editBox = null;
+                if (fileNameCombo != null)
                 {
-                    bidx++;
-                    var r = el.Current.BoundingRectangle;
-                    Console.WriteLine($"[{bidx}] סוג: {el.Current.ControlType.ProgrammaticName,-30} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}' | מיקום: {r.X:0},{r.Y:0} {r.Width:0}x{r.Height:0}");
+                    editBox = fileNameCombo.FindFirst(TreeScope.Descendants,
+                        new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
                 }
-                Console.WriteLine(new string('-', 60));
-                Console.WriteLine("(עוצר כאן כרגע - תעתיק לי את הרשימה הזו לפני שממשיכים)");
-                Console.ReadLine();
-                return;
+
+                if (editBox != null)
+                {
+                    Console.WriteLine("מצאתי את תיבת 'File name' הנכונה.");
+                    object p;
+                    if (editBox.TryGetCurrentPattern(ValuePattern.Pattern, out p))
+                    {
+                        ((ValuePattern)p).SetValue(desiredFullPath);
+                        Console.WriteLine("מילאתי את הנתיב ישירות.");
+                    }
+                    else
+                    {
+                        RealClick(editBox);
+                        Thread.Sleep(300);
+                        SendKeys.SendWait("^a");
+                        SendKeys.SendWait(desiredFullPath);
+                    }
+
+                    Thread.Sleep(500);
+
+                    AutomationElement saveBtn = browseDialog.FindFirst(TreeScope.Descendants,
+                        new PropertyCondition(AutomationElement.NameProperty, "Save"));
+
+                    if (saveBtn != null)
+                    {
+                        object p2;
+                        if (saveBtn.TryGetCurrentPattern(InvokePattern.Pattern, out p2))
+                            ((InvokePattern)p2).Invoke();
+                        else
+                            RealClick(saveBtn);
+                        Console.WriteLine("לחצתי על Save.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("לא מצאתי כפתור Save - שולח Enter.");
+                        SendKeys.SendWait("{ENTER}");
+                    }
+                    Thread.Sleep(1000);
+                }
+                else
+                {
+                    Console.WriteLine("(!) לא מצאתי את תיבת File name לפי מזהה 1148.");
+                    Console.WriteLine("אלה כל השדות בחלון הסייר:");
+                    Console.WriteLine(new string('-', 60));
+                    AutomationElementCollection browseControls = browseDialog.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+                    int bidx = 0;
+                    foreach (AutomationElement el in browseControls)
+                    {
+                        bidx++;
+                        Console.WriteLine($"[{bidx}] סוג: {el.Current.ControlType.ProgrammaticName,-30} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
+                    }
+                    Console.WriteLine(new string('-', 60));
+                    Console.ReadLine();
+                    return;
+                }
             }
 
             Console.WriteLine("לוחץ על 'אישור' הסופי...");
