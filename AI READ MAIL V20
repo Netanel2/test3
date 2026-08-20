@@ -235,10 +235,10 @@ class Program
                 }
                 else
                 {
-                    Console.WriteLine("מצאתי את תיבת 'File name'. לוחץ ומקליד...");
+                    Console.WriteLine("מצאתי את תיבת 'File name'. היא כבר מסומנת - מקליד ישר...");
 
-                    RealClick(editBox);
-                    Thread.Sleep(400);
+                    // *** לא לוחצים בכלל - השדה כבר ממוקד ומסומן כשהחלון נפתח ***
+                    Thread.Sleep(300);
                     SendKeys.SendWait("^a");
                     Thread.Sleep(200);
                     SendKeys.SendWait("{DEL}");
