@@ -235,11 +235,16 @@ class Program
                     RealClick(editBox);
                     Thread.Sleep(400);
 
-                    Console.WriteLine("מסמן הכל ומקליד עם המקלדת...");
-                    SendKeys.SendWait("^a");
-                    Thread.Sleep(200);
-                    SendKeys.SendWait("{DEL}");
-                    Thread.Sleep(200);
+                    Console.WriteLine("מרוקן את השדה...");
+                    object clearPattern;
+                    if (editBox.TryGetCurrentPattern(ValuePattern.Pattern, out clearPattern))
+                    {
+                        try { ((ValuePattern)clearPattern).SetValue(""); }
+                        catch { }
+                    }
+                    Thread.Sleep(300);
+
+                    Console.WriteLine("מקליד עם המקלדת...");
                     SendKeys.SendWait("אחרי בפועל");
                     Thread.Sleep(500);
 
