@@ -212,7 +212,9 @@ class Program
                 {
                     Condition cond = new OrCondition(
                         new PropertyCondition(AutomationElement.NameProperty, "אישור"),
-                        new PropertyCondition(AutomationElement.NameProperty, "OK"));
+                        new PropertyCondition(AutomationElement.NameProperty, "OK"),
+                        new PropertyCondition(AutomationElement.NameProperty, "כן"),
+                        new PropertyCondition(AutomationElement.NameProperty, "Yes"));
                     okBtn = w.FindFirst(TreeScope.Descendants, cond);
                 }
                 catch { }
