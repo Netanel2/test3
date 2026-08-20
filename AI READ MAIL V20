@@ -52,13 +52,18 @@ class Recorder
         Console.WriteLine("כשתסיים את כל התהליך (כולל השמירה בסוף) - חזור לכאן ולחץ Enter.");
         Console.WriteLine(new string('-', 60));
 
-        hookId = SetWindowsHookEx(WH_MOUSE_LL, hookProc, GetModuleHandle(null), 0);
-
-        // מריצים לולאת הודעות ברקע - נדרש כדי שה-hook יתפוס לחיצות
-        System.Threading.Thread appThread = new System.Threading.Thread(() => Application.Run());
+        // *** התיקון: מתקינים את ה-hook באותו thread שמריץ את לולאת ההודעות ***
+        System.Threading.Thread appThread = new System.Threading.Thread(() =>
+        {
+            hookId = SetWindowsHookEx(WH_MOUSE_LL, hookProc, GetModuleHandle(null), 0);
+            Application.Run();
+        });
         appThread.SetApartmentState(System.Threading.ApartmentState.STA);
         appThread.IsBackground = true;
         appThread.Start();
+
+        // נותנים רגע לthread להתחיל ולהתקין את ה-hook לפני שממשיכים
+        System.Threading.Thread.Sleep(300);
 
         Console.ReadLine();
 
