@@ -396,6 +396,38 @@ class Program
         }
 
         Console.WriteLine(new string('=', 60));
+        Console.WriteLine("=== שלב 2: פותח את התוכנה הבאה ===");
+
+        // *** תשים כאן את הנתיב האמיתי לתוכנה השנייה ***
+        string exePath2 = @"C:\PUT\PATH\HERE\Program2.exe";
+
+        Console.WriteLine("פותח את התוכנה השנייה...");
+        Process proc2 = Process.Start(exePath2);
+        try { proc2.WaitForInputIdle(5000); } catch { }
+
+        AutomationElement window2 = FindWindowByProcessId(proc2.Id, 15);
+
+        if (window2 == null)
+        {
+            Console.WriteLine("(!) לא מצאתי את חלון התוכנה השנייה.");
+        }
+        else
+        {
+            Console.WriteLine("נמצא חלון: '" + window2.Current.Name + "'");
+            Console.WriteLine(new string('-', 60));
+            Console.WriteLine("אלה כל השדות/כפתורים בחלון הזה:");
+            Console.WriteLine(new string('-', 60));
+
+            AutomationElementCollection controls2 = window2.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+            foreach (AutomationElement el in controls2)
+            {
+                Console.WriteLine($"סוג: {el.Current.ControlType.ProgrammaticName,-35} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
+            }
+            Console.WriteLine(new string('-', 60));
+            Console.WriteLine("תעתיק לי את הרשימה הזו - נזהה לפיה את שדות שם המשתמש והסיסמה.");
+        }
+
+        Console.WriteLine(new string('=', 60));
         Console.WriteLine("תעתיק לי הכל מלמעלה.");
         Console.WriteLine("לחץ Enter לסגירה...");
         Console.ReadLine();
