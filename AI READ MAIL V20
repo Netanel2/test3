@@ -184,38 +184,75 @@ class Program
         {
             Console.WriteLine("נמצא חלון: '" + saveWindow.Current.Name + "'");
 
-            // *** נותנים רק את התיקייה - התוכנה בוחרת את שם הקובץ לבד ***
-            Console.WriteLine("ממלא את תיקיית השמירה: " + todayFolder);
-            SetTextValue(saveWindow, "txtFolderName", todayFolder);
+            string desiredFullPath = Path.Combine(todayFolder, "אחרי בפועל.xlsm");
 
-            DateTime clickTime = DateTime.Now;
-            Thread.Sleep(500);
-            Console.WriteLine("לוחץ על 'אישור'...");
-            ClickButton(saveWindow, "btnSave");
+            var handlesBeforeBrowse = GetAllTopWindowHandles();
+            Console.WriteLine("לוחץ על 'סייר...'...");
+            ClickButton(saveWindow, "btnBrowse");
 
-            Console.WriteLine("ממתין שהקובץ החדש יישמר (זה יכול לקחת רגע)...");
-            string newFile = WaitForNewExcelFile(todayFolder, clickTime, 90);
+            AutomationElement browseDialog = FindNewTopWindowAny(handlesBeforeBrowse, 10);
 
-            if (newFile == null)
+            if (browseDialog == null)
             {
-                Console.WriteLine("(!) לא זיהיתי קובץ אקסל חדש בתיקייה תוך הזמן שחיכיתי.");
+                Console.WriteLine("(!) לא נפתח חלון סייר.");
             }
             else
             {
-                string targetPath = Path.Combine(todayFolder, "אחרי בפועל.xlsm");
-                Console.WriteLine("נמצא קובץ חדש: " + newFile);
-                Console.WriteLine("משנה שם ל: " + targetPath);
-                try
+                Console.WriteLine("נמצא חלון סייר: '" + browseDialog.Current.Name + "'");
+                Console.WriteLine("ממלא את שם הקובץ: " + desiredFullPath);
+
+                AutomationElement editBox = browseDialog.FindFirst(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
+
+                if (editBox != null)
                 {
-                    if (File.Exists(targetPath)) File.Delete(targetPath);
-                    File.Move(newFile, targetPath);
-                    Console.WriteLine("בוצע בהצלחה!");
+                    object p;
+                    if (editBox.TryGetCurrentPattern(ValuePattern.Pattern, out p))
+                        ((ValuePattern)p).SetValue(desiredFullPath);
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine("(!) שגיאה בשינוי שם: " + ex.Message);
+                    Console.WriteLine("(!) לא מצאתי תיבת טקסט לשם קובץ בחלון הסייר.");
                 }
+
+                Thread.Sleep(500);
+
+                AutomationElement saveBtn = browseDialog.FindFirst(TreeScope.Descendants,
+                    new OrCondition(
+                        new PropertyCondition(AutomationElement.NameProperty, "Save"),
+                        new PropertyCondition(AutomationElement.NameProperty, "שמירה"),
+                        new PropertyCondition(AutomationElement.NameProperty, "פתיחה"),
+                        new PropertyCondition(AutomationElement.NameProperty, "Open")));
+
+                if (saveBtn != null)
+                {
+                    object p2;
+                    if (saveBtn.TryGetCurrentPattern(InvokePattern.Pattern, out p2))
+                    {
+                        try { ((InvokePattern)p2).Invoke(); }
+                        catch { RealClick(saveBtn); }
+                    }
+                    else RealClick(saveBtn);
+                }
+                else
+                {
+                    Console.WriteLine("(!) לא מצאתי כפתור שמירה - שולח Enter כגיבוי.");
+                    PressEnter();
+                }
+
+                Thread.Sleep(1000);
             }
+
+            Console.WriteLine("לוחץ על 'אישור' הסופי...");
+            ClickButton(saveWindow, "btnSave");
+
+            Console.WriteLine("ממתין שהקובץ יישמר...");
+            Thread.Sleep(3000);
+
+            if (File.Exists(desiredFullPath))
+                Console.WriteLine("מצוין! הקובץ נשמר בהצלחה: " + desiredFullPath);
+            else
+                Console.WriteLine("(!) לא רואה את הקובץ בנתיב הצפוי - כדאי לבדוק ידנית מה קרה.");
         }
 
         Console.WriteLine(new string('=', 60));
@@ -335,6 +372,47 @@ class Program
             SetForegroundWindow(hWnd);
         }
         catch { }
+    }
+
+    [DllImport("user32.dll")]
+    static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+    const byte VK_RETURN = 0x0D;
+    const uint KEYEVENTF_KEYUP = 0x0002;
+
+    static void PressEnter()
+    {
+        keybd_event(VK_RETURN, 0, 0, UIntPtr.Zero);
+        Thread.Sleep(50);
+        keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+    }
+
+    // צילום כל החלונות העצמאיים הפתוחים כרגע, בכל תהליך שהוא
+    static HashSet<IntPtr> GetAllTopWindowHandles()
+    {
+        var set = new HashSet<IntPtr>();
+        AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+        foreach (AutomationElement w in windows)
+        {
+            try { set.Add(new IntPtr(w.Current.NativeWindowHandle)); } catch { }
+        }
+        return set;
+    }
+
+    static AutomationElement FindNewTopWindowAny(HashSet<IntPtr> knownHandles, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement w in windows)
+            {
+                IntPtr h;
+                try { h = new IntPtr(w.Current.NativeWindowHandle); } catch { continue; }
+                if (!knownHandles.Contains(h)) return w;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
     }
 
     // מחכה שיופיע קובץ אקסל חדש בתיקייה (שנוצר אחרי הזמן שהעברנו)
