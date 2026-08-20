@@ -144,6 +144,12 @@ class Program
         Console.WriteLine("ממתין לחלון אישור נוסף...");
         HandleConfirmationPopup(6);
 
+        // נותנים לחלון הזה זמן להיסגר ולחזור למסך הקודם
+        Thread.Sleep(1500);
+
+        Console.WriteLine("מסמן 'שמירה בסיום' במסך הקודם...");
+        SetCheckBox(nextWindow, "chkSaveFileAtEnd", true);
+
         Console.WriteLine(new string('=', 60));
         Console.WriteLine("תעתיק לי הכל מלמעלה.");
         Console.WriteLine("לחץ Enter לסגירה...");
@@ -330,6 +336,34 @@ class Program
         {
             try { ((InvokePattern)pattern).Invoke(); }
             catch (Exception ex) { Console.WriteLine("   (!) Invoke נכשל: " + ex.Message); }
+        }
+    }
+
+    static void SetCheckBox(AutomationElement parentWindow, string automationId, bool check)
+    {
+        AutomationElement cb = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+
+        if (cb == null) { Console.WriteLine("   (!) לא נמצאה תיבת סימון: " + automationId); return; }
+
+        object pattern;
+        if (cb.TryGetCurrentPattern(TogglePattern.Pattern, out pattern))
+        {
+            TogglePattern toggle = (TogglePattern)pattern;
+            bool isChecked = toggle.Current.ToggleState == ToggleState.On;
+            if (isChecked != check)
+            {
+                try { toggle.Toggle(); }
+                catch (Exception ex) { Console.WriteLine("   (!) סימון נכשל: " + ex.Message); }
+            }
+            else
+            {
+                Console.WriteLine("   (המצב כבר היה כמו שרצינו)");
+            }
+        }
+        else
+        {
+            Console.WriteLine("   (!) התיבה לא תומכת בסימון ישיר.");
         }
     }
 
