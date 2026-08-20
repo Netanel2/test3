@@ -150,6 +150,30 @@ class Program
         Console.WriteLine("מסמן 'שמירה בסיום' במסך הקודם...");
         SetCheckBox(nextWindow, "chkSaveFileAtEnd", true);
 
+        Thread.Sleep(500);
+        Console.WriteLine("לוחץ על 'יצוא לאקסל' (מריץ את הדוח בפועל)...");
+        ClickButton(nextWindow, "btnExportExcel");
+
+        Console.WriteLine("ממתין לחלון 'שמירה בסיום'...");
+        AutomationElement saveWindow = FindWindowByTitleAnyProcess(nextWindow, "שמירה בסיום הרצה", 15);
+
+        if (saveWindow == null)
+        {
+            Console.WriteLine("(!) לא נמצא חלון בשם 'שמירה בסיום הרצה'. תגיד לי אם השם אצלך שונה.");
+        }
+        else
+        {
+            Console.WriteLine("נמצא חלון: '" + saveWindow.Current.Name + "'");
+            Console.WriteLine(new string('-', 60));
+            AutomationElementCollection allControls = saveWindow.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+            int idx = 0;
+            foreach (AutomationElement el in allControls)
+            {
+                idx++;
+                Console.WriteLine($"[{idx}] סוג: {el.Current.ControlType.ProgrammaticName,-35} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
+            }
+        }
+
         Console.WriteLine(new string('=', 60));
         Console.WriteLine("תעתיק לי הכל מלמעלה.");
         Console.WriteLine("לחץ Enter לסגירה...");
