@@ -137,7 +137,11 @@ class Program
 
         Console.WriteLine("לוחץ על 'עדכון דוח 816-עמיתים'...");
         ClickButton(fileWindow, "btnUpdateReport");
-        Console.WriteLine("ממתין לחלון אישור אפשרי...");
+        Console.WriteLine("ממתין לחלון 'כן/לא'...");
+        HandleConfirmationPopup(6);
+
+        Thread.Sleep(1000);
+        Console.WriteLine("ממתין לחלון אישור נוסף...");
         HandleConfirmationPopup(6);
 
         Console.WriteLine(new string('=', 60));
