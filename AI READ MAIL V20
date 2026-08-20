@@ -28,7 +28,7 @@ class Program
     [STAThread]
     static void Main()
     {
-        string exePath = @"E:\Root\HomeFolder\Shared\IT\Utils\ReportsEngine\Exe\ReportsEngine.exe";
+        string exePath = @"C:\Users\netanelma\Desktop\מנוע דוחות.exe";
 
         Console.WriteLine("מחפש את תיקיית היום...");
         string todayFolder = FindTodayFolder(baseFolder);
@@ -398,11 +398,13 @@ class Program
         Console.WriteLine(new string('=', 60));
         Console.WriteLine("=== שלב 2: פותח את התוכנה הבאה ===");
 
-        // *** תשים כאן את הנתיב האמיתי לתוכנה השנייה ***
-        string exePath2 = @""C:\Program Files\Archive\Archive.exe" -auto";
+        // *** תשים כאן את הנתיב האמיתי לתוכנה השנייה (בלי שום מרכאות/פרמטרים בפנים!) ***
+        string exePath2 = @"C:\Program Files\Archive\Archive.exe";
+        // *** אם צריך פרמטר הרצה (כמו -auto), תשים אותו כאן בנפרד ***
+        string exeArgs2 = "-auto";
 
         Console.WriteLine("פותח את התוכנה השנייה...");
-        Process proc2 = Process.Start(exePath2);
+        Process proc2 = Process.Start(exePath2, exeArgs2);
         try { proc2.WaitForInputIdle(5000); } catch { }
 
         AutomationElement window2 = FindWindowByProcessId(proc2.Id, 15);
