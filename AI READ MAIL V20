@@ -13,47 +13,60 @@ class Program
         Console.WriteLine("פותח את התוכנה...");
         Process proc = Process.Start(exePath);
 
-        // לא כל תוכנה עונה כמו שצריך ל-WaitForInputIdle,
-        // אז עוטפים את זה כדי שהתוכנית שלנו לא תיתקע כאן
-        try
+        try { proc.WaitForInputIdle(5000); } catch { }
+
+        Console.WriteLine("מחפש את חלון 'בחירת דוח'...");
+
+        // מחפשים את החלון הראשי של התהליך שפתחנו, עד 15 שניות
+        AutomationElement reportWindow = null;
+        for (int i = 0; i < 30 && reportWindow == null; i++)
         {
-            proc.WaitForInputIdle(5000);
-        }
-        catch
-        {
-            Console.WriteLine("(אזהרה קטנה: לא הצלחתי לחכות בדרך הרגילה, ממשיך בכל זאת)");
-        }
+            Thread.Sleep(500);
 
-        Console.WriteLine("ממתין 3 שניות שהחלון ייטען...");
-        Thread.Sleep(3000);
+            AutomationElementCollection topWindows = AutomationElement.RootElement.FindAll(
+                TreeScope.Children, Condition.TrueCondition);
 
-        // במקום לחפש רק לפי המספר-זיהוי של התהליך שפתחנו,
-        // נדפיס עכשיו את *כל* החלונות הפתוחים במחשב, כדי לראות מה באמת נפתח
-        Console.WriteLine(new string('-', 60));
-        Console.WriteLine("אלה כל החלונות הפתוחים כרגע במחשב:");
-        Console.WriteLine(new string('-', 60));
+            foreach (AutomationElement win in topWindows)
+            {
+                int pid = 0;
+                try { pid = win.Current.ProcessId; } catch { continue; }
 
-        AutomationElementCollection allWindows = AutomationElement.RootElement.FindAll(
-            TreeScope.Children, Condition.TrueCondition);
-
-        foreach (AutomationElement win in allWindows)
-        {
-            string name = win.Current.Name;
-
-            // מדלגים על חלונות בלי שם, כדי שלא יהיה יותר מדי רעש
-            if (string.IsNullOrWhiteSpace(name))
-                continue;
-
-            int pid = 0;
-            try { pid = win.Current.ProcessId; } catch { }
-
-            Console.WriteLine($"שם חלון: '{name}'   |   מספר תהליך (PID): {pid}");
+                if (pid == proc.Id)
+                {
+                    reportWindow = win;
+                    break;
+                }
+            }
         }
 
+        if (reportWindow == null)
+        {
+            Console.WriteLine("לא מצאתי את החלון. נסה להריץ שוב, או תגיד לי ואבדוק אחרת.");
+            Console.WriteLine("לחץ Enter לסגירה...");
+            Console.ReadLine();
+            return;
+        }
+
+        Console.WriteLine("נמצא חלון: '" + reportWindow.Current.Name + "'");
         Console.WriteLine(new string('-', 60));
-        Console.WriteLine("התהליך שאנחנו פתחנו נקרא: " + proc.Id);
-        Console.WriteLine("תעתיק לי את כל הרשימה למעלה, ותגיד לי גם אם התוכנה 'מנוע דוחות' בכלל נפתחה על המסך.");
-        Console.WriteLine();
+        Console.WriteLine("אלה כל הכפתורים/תפריטים/רשימות בתוך החלון:");
+        Console.WriteLine(new string('-', 60));
+
+        // עוברים על כל מה שיש בתוך החלון הזה בלבד
+        AutomationElementCollection allControls = reportWindow.FindAll(
+            TreeScope.Descendants, Condition.TrueCondition);
+
+        foreach (AutomationElement el in allControls)
+        {
+            string type = el.Current.ControlType.ProgrammaticName;
+            string name = el.Current.Name;
+            string autoId = el.Current.AutomationId;
+
+            Console.WriteLine($"סוג: {type,-35} | שם: '{name}' | מזהה: '{autoId}'");
+        }
+
+        Console.WriteLine(new string('-', 60));
+        Console.WriteLine("סיימתי. תעתיק לי את כל הרשימה למעלה (או צילום מסך).");
         Console.WriteLine("לחץ Enter לסגירה (זה לא יסגור את התוכנה עצמה)...");
         Console.ReadLine();
     }
