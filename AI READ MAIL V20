@@ -24,6 +24,7 @@ class Program
     const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
     const uint MOUSEEVENTF_LEFTUP = 0x0004;
 
+    [STAThread]
     static void Main()
     {
         string exePath = @"C:\Users\netanelma\Desktop\מנוע דוחות.exe";
@@ -185,52 +186,114 @@ class Program
         {
             Console.WriteLine("נמצא חלון: '" + saveWindow.Current.Name + "'");
 
-            DateTime clickTime = DateTime.Now;
+            BringToFront(saveWindow);
+            Thread.Sleep(400);
 
-            // מסמנים שהאקסל ייסגר לבד אחרי השמירה - כדי שלא יישאר נעול
-            Console.WriteLine("מסמן 'סגירת האקסל לאחר שמירתו'...");
-            SetCheckBox(saveWindow, "chkCloseReport", true);
-            Thread.Sleep(300);
+            var handlesBeforeBrowse = GetAllTopWindowHandles();
+            Console.WriteLine("לוחץ על 'סייר...'...");
+            ClickButton(saveWindow, "btnBrowse");
 
-            // *** לא נוגעים בתיבה או ב'סייר' בכלל - משאירים את ברירת המחדל שהתוכנה הכינה ***
-            Console.WriteLine("לוחץ על 'אישור' (עם ברירת המחדל שהתוכנה הכינה)...");
-            ClickButton(saveWindow, "btnSave");
+            AutomationElement browseDialog = FindNewTopWindowAny(handlesBeforeBrowse, 5);
 
-            Console.WriteLine("ממתין שהקובץ יישמר (זה יכול לקחת רגע, מחפש גם בתתי-תיקיות)...");
-            string newFile = WaitForNewExcelFile(todayFolder, clickTime, 90);
-
-            if (newFile == null)
+            if (browseDialog == null)
             {
-                Console.WriteLine("(!) לא זיהיתי קובץ אקסל חדש. כדאי לבדוק ידנית בתיקייה.");
+                Console.WriteLine("לא נמצא - מנסה לחיצת עכבר אמיתית על 'סייר...'...");
+                AutomationElement browseBtn = saveWindow.FindFirst(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.AutomationIdProperty, "btnBrowse"));
+                if (browseBtn != null)
+                {
+                    RealClick(browseBtn);
+                    browseDialog = FindNewTopWindowAny(handlesBeforeBrowse, 10);
+                }
+            }
+
+            if (browseDialog == null)
+            {
+                Console.WriteLine("(!) לא נפתח חלון סייר. עוצר כאן.");
             }
             else
             {
-                string targetPath = Path.Combine(Path.GetDirectoryName(newFile), "אחרי בפועל.xlsm");
-                Console.WriteLine("נמצא קובץ חדש: " + newFile);
-                Console.WriteLine("מנסה לשנות שם ל: " + targetPath);
-                Console.WriteLine("(אם הקובץ נעול, אמשיך לנסות עד 3 דקות)");
+                Console.WriteLine("נמצא חלון סייר: '" + browseDialog.Current.Name + "'");
 
-                bool renamed = false;
-                for (int attempt = 1; attempt <= 60 && !renamed; attempt++)
+                // *** קריטי: מביאים את חלון הסייר עצמו קדימה - לא מספיק שהבאנו את מה שמאחוריו ***
+                BringToFront(browseDialog);
+                Thread.Sleep(500);
+
+                AutomationElement fileNameCombo = browseDialog.FindFirst(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.AutomationIdProperty, "1148"));
+
+                AutomationElement editBox = null;
+                if (fileNameCombo != null)
                 {
-                    try
-                    {
-                        if (File.Exists(targetPath)) File.Delete(targetPath);
-                        File.Move(newFile, targetPath);
-                        renamed = true;
-                        Console.WriteLine("בוצע בהצלחה! (אחרי " + attempt + " ניסיונות)");
-                    }
-                    catch (Exception ex)
-                    {
-                        if (attempt == 1 || attempt % 5 == 0)
-                            Console.WriteLine("   (ניסיון " + attempt + "/60) הקובץ עדיין נעול... (" + ex.Message + ")");
-                        Thread.Sleep(3000);
-                    }
+                    editBox = fileNameCombo.FindFirst(TreeScope.Descendants,
+                        new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
                 }
 
-                if (!renamed)
-                    Console.WriteLine("(!) לא הצלחתי לשנות שם אחרי 3 דקות. תסגור ידנית את הקובץ אם הוא פתוח, ותגיד לי.");
+                if (editBox == null)
+                {
+                    Console.WriteLine("(!) לא מצאתי את תיבת 'File name' (מזהה 1148). עוצר כאן.");
+                }
+                else
+                {
+                    Console.WriteLine("מצאתי את תיבת 'File name'. לוחץ ומקליד...");
+
+                    RealClick(editBox);
+                    Thread.Sleep(400);
+                    SendKeys.SendWait("^a");
+                    Thread.Sleep(200);
+                    SendKeys.SendWait("{DEL}");
+                    Thread.Sleep(200);
+                    SendKeys.SendWait("אחרי בפועל");
+                    Thread.Sleep(500);
+
+                    // *** בדיקה מיידית: מה באמת כתוב בתיבה עכשיו? ***
+                    string currentValue = "";
+                    object vp;
+                    if (editBox.TryGetCurrentPattern(ValuePattern.Pattern, out vp))
+                        currentValue = ((ValuePattern)vp).Current.Value;
+
+                    Console.WriteLine("מה שכתוב בתיבה עכשיו: '" + currentValue + "'");
+
+                    if (!currentValue.Contains("אחרי בפועל"))
+                    {
+                        Console.WriteLine("(!) ההקלדה לא נכנסה כמו שציפיתי. מנסה גם SetValue ישירות...");
+                        if (vp != null)
+                        {
+                            try { ((ValuePattern)vp).SetValue("אחרי בפועל"); }
+                            catch (Exception ex) { Console.WriteLine("   SetValue נכשל: " + ex.Message); }
+                        }
+                        Thread.Sleep(300);
+                        if (editBox.TryGetCurrentPattern(ValuePattern.Pattern, out vp))
+                            currentValue = ((ValuePattern)vp).Current.Value;
+                        Console.WriteLine("אחרי ניסיון נוסף, כתוב: '" + currentValue + "'");
+                    }
+
+                    Thread.Sleep(300);
+
+                    AutomationElement saveBtn = browseDialog.FindFirst(TreeScope.Descendants,
+                        new PropertyCondition(AutomationElement.NameProperty, "Save"));
+
+                    if (saveBtn != null)
+                    {
+                        object p2;
+                        if (saveBtn.TryGetCurrentPattern(InvokePattern.Pattern, out p2))
+                            ((InvokePattern)p2).Invoke();
+                        else
+                            RealClick(saveBtn);
+                        Console.WriteLine("לחצתי על Save.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("לא מצאתי כפתור Save בשם - שולח Enter.");
+                        SendKeys.SendWait("{ENTER}");
+                    }
+                    Thread.Sleep(1500);
+                }
             }
+
+            Console.WriteLine("לוחץ על 'אישור' הסופי בחלון 'שמירה בסיום ההרצה'...");
+            ClickButton(saveWindow, "btnSave");
+            Thread.Sleep(3000);
         }
 
         Console.WriteLine(new string('=', 60));
