@@ -184,13 +184,38 @@ class Program
         {
             Console.WriteLine("נמצא חלון: '" + saveWindow.Current.Name + "'");
 
-            string saveFilePath = Path.Combine(todayFolder, "בפועל.xlsm");
-            Console.WriteLine("ממלא את נתיב השמירה: " + saveFilePath);
-            SetTextValue(saveWindow, "txtFolderName", saveFilePath);
+            // *** נותנים רק את התיקייה - התוכנה בוחרת את שם הקובץ לבד ***
+            Console.WriteLine("ממלא את תיקיית השמירה: " + todayFolder);
+            SetTextValue(saveWindow, "txtFolderName", todayFolder);
 
+            DateTime clickTime = DateTime.Now;
             Thread.Sleep(500);
             Console.WriteLine("לוחץ על 'אישור'...");
             ClickButton(saveWindow, "btnSave");
+
+            Console.WriteLine("ממתין שהקובץ החדש יישמר (זה יכול לקחת רגע)...");
+            string newFile = WaitForNewExcelFile(todayFolder, clickTime, 60);
+
+            if (newFile == null)
+            {
+                Console.WriteLine("(!) לא זיהיתי קובץ אקסל חדש בתיקייה תוך הזמן שחיכיתי.");
+            }
+            else
+            {
+                string targetPath = Path.Combine(todayFolder, "אחרי בפועל.xlsm");
+                Console.WriteLine("נמצא קובץ חדש: " + newFile);
+                Console.WriteLine("משנה שם ל: " + targetPath);
+                try
+                {
+                    if (File.Exists(targetPath)) File.Delete(targetPath);
+                    File.Move(newFile, targetPath);
+                    Console.WriteLine("בוצע בהצלחה!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("(!) שגיאה בשינוי שם: " + ex.Message);
+                }
+            }
         }
 
         Console.WriteLine(new string('=', 60));
@@ -310,6 +335,28 @@ class Program
             SetForegroundWindow(hWnd);
         }
         catch { }
+    }
+
+    // מחכה שיופיע קובץ אקסל חדש בתיקייה (שנוצר אחרי הזמן שהעברנו)
+    static string WaitForNewExcelFile(string folder, DateTime afterTime, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds; i++)
+        {
+            try
+            {
+                var files = Directory.GetFiles(folder)
+                    .Select(f => new FileInfo(f))
+                    .Where(f => f.LastWriteTime > afterTime &&
+                                (f.Extension.ToLower() == ".xlsm" || f.Extension.ToLower() == ".xlsx"))
+                    .OrderByDescending(f => f.LastWriteTime)
+                    .ToList();
+
+                if (files.Count > 0) return files[0].FullName;
+            }
+            catch { }
+            Thread.Sleep(1000);
+        }
+        return null;
     }
 
     static string FindTodayFolder(string parentFolder)
