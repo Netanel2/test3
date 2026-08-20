@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Automation;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 class Program
 {
@@ -282,7 +283,25 @@ class Program
 
             string expectedPath = Path.Combine(todayFolder, "SubFolder1", "אחרי בפועל.xlsm");
             if (File.Exists(expectedPath))
+            {
                 Console.WriteLine("מצוין! הקובץ נמצא: " + expectedPath);
+
+                // *** שלב חדש: יוצרים קובץ חדש עם שני הטאבים זה לצד זה ***
+                string outputFolder = Path.GetDirectoryName(expectedPath);
+                string outputName = "report_115_" + DateTime.Now.ToString("yyyy_MM_dd-HH-mm") + ".xlsx";
+                string outputFullPath = Path.Combine(outputFolder, outputName);
+
+                Console.WriteLine("יוצר קובץ ממוזג: " + outputFullPath);
+                try
+                {
+                    CombineTabsToNewWorkbook(expectedPath, "שגיאות הקמה", "סטטוס הקמה במערכת", outputFullPath);
+                    Console.WriteLine("הקובץ הממוזג נוצר בהצלחה!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("(!) שגיאה ביצירת הקובץ הממוזג: " + ex.Message);
+                }
+            }
             else
                 Console.WriteLine("(!) לא רואה את הקובץ בנתיב הצפוי: " + expectedPath);
         }
@@ -294,6 +313,48 @@ class Program
     }
 
     // מחפש חלון לפי השם המדויק שלו - בלי קשר לאיזה תהליך (process) פתח אותו
+    // פותח את הקובץ המקור, ומעתיק שני טאבים שלמים לקובץ חדש (כל אחד כטאב נפרד)
+    static void CombineTabsToNewWorkbook(string sourceFile, string sheet1Name, string sheet2Name, string outputFullPath)
+    {
+        Excel.Application excelApp = null;
+        Excel.Workbook sourceWb = null;
+        Excel.Workbook newWb = null;
+
+        try
+        {
+            excelApp = new Excel.Application();
+            excelApp.Visible = false;
+            excelApp.DisplayAlerts = false;
+
+            sourceWb = excelApp.Workbooks.Open(sourceFile, ReadOnly: true);
+
+            Excel.Worksheet sheet1 = (Excel.Worksheet)sourceWb.Sheets[sheet1Name];
+            Excel.Worksheet sheet2 = (Excel.Worksheet)sourceWb.Sheets[sheet2Name];
+
+            // חוברת חדשה - מתחילה עם טאב ברירת מחדל אחד ריק
+            newWb = excelApp.Workbooks.Add();
+            Excel.Worksheet placeholderSheet = (Excel.Worksheet)newWb.Sheets[1];
+
+            // מעתיקים את שני הטאבים בשלמותם (עם כל התוכן והעיצוב) לתוך החוברת החדשה
+            sheet1.Copy(After: newWb.Sheets[newWb.Sheets.Count]);
+            sheet2.Copy(After: newWb.Sheets[newWb.Sheets.Count]);
+
+            // מוחקים את הטאב הריק המקורי שנוצר אוטומטית עם החוברת החדשה
+            placeholderSheet.Delete();
+
+            newWb.SaveAs(outputFullPath, Excel.XlFileFormat.xlOpenXMLWorkbook);
+        }
+        finally
+        {
+            // חשוב מאוד: לשחרר הכל כמו שצריך, אחרת נשארים תהליכי Excel "רוחות רפאים"
+            if (newWb != null) { newWb.Close(false); Marshal.ReleaseComObject(newWb); }
+            if (sourceWb != null) { sourceWb.Close(false); Marshal.ReleaseComObject(sourceWb); }
+            if (excelApp != null) { excelApp.Quit(); Marshal.ReleaseComObject(excelApp); }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+    }
+
     static AutomationElement FindWindowByTitleAnyProcess(AutomationElement innerSearchRoot, string title, int timeoutSeconds)
     {
         for (int i = 0; i < timeoutSeconds * 2; i++)
