@@ -227,22 +227,14 @@ class Program
 
                 if (editBox != null)
                 {
-                    Console.WriteLine("מצאתי את תיבת 'File name' הנכונה.");
-                    object p;
-                    if (editBox.TryGetCurrentPattern(ValuePattern.Pattern, out p))
-                    {
-                        ((ValuePattern)p).SetValue(desiredFullPath);
-                        Console.WriteLine("מילאתי את הנתיב ישירות.");
-                    }
-                    else
-                    {
-                        RealClick(editBox);
-                        Thread.Sleep(300);
-                        SendKeys.SendWait("^a");
-                        SendKeys.SendWait(desiredFullPath);
-                    }
-
-                    Thread.Sleep(500);
+                    Console.WriteLine("מצאתי את תיבת 'File name'. מקליד את השם...");
+                    // התיקייה כבר נכונה מעצמה - כותבים רק את שם הקובץ (בלי נתיב, בלי סיומת)
+                    RealClick(editBox);
+                    Thread.Sleep(400);
+                    SendKeys.SendWait("^a");
+                    Thread.Sleep(150);
+                    SendKeys.SendWait("אחרי בפועל");
+                    Thread.Sleep(400);
 
                     AutomationElement saveBtn = browseDialog.FindFirst(TreeScope.Descendants,
                         new PropertyCondition(AutomationElement.NameProperty, "Save"));
