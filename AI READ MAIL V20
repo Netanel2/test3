@@ -1,16 +1,3 @@
-תזכורת מהירה מה לעשות איתו:
-
-תוריד את הקובץ למעלה
-פתח את הפרויקט ב-Visual Studio 2019 (Console App .NET Framework)
-תעתיק את התוכן שלו לתוך Program.cs בפרויקט (מחליף את מה שכבר יש שם)
-שנה את השורה הזו לנתיב האמיתי של הקובץ אצלך:
-   string exePath = @"C:\Users\YourUserName\Desktop\מנוע דוחות.exe";
-הוסף את שני ה-References (קליק ימני על References ← Add Reference ← Assemblies): UIAutomationClient ו-UIAutomationTypes
-לחץ F5 להריץ
-
-אחרי שזה ירוץ, תיפתח לך התוכנה "מנוע דוחות" וגם חלון שחור עם רשימת שמות - את זה תעתיק ותשלח לי, ולפיו אכתוב את הקוד הסופי שבאמת בוחר את הקטגוריה ולוחץ על הכפתורים.
-
-
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -25,54 +12,48 @@ class Program
 
         Console.WriteLine("פותח את התוכנה...");
         Process proc = Process.Start(exePath);
-        proc.WaitForInputIdle();
 
-        // נותנים לחלון זמן להיפתח לגמרי
-        Thread.Sleep(2000);
-
-        // מחפשים את החלון הראשי של התוכנה שפתחנו
-        AutomationElement mainWindow = null;
-        for (int i = 0; i < 20 && mainWindow == null; i++)
+        // לא כל תוכנה עונה כמו שצריך ל-WaitForInputIdle,
+        // אז עוטפים את זה כדי שהתוכנית שלנו לא תיתקע כאן
+        try
         {
-            mainWindow = AutomationElement.RootElement.FindFirst(
-                TreeScope.Children,
-                new PropertyCondition(AutomationElement.ProcessIdProperty, proc.Id));
-
-            if (mainWindow == null)
-                Thread.Sleep(500);
+            proc.WaitForInputIdle(5000);
+        }
+        catch
+        {
+            Console.WriteLine("(אזהרה קטנה: לא הצלחתי לחכות בדרך הרגילה, ממשיך בכל זאת)");
         }
 
-        if (mainWindow == null)
-        {
-            Console.WriteLine("לא הצלחתי למצוא את חלון התוכנה. אולי צריך יותר זמן המתנה, או שנפתח חלון ביניים לפני החלון הראשי.");
-            Console.WriteLine("לחץ Enter לסיום...");
-            Console.ReadLine();
-            return;
-        }
+        Console.WriteLine("ממתין 3 שניות שהחלון ייטען...");
+        Thread.Sleep(3000);
 
-        Console.WriteLine("נמצא חלון: " + mainWindow.Current.Name);
-        Console.WriteLine("מחפש את כל הכפתורים והתפריטים בתוכו...");
+        // במקום לחפש רק לפי המספר-זיהוי של התהליך שפתחנו,
+        // נדפיס עכשיו את *כל* החלונות הפתוחים במחשב, כדי לראות מה באמת נפתח
+        Console.WriteLine(new string('-', 60));
+        Console.WriteLine("אלה כל החלונות הפתוחים כרגע במחשב:");
         Console.WriteLine(new string('-', 60));
 
-        // עוברים על כל האלמנטים (כפתורים, תפריטים, רשימות) שבתוך החלון
-        AutomationElementCollection allControls = mainWindow.FindAll(
-            TreeScope.Descendants, Condition.TrueCondition);
+        AutomationElementCollection allWindows = AutomationElement.RootElement.FindAll(
+            TreeScope.Children, Condition.TrueCondition);
 
-        foreach (AutomationElement el in allControls)
+        foreach (AutomationElement win in allWindows)
         {
-            string type = el.Current.ControlType.ProgrammaticName;
-            string name = el.Current.Name;
-            string autoId = el.Current.AutomationId;
+            string name = win.Current.Name;
 
-            // מדפיסים רק אלמנטים עם שם, כדי שלא יהיה יותר מדי רעש
-            if (!string.IsNullOrWhiteSpace(name) || !string.IsNullOrWhiteSpace(autoId))
-            {
-                Console.WriteLine($"סוג: {type}   |   שם: '{name}'   |   מזהה: '{autoId}'");
-            }
+            // מדלגים על חלונות בלי שם, כדי שלא יהיה יותר מדי רעש
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
+
+            int pid = 0;
+            try { pid = win.Current.ProcessId; } catch { }
+
+            Console.WriteLine($"שם חלון: '{name}'   |   מספר תהליך (PID): {pid}");
         }
 
         Console.WriteLine(new string('-', 60));
-        Console.WriteLine("סיימתי. אפשר להעתיק את כל הטקסט למעלה ולשלוח אליי.");
+        Console.WriteLine("התהליך שאנחנו פתחנו נקרא: " + proc.Id);
+        Console.WriteLine("תעתיק לי את כל הרשימה למעלה, ותגיד לי גם אם התוכנה 'מנוע דוחות' בכלל נפתחה על המסך.");
+        Console.WriteLine();
         Console.WriteLine("לחץ Enter לסגירה (זה לא יסגור את התוכנה עצמה)...");
         Console.ReadLine();
     }
