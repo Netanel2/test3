@@ -457,7 +457,7 @@ class Program
         // *** תשים כאן את הנתיב האמיתי לתוכנה השנייה (בלי שום מרכאות/פרמטרים בפנים!) ***
         string exePath2 = @"C:\Program Files\Archive\Archive.exe";
         // *** ננסה קודם בלי פרמטר בכלל, כדי לוודא שנפתח חלון רגיל שרואים ***
-        string exeArgs2 = "";
+        string exeArgs2 = "-auto";
 
         Console.WriteLine("פותח את התוכנה השנייה...");
         Process proc2 = string.IsNullOrEmpty(exeArgs2)
@@ -556,7 +556,7 @@ class Program
             Thread.Sleep(300);
             Console.WriteLine("לוחץ פיזית על 'אישור' (OK)...");
 
-            var handlesBeforeLogin = GetAllTopWindowHandles();
+            var handlesBeforeLogin = GetWindowHandlesForProcess(proc2.Id);
 
             AutomationElement okBtn2 = window2.FindFirst(TreeScope.Descendants,
                 new PropertyCondition(AutomationElement.AutomationIdProperty, "OK"));
@@ -576,50 +576,13 @@ class Program
 
             Thread.Sleep(1500);
 
-            // *** מדפיסים את *כל* החלונות הפתוחים כרגע (לא רק "חדשים") - כדי לראות בדיוק מה יש על המסך ***
-            Console.WriteLine(new string('-', 60));
-            Console.WriteLine("מתחיל לחפש את כל החלונות הפתוחים (סימון דרך 1)...");
-
-            try
-            {
-                AutomationElementCollection allWindowsNow = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
-                Console.WriteLine("נמצאו " + allWindowsNow.Count + " חלונות עצמאיים. אלה השמות שלהם:");
-                foreach (AutomationElement w in allWindowsNow)
-                {
-                    string n = "";
-                    try { n = w.Current.Name; } catch { }
-                    Console.WriteLine("   - '" + n + "'");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("   (!) שגיאה בחיפוש חלונות עצמאיים: " + ex.GetType().Name + " - " + ex.Message);
-            }
-
-            Console.WriteLine("סימון דרך 2 - בודק חלונות פנימיים...");
-            try
-            {
-                AutomationElementCollection innerNow = window2.FindAll(TreeScope.Descendants,
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
-                foreach (AutomationElement w in innerNow)
-                {
-                    string n = "";
-                    try { n = w.Current.Name; } catch { }
-                    if (!string.IsNullOrWhiteSpace(n))
-                        Console.WriteLine("   - '" + n + "'");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("   (!) שגיאה: " + ex.Message);
-            }
-            Console.WriteLine(new string('-', 60));
-            Console.WriteLine("סימון דרך 3 - מחפש חלון 'חדש'...");
+            Console.WriteLine("מחפש את החלון הבא - רק כאלה ששייכים ל-Archive עצמו...");
 
             AutomationElement window3 = null;
             try
             {
-                window3 = FindNewTopWindowAny(handlesBeforeLogin, 15);
+                // *** קריטי: מסננים לפי proc2.Id - כדי לא לתפוס בטעות חלון של תוכנה אחרת ***
+                window3 = FindNewWindowByHandle(proc2.Id, handlesBeforeLogin, 15);
             }
             catch (Exception ex)
             {
