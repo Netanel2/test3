@@ -176,9 +176,6 @@ class Program
                 }
 
                 Console.WriteLine(new string('-', 60));
-                Console.WriteLine("(עוצר כאן. תגיד לי אם הנתיב הנכון נבחר.)");
-                Console.ReadLine();
-                return;
             }
         }
 
