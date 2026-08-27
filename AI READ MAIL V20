@@ -1,686 +1,1060 @@
-מחפש את תיקיית היום...
-מצאתי תיקיית היום: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57
-מצאתי קובץ XML: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57\SubFolder1\bc565f89-f994-40ca-a12d-83eb375447f6_2026-20-08--11-30-17_PJ.xml
-============================================================
-פותח את התוכנה...
-בוחר קטגוריה 'עדכונים-תפעול'...
-בוחר את הדוח 'קליטת מעברים מXML'...
-לוחץ על 'בחירת דוח'...
-נמצא חלון: 'דוח 1152 - קליטת מעברים מXML'
-ממלא סיסמה...
-לוחץ על 'פתיחת קובץ'...
-נמצא חלון: 'בדיקת XML וטעינתו למערכת'
-ממלא את נתיב קובץ ה-XML...
-מצאתי קובץ XSD: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\XSD_Amit_20220216.xsd
-ממלא את נתיב קובץ ה-XSD...
-לוחץ על 'בדיקה מול XSD'...
-ממתין לחלון אישור אפשרי...
-   נמצא חלון: 'בדיקת XML וטעינתו למערכת' - לוחץ על אישור...
-לוחץ על 'עדכון דוח 816-עמיתים'...
-ממתין לחלון 'כן/לא'...
-   נמצא חלון: 'בדיקת XML וטעינתו למערכת' - לוחץ על אישור...
-ממתין לחלון אישור נוסף...
-   נמצא חלון: 'בדיקת XML וטעינתו למערכת' - לוחץ על אישור...
-מסמן 'שמירה בסיום' במסך הקודם...
-לוחץ על 'יצוא לאקסל' (מריץ את הדוח בפועל)...
-ממתין לחלון 'שמירה בסיום'...
-נמצא חלון: 'שמירה בסיום ההרצה'
-לוחץ על 'סייר...'...
-נמצא חלון סייר: 'Save As'
-קליק פיזי על תיבת השם...
-מרוקן את השדה...
-מקליד עם המקלדת...
-מקליד את הנתיב המלא: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57\SubFolder1\אחרי בפועל.xlsm
-בתיבה כתוב עכשיו: '\\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57\SubFolder1\אחרי בפועל.xlsm'
-קליק פיזי על Save...
-התיבה הראשית עכשיו מראה: '\\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57\SubFolder1\אחרי בפועל.xlsm'
-לוחץ על 'אישור' הסופי בחלון 'שמירה בסיום ההרצה'...
-ממתין שהקובץ באמת יופיע (עד 90 שניות)...
-מצוין! הקובץ נמצא: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57\SubFolder1\אחרי בפועל.xlsm
-יוצר קובץ ממוזג: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57\SubFolder1\report_115_2026_08_27-13-42.xlsx
-הקובץ הממוזג נוצר בהצלחה!
-שמות הטאבים שבאמת יש בקובץ:
-   - 'Amit'
-   - 'Relative'
-   - 'Version'
-   - 'InvestmentPlanAmit'
-   - 'Company'
-   - 'PowerOfAttorney'
-   - 'CompanyInfo'
-   - 'InvestmentPlanCompany'
-   - 'Benefit'
-   - 'TransIn'
-   - 'Docs'
-   - 'פרטי קובץ כלליים'
-   - 'שגיאות הקמה'
-   - 'סטטוס הקמה במערכת'
-   - 'קבצים למפתוח'
-מחלץ את הטאב 'קבצים לפתוח' לקובץ: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57\SubFolder1\מפתוחים.xlsx
-קובץ 'מפתוחים' נוצר בהצלחה!
-מעתיק את תיקיית 'מסמכים' אל: \\100.100.100.6\Root\ScanDocs\Source\2\מפתוח אוטומטי\מסמכים
-התיקייה הועתקה בהצלחה!
-============================================================
-מנקה: סוגר את 'מנוע דוחות' ופותח את התיקייה הראשית להצגה...
-   סגירה רגילה לא הספיקה, סוגר בכוח...
-============================================================
-=== שלב 2: פותח את התוכנה הבאה ===
-פותח את התוכנה השנייה...
-נמצא חלון (מחכה שהוא יטען לגמרי)...
-שם החלון: ''
-------------------------------------------------------------
-אלה כל השדות/כפתורים בחלון הזה (11 נמצאו):
-------------------------------------------------------------
-סוג: ControlType.Edit                    | שם: '' | מזהה: 'txtUser'
-סוג: ControlType.Button                  | שם: 'ביטול' | מזהה: 'Cancel'
-סוג: ControlType.Button                  | שם: 'אישור' | מזהה: 'OK'
-סוג: ControlType.Edit                    | שם: 'בחר בעלים:' | מזהה: 'txtPassword'
-סוג: ControlType.Text                    | שם: 'שם משתמש:' | מזהה: 'Label1'
-סוג: ControlType.Text                    | שם: 'סיסמא:' | מזהה: 'PasswordLabel'
-סוג: ControlType.Pane                    | שם: 'בחר בעלים:' | מזהה: 'LogoPictureBox'
-סוג: ControlType.TitleBar                | שם: '' | מזהה: 'TitleBar'
-סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmLogin'
-סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
-סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
-ממלא שם משתמש (קליק פיזי + הקלדה אמיתית)...
-ממלא סיסמה (קליק פיזי + הקלדה אמיתית)...
-לוחץ פיזית על 'אישור' (OK)...
-   כפתור OK נמצא במיקום: X=878 Y=589 רוחב=62 גובה=23 (פעיל: True)
-   בוצעה לחיצה במרכז הכפתור.
-מחפש את החלון הבא - רק כאלה ששייכים ל-Archive עצמו...
-נמצא חלון חדש: 'מפתוח אוטומטי מתיקיה - אלטשולר שחם'
-------------------------------------------------------------
-אלה כל השדות/כפתורים בחלון הזה (588 נמצאו):
-------------------------------------------------------------
-סוג: ControlType.Text                    | שם: 'מוצר' | מזהה: 'lblCmbVersionCode'
-סוג: ControlType.ComboBox                | שם: 'מוצר' | מזהה: 'cmbVersionCode'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: '0 - ללא מוצר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '3 - מקיפה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '4 - כללית' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'התעלם מתוים' | מזהה: 'lblcmbIgnoreCharsSeperator'
-סוג: ControlType.ComboBox                | שם: 'התעלם מתוים' | מזהה: 'cmbIgnoreCharsSeperator'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: 'אל תתעלם' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'לפני המפריד' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'אחרי המפריד' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'מפריד' | מזהה: 'lbltxtSeperatorChar'
-סוג: ControlType.Edit                    | שם: 'ת. מסמך' | מזהה: 'txtSeperatorChar'
-סוג: ControlType.CheckBox                | שם: 'ת.מסמך מהקובץ' | מזהה: 'chkGetActualDateFromFile'
-סוג: ControlType.Text                    | שם: 'מבנה שם קבצים' | מזהה: 'Label5'
-סוג: ControlType.ComboBox                | שם: 'מבנה שם קבצים' | מזהה: 'cmbFilesFormat'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: 'מספר ישות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'מספר ישות_מספר סוג מסמך' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'מספר קבלה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'מספר ישות_מספר סוג מסמך_מספר סוג ישות_תיאור' | מזהה: ''
-סוג: ControlType.ListItem                | שם: 'אקסל בפורמט: *שם קובץ,*סוג ישות,*מס' ישות,*סוג מסמך,*ת.מהקובץ?,תאריך,מוצר,תיאור' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'תיאור' | מזהה: 'lbltxtDescription'
-סוג: ControlType.Edit                    | שם: 'סוג ישות' | מזהה: 'txtDescription'
-סוג: ControlType.Pane                    | שם: '27/08/2026' | מזהה: 'dtActualDate'
-סוג: ControlType.Text                    | שם: 'ת. מסמך' | מזהה: 'lbldtActualDate'
-סוג: ControlType.Text                    | שם: 'סוג ישות' | מזהה: 'lblcmbStorageTypeNo'
-סוג: ControlType.ComboBox                | שם: 'סוג ישות' | מזהה: 'cmbStorageTypeNo'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: '1-עמית - ת.ז./חשבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '2-מעסיק - מס.מעסיק/ח.פ.' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '3-סוכן - מס.סוכן' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'סוג מסמך' | מזהה: 'lblcmbDocTypeNo'
-סוג: ControlType.ComboBox                | שם: 'סוג מסמך' | מזהה: 'cmbDocTypeNo'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.ListItem                | שם: '0-***לא ידוע***' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '1-פירוט תשלומים לעמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '2-כרטיס עובד' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '3-בקשה לפנסית שארים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '4-יפוי כח עמית למסירת מידע/פעולות לבא כח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '5-הסכם עובד-מעביד' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '6-בקשה להקפאת/הפסקת תשלומים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '7-בקשה לפנסית נכות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '8-בקשה לפנסית זקנה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '9-טופס הצטרפות עמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '10-פדיון שבוצע' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '11-בקשה לשינוי פרטי בנק לתשלום משכורת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '12-צילום המחאה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '13-אישור לתאום מס קצבאות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '14-בקשה לרצף פיצויים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '15-בקשה להמשך חברות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '16-שינוי סכום בהוראת קבע' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '17-"ביטול הו""ק"' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '18-סעיף 14' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '19-בקשה לביטול פדיון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '20-צו ירושה(צוואה)' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '21-פסק דין בית משפט' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '22-הצהרת בריאות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '23-תביעה משפטית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '24-זכאות ללא תנאי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '25-זימון לרופא מומחה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '26-הפקדות חריגות בחשבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '27-פנסית זקנה שבוצעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '28-תלונות עמיתים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '29-אישור מביטוח לאומי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '30-ביטול צו עיקול' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '31-בקשה להמשך ריסק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '32-התכתבות עם עמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '33-בקשה לשינוי פרטי בנק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '34-"שלילת מתן שיחרור כספים ע""י מעסיק"' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '35-חשבון פנסיית שאירים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '36-מענק פטירה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '37-מכתב לאלמן/ אלמנה/ יתום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '38-ויתור על סודיות רפואית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '39-בקשה להמצאת מסמכים רפואיים/ שאלון כושר עבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '40-הזמנה לועדה רפואית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '41-אישור פנסיית נכות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '42-מסקנות ועדה רפואית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '43-הצהרת נכות לאוצר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '44-חשבון פנסיית נכות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '45-חשבון פנסיית זיקנה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '46-הוון פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '47-מקדמה על חשבון פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '48-כללי פדיונות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '49-כללי מסמכים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '50-דואר חוזר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '51-תשלום ידני בבנק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '52-החזר פרמיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '53-ריסק למקרה מוות-מענק פטירה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '54-מכתב הצטרפות בהחרגה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '55-ביטול הפסקת עבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '56-חוב למעסיק/ לקרן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '57-דוח שנתי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '58-"מכתב מעו""ד"' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '59-ייפוי כח-עמיתים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '60-שינוי מסלול פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '61-מעבר עמית ותיק/ עמית חדש' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '62-אפוטרופוס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '63-"אישור חיים לגימלאים בחו""ל"' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '64-בקשה להלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '65-חוזה הלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '66-מכתב פיגור בהלוואה לעמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '67-מכתב פיגור בהלוואה למעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '68-מכתב אישור הלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '69-הודעה על עודף בתשלום הלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '70-הודעה על ניכוי יתרה מפנסיה/עזיבה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '71-מכתב הודעה למעסיק הפסקת ניכוי הלוואות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '72-כללי פנסיות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '73-כללי הלוואות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '74-בקשה לשינוי תנאי הלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '75-עדכון ניכוי הלוואה למעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '76-הוראת קבע - הלוואות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '77-הליכים משפטיים - הלוואות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '78-מכתב על טפסי הלוואות  חסרים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '79-בקשה למשיכת 2.33' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '80-פירוט תשלום חשבון 2.33' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '81-בקשה למשיכת קופת גמל  -שכיר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '82-בקשה למשיכת קופת גמל - עצמאי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '83-בקשת הצטרפות לקופת גמל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '84-הוראה לחיוב חשבון ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '85-בקשה להעברת כספי קופת גמל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '86-כללי - קופת גמל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '87-פירוט חשבון קופת גמל שכירים/ עצמאיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '88-2003 - דוח שנתי/כללית חדשה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '89-2003 - דוח שנתי/קופת גמל שכיר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '90-2003 - דוח שנתי/קופת גמל עצמאי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '91-דוח שנתי/כללית חדשה - 2004' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '92-דוח שנתי/קופת גמל שכיר - 2004' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '93-דוח שנתי/קופת גמל עצמאי - 2004' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '94-דוח שנתי/דמי גמולים - 2004' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '95-עמיתיי הביניים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '96-זכויות למוקפאים בגיל פרישה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '97-דחיית נכות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '98-ערעור לוועדה רפואית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '99-ויתור סודיות לקבלת הלוואה מהבנק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '100-הפניה למס הכנסה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '101-חשבון פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '102-מסמך סימולציה - מסלולי פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '103-טופס הצטרפות למטריה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '104-החזר פרמיה הלוואות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '105-ביטול הוראת קבע הלוואות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '106-תעודת זהות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '107-הנחה בדמי ניהול לעמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '108-פנסיות קיזוזים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '109-הודעות בית משפט' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '110-ערעור לבקשת הצטרפות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '111-שיווק פנסיוני' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '112-בקשה לפירוט תשלומים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '113-הפסקת עבודה\שחרור כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '114-הודעה על עזיבת קבוצה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '115-חופשה ללא תשלום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '116-חופשת לידה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '117-עדכון פרטים אישיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '118-בקשה לפדיון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '119-בקשה לה. קבע' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '120-סיכום העברת טפסים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '121-תביעה לתשלום חוב  לקופת גמל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '122-פירוט תשלומים לה. בנקאיות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '123-אישורבנק(ה. קבע)' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '124-ת. פטירה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '125-ביטול הצגת חיובים על פי הרשאות לחיוב חשבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '126-מינוי סוכן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '127-קבלת בעלות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '128-עדכון מוטבים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '129-טופס 161' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '130-אישור הצטרפות לקרן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '131-שינוי הפרשות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '132-בקשה להסדר ריסק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '133-בקשה לרצף זכויות לקצבה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '134-תלושי שכר - עמיתים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '135-הודעה על פיגור בתשלומים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '136-אובדן כושר עבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '137-כתב שיפוי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '138-צו עיקול' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '139-מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '140-בקשה לשינוי פרטים בפוליסה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '141-מסמכים רפואיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '142-אישור לפטור ממס הכנסה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '143-כתב הצטרפות לקבוצה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '144-הוראת לתשלום החזר הלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '145-ביטול החזר פרמיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '146-מעבר לאפיק השקעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '147-שינוי פרטי מפעל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '148-ייפוי כח-עמית למפעל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '149-פדיון לקבוצות/קיבוצים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '150-הנחיות חישוב לקיבוץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '151-רשימת באי כח לקבוצה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '152-מתן הוראות להקצאה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '153-התכתבות עם קיבוץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '154-החזר פרמיה שבוצע' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '155-חלופות סוכנים לאופן תשלום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '156-הנחיות ביצוע של קיבוץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '157-ריבית פיגורים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '158-הסכם ה.ד. ניהול עם מפעל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '159-בקשה להחזר פרמיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '160-הודעה על פשיטת רגל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '161-עדכון רשימת מקבלי פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '162-אישור ניכוי מס לקיבוץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '163-עדכון פרטים לחברי קבוצה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '164-אישור מס לקיבוץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '165-עדכון פרטי סוכנים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '166-התכתבות עם סוכן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '168-"דו""ח הפקדה"' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '189-רשימת קבלה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '190-חרטה מרצף קצבה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '191-חיתום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '192-סיכום פגישה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '193-העברה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '194-מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '195-טופס יעוץ פנסיוני' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '196-העברה בנקאית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '197-טופס התחייבות בלתי חוזרת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '198-טופס הצהרת עובד מוסמך' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '199-דוחות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '200-"דו""ח רבעוני לעמית"' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '201-"דו""ח תקופתי למבוטח"' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '202-סימולציה לעמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '203-טופס הקמת מעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '204-אישור העברת כספים - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '205-אישור העברת כספים - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '206-טופס 161 א' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '207-הוראה להעברת כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '208-התחייבות בלתי חוזרת של הקרן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '209-תאום מס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '210-פירוק כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '211-הו"ק - אישור הבנק על ביטול' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '212-הו"ק - דחיית בקשה ע"י הבנק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '213-הו"ק - אישור בקשה ע"י הבנק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '214-מעבר בין קרנות - סטטוס מקרן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '215-מועד קובע - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '216-מכתב פניה לקרן פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '217-טופס הצהרת עובד מוסמך - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '218-הוראה להעברת כספים - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '219-התחייבות בלתי חוזרת - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '220-אישור העסקה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '221-החזר ערכי פדיון למעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '222-מועד קובע - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '223-קבלה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '224-בקשה להפסקת הוראת קבע' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '225-מעבר נכנס מקופת ביטוח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '226-טופס הקמת סוכן/משווק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '227-הסכם עובד-מעסיק עובדי מדינה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '228-הצהרת מעסיק לגבי פעילות עובד/יו במקום העבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '229-תום תקופת ויתור כיסוי שארים ואו בן/בת זוג' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '230-בקשה לביטול העברה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '231-רשיון לסוכן ביטוח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '232-נספח א' - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '233-נספח ג' - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '234-נספח ד' - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '235-נספח ה' - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '236-נספח ו' - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '237-נספח א' - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '238-נספח ג' - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '239-נספח ד' - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '240-נספח ה' - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '241-נספח ו' - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '242-הפסקת חברות בקרן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '243-ביטול הצטרפות לקרן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '244-נספח ב' - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '245-נספח ב' - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '246-אישור על ניכוי מס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '247-אישור על ניהול ספרים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '248-התכתבות עם עמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '249-מכתב למעסיק בגין פיגורים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '250-פרטי חשבון בנק עמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '251-ביטול מעבר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '252-סעיף 14 לחוק פיצויי פיטורים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '253-פירוט הפקדות ממעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '254-הודעה על ביצוע תשלום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '255-אישור על ייעוד סכומים לקצבה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '256-בדיקה לפני משיכת כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '257-תעודת עוסק מורשה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '258-הודעה על הפסקת כיסוי ביטוחי לעמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '259-הודעה על הפקדה שחורגת מפעמיים שכר ממוצע' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '260-אישור בגין הפקדות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '261-פקיעת תוקף בקשת העברת כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '262-חישוב ניכוי מס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '263-כתב קבלה וסילוק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '264-אישור חיתום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '265-נספחי העמלה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '266-אי ביצוע הרשאה לחיוב חשבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '267-אישור למסירת דואר רשום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '269-אישור על סכומים בחשבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '270-טופס נשם' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '272-טופס 101' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '273-כתב שיפוי לפנסיונר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '274-תלוש פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '275-ויתור על כיסוי שארים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '276-מכתב לעמית בגין דמי ניהול' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '277-פיגור בביצוע מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '278-טופס 617' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '279-טופס 102' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '280-פקודת תשלום למוטבים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '281-פקודת שכר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '282-שימור' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '283-הודעה לעמית על ביטול מעבר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '284-מכתב לעמית בגין סיום תקופת ויתור' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '285-הודעה על תשלום לקרן אחרת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '286-הסדר לרבים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '287-הצהרת בעל רישיון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '288-תעודה מזהה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '289-מסמך הנמקה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '290-טופס נשם' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '291-מסמך תיוג לפתיחת חשבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '292-הפסקת ביטוח חיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '293-מסמך תיוג' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '294-טיפול במנותקי קשר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '295-מעבר יוצא - נספח ה'1 - עיכוב בקשה להעברת כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '296-מעבר נכנס - נספח ה'1 - עיכוב בקשה להעברת כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '400-החזרת מעבר מבוטל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '401-תגובה של קופה חיצונית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '402-תיקון נספח א' - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '403-בדיקה לפני מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '404-תעודת זהות יורש' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '405-צילום המחאה יורש' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '406-אישור על מעמד עמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '407-מינוי מנהל עיזבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '408-אישור הלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '409-סגירת הלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '410-מכתב למעסיק על אפשרות תשלום במסב' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '411-טופס 106' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '412-דוח בקרה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '413-אישור אקטואר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '440-בקשה לפדיון מוקדם' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '441-הוראה בלתי חוזרת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '442-בירור זכאות לקבלת פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '443-עדכון מעסיק לגבי הפקדות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '444-* moti - חשבונית מס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '445-* moti - קבלה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '446-* moti - דוח מע"מ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '447-* moti - אישור על ניכוי במקור' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '448-* moti - תעודת עוסק מורשה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '449-* moti - מאזן בוחן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '450-* moti - כרטסת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '451-* moti אישור שנתי ב"ל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '452-* moti אישור שנתי ביטוח חיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '453-* moti - טופס 106' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '454-* moti - חשבונית הוצאה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '455-מכתב הצטרפות למעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '456-הודעה על אי רצף הפקדות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '457-שינוי סוכן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '458-פיצוי בגין איחור העברת כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '459-עדכון פרטים - טיוב נתונים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '460-תשלום ריבית פיגורים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '461-מכתב לעמית לגבי עדכון הפקדות המעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '462-התכתבות עם מעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '463-דיווח הפקדות לפנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '464- מעבר נכנס - הודעה של עמית שלא יופקדו בשלו כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '465- מעבר יוצא - הודעה של עמית שלא יופקדו בשלו כספים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '466- נספח י - מעבר נכנס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '467- נספח י - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '468- נספח יא - הודעה למעסיק - מעבר יוצא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '469-כתב ויתור על סודיות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '470-אישור ביטוח לאומי מחלקת נפגעי תאונות עבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '471-אישור ביצוע תשלום הלואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '472-אישור הכנסה מרו"ח /יועץ מס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '473-אישור העברה במס"ב' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '474-אישור הפקדה לה. בנקאיות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '475-אישור מנהל לתשלום החזר פרמיה ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '476-אישור פדיון בהמחאה ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '477-ביטוח מנהלים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '478-בקשה לביטול או סילוק פוליסה ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '479-בקשה להצטרפות עמית עצמאי ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '480-בקשה למידע' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '481-בקשה לסילוק הלוואה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '482-בקשה לסילוק הלוואה בפדיון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '483-בקשה לעדכון שכר או נתוני הפרשה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '484-בקשה לפדיון מקרן קודמת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '485-בקשה לשינוי פרטי התקשרות עם סוכן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '486-דחיית בקשת הצטרפות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '487-הודעה למעסיק על מיזוג אפיקי השקעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '488-הודעה על חידוש פיקדון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '489-הודעת זיכוי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '490-הסכם דמי ניהול' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '491-הסכם העסקה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '492-הסכם לרבים למעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '493-הסכמי דמ"נ - מעסיקים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '494-העברת כספים מעוקלים מקרן אחרת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '495-הפסקת עבודה לקרן קודמת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '496-הפרשת פיצויים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '497-הצהרת הלבנת הון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '498-השלמת פרטים מגוף מתחרה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '499-חוסרים פדיונות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '500-חשבוניות מס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '501-טופס בקשה לתיקון הפקדות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '502-ייפוי כח א קבלת מידע ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '503-ייפוי כח ב1 בצוע פעולות וקבלת מידע כל הקופות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '504-ייפוי כח ב2 בצוע פעולות לקרן ספציפית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '505-ייפוי כח ב2 קבלת מידע לקרן ספציפית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '506-כניסה חריגה לקרן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '507-כתב התחיבות הקרן לקבלת עמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '508-כתב התחייבות של עמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '509-מורשי חתימה בקיבוץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '510-מכתב חוסרים ייפוי כוח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '511-מכתב חוסרים לסוכן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '512-מכתב לפני מיזוג אפיקי השקעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '513-מכתב מעו"ד בתביעה ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '514-מכתב מעמית בתביעה ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '515-מכתב תשובה לעו"ד בתביעה ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '516-מסמכי כפי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '517-נספח ה'-סירוב מעבר לקרן אחרת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '518-נתוני פנסיה קודמת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '519-סיכום בדיקת רופא מומחה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '520-סירוב מעבר מקרן אחרת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '521-עדכון פרטי מורשי חתימה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '522-עדכון רטרו במערכות הפנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '523-עזיבת קיבוץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '524-פיגור בתשלומי הקרן' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '525-פידיון מכתב חוסרים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '526-פירוט תשלומי ביטוח לאומי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '527-פירוט תשלומי בנקים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '528-קבלה לקרן הפנסיה בתנאים רגילים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '529-קוד מסמך לא מוכר בעתודות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '530-ריבית עוש' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '531-ריסק זמני יזום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '532-רשם החברות/BDI' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '533-שחרור פוליסה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '534-שינוי מסלולי גימלה שנשלח לעמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '535-תדפיס תנועות יומי לחשבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '536-תזכורת שניה למעבר בין קרנות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '537-תיבת מייל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '538-תיעוד פניה פנסיה למוקד ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '539-תיקון תאריך מעבר בין קרנות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '540-תיקון תז' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '541-תיקון/איפוס יתרה צבורה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '542-תעודת נישואין/גירושין' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '543-תקולים קליטה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '544-תשובה מקרן פנסיה מוסרת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '545-מסלקה - תצלום ת.ז + ספח/רשיון נהיגה/דרכון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '546-מסלקה - עדכון פרטים אישיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '547-מסלקה - תצלום ת.ז +נספח/דרכון  הורה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '548-מסלקה -הצטרפות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '549-מסלקה - ייפוי כח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '550-מסלקה - הנמקה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '551-מסלקה - טפסי חיתום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '552-מסלקה - טופס בחתימת מעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '553-מסלקה - טופס הודעה על עזיבת מקום עבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '554-מסלקה - 161 / 161א / טופס ניכוי מס במקור ממענק פרי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '555-מסלקה - צילום שיק/אישור ניהול חשבון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '556-מסלקה - טופס ניכוי מס במקור ממענק פרישה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '557-מסלקה - טופס בקשה לעדכון פרטים במוצר קיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '558-מסלקה - אישור מעסיק על תקופת העסקה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '559-מסלקה - אישור ביטוח לאומי עבור הורה נתמך' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '560-מסלקה - אחר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '561-טופס מתן הוראות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '562-בדיקה לפני פרישה לפנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '563-אישור סטטוס מעסיק' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '564-הודעה על מיזוג חברות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '565-עדכון אחוזי הפרשה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '566-רשיון קבורה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '567-הודעה על פטירה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '568-אישור נאמן למקור' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '569-הפסקת תשלום נכות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '570-חסימת חשבון להפקדות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '571-בקשה לביטול פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '572-מינוי איש קשר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '573-מסלקה - עדכון כתובת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '574-טופס 159 א' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '575-בקשה לתיקון תנועות ממשק מעסיקים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '576-כתב שיפוי שאר / מוטב' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '577-הוראת תשלום לחשבון אחר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '578-אישור לימודים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '579-אישור קיבוץ על סכומי קצבה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '580-ויתור יורש על ערכי פדיון' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '581-אישור לביצוע מעבר לאפיק השקעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '582-הצטרפות - נספח ח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '583-הצטרפות - סירוב נספח ח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '584-הצטרפות - נספח ט' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '585-הצטרפות - סירוב נספח ט' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '586-הצטרפות - נספח י' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '587-נספח הקדמת פרישה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '588-אישור תושבות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '589-חודשי הבטחת פנסיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '590-חישוב תשלום פנסיית שארים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '591-התחייבות מעסיק להפרשת כספים לעובד חדש' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '592-הרשאה מתמשכת לגורם מתפעל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '593-אישור על אי תשלום' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '594-מכתב פנייה לשארים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '595-מכתב לקראת גיל פרישה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '596-מכתב למעסיק בנושא חוזר תשלומים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '597-איחוד חשבונות - התנגדות נספח א' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '598-איחוד חשבונת - התנגדות נספח ג' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '599-איחוד חשבונת - נספח ד' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '600-נספח ז (הצטרפות הסדר לרבים)' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '601-טופס קבלת דוחות במייל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '602-טופס קבלת דוחות בדואר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '603-טופס נהנה (הצטפות)' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '604-הכר את הלקוח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '605-טופס חלוקחת חיסכון פנסיוני' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '606-טופס ביטול משיכה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '607-הוראה לחיוב חשבון- התכתבות עם עמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '608-טופס אישור החרגה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '609-הודעת תשלום תביעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '610-אישור המשך תביעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '611-צ'ק ליסט תביעות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '612-מכתב דרישה למסמכים נוספים.' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '613-מכתב חוסרים לתביעות.' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '614-הודעה לעמית לעניין קיזוז קצבה ממקור אחר.' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '615-חישוב תביעה.' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '616-מכתב לבית הנפטר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '617-יציאה לפנסיה במקביל להמשך עבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '618-מכתב לעמית בגין כספים שלא שוייכו' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '619-מסלקה- נספח ד'' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '620-מסלקה - עדכון מין +עדכון תאריך לידה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '621-מכתב לעמית על הודעת מעסיקו על חוסר הפקדות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '622-תשלום משיכה יזומה סכומים קטנים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '623-מסלקה - עדכון פרטים אישיים מטופס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '624-הצהרת העמית על הפסקת עבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '625-מכתב למעסיק בגין הצהרת העמית על הפסקת עבודה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '626-מסלקה ייפוי כוח - דרך 1800' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '627-אישור אחוזי הפרשה לעצמאי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '628-טופס רישום לפורטל מעסיקים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '629-מסמך ייפוי כוח גורם מתפעל פנסיוני' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '630-אישור רו"ח/עו"ד למ.ח מטעם המעסיק למתפעל פנסיוני' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '631-אישור רו"ח/עו"ד למ.ח בשם הגורם המתפעל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '632-עובדים אליהם מתייחסת ההרשאה - שאינה לכלל העובדים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '633-עובדים אליהם מתייחסת הרשאה בביטול הרשאה חלקית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '634-מסלקה- הצהרת מעסיק בנוגע לח.פ קשורים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '635-מסלקה- נסח מרשם החברות על שליטה בחברת בת' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '636-מסלקה ייפוי כוח עבור ארוע כללי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '637-טופס עדכון פרטי ביטוח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '638-הודעה לעמית על ביטול כיסוי ברות ביטוח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '639-התחייבות מעסיק לביצוע הפקדה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '640-צ'ק ליסט הקמה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '641-ביטול יפוי כח עמית למסירת מידע/פעולות לבא כח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '642-מסלקה ניוד - נספח א חלק 1' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '643-מסלקה ניוד - נספח א חלק 2' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '644-מסלקה ניוד - נספח א חלק 3' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '645-מסלקה ניוד - נספח ו' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '646-מסלקה ניוד - תצלום ת.ז של האפוטרופוס' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '647-מסלקה ניוד - פרוטוקול זכויות חתימה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '648-מסלקה ניוד - מסמכים בגין העמית בקופה המעבירה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '649-מסלקה ניוד - פסיקתא' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '650-מסלקה ניוד - טופס עבור חבר קיבוץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '651-מסלקה ניוד - אישור בן זוג לניוד' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '652-מכתב לעמית בגין סכומים קטנים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '653-עדכון פרטים אישיים מקובץ' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '654-ויתור על קבלת קצבה למשיכה חד פעמית' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '655-תיקון / השלמה לתביעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '656-בקשה לעדכון פרטים במוצר קיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '657-הודעה לעמית לפני הקפאה בשל חוסר הפקדה 24 חודשים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '658-ביטול בקשת מעבר לאפיק השקעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '659-טופס קוביות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '660-אישור מעסיק על הפקדה בהתאם לתקנה 19' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '661-אישור חיים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '662-תצהיר מעסיק - דיווח שלילי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '663-טופס 161 י'' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '664-טופס 161 ח'' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '665-אישור מעסיק על מסלול השקעה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '666-בקשה לפנסית שארי פנסיונר' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '667-מכתב לפני נקיטת הליך משפטי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '668-מכתב לעמית עם שכר קובע מעל 20000 שח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '669-מכתב לעמית עבר חיתום מעל 7 עובדים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '670-מכתב לעמית על שינוי בעקבות הפחתת הפקדות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '671-מכתב לעמית בגין ריסק גבוה מיתרה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '672-הודעה לעמית על איחור בהפקדות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '673-אסמכתא מקופה מעבירה על שיעורי כיסוי ביטוח מיוחדים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '674-פרוטוקול למורשי חתימה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '675-ייפוי כוח קיבוץ -  מידע בלבד' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '676-ייפוי כוח קיבוץ -  מידע ופעולות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '677-ערעור לתביעת נכות' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '678-אישור דמי ניהול' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '679-בקשה של יורשים/מוטבים לקבלת תשלומים מובטחים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '680-חיתום - דחיה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '681-סיום ארכת ביטוח' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '687-תצהיר עובד - דיווח שלילי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '688-הסכם קיבוצי - דיווח שלילי' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '689-נספח ז' - טופס הצטרפות לקופת ברירת מחדל' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '690-מסלקה ניוד - מסמך הנמקה' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '691-מסלקה ניוד- נספח ד' חיסכון ארוך טווח לילד' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '692-מסלקה ניוד - זכאות המעסיק לכספי הפיצויים' | מזהה: ''
-סוג: ControlType.ListItem                | שם: '999-ביטול מעבר' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'תיקיה למפתוח' | מזהה: 'Label1'
-סוג: ControlType.Button                  | שם: 'בחירה...' | מזהה: 'btnBrowseFolder'
-סוג: ControlType.Button                  | שם: 'מפתוח קבצים מהתיקיה' | מזהה: 'btnArchiveFiles'
-סוג: ControlType.Edit                    | שם: 'תיקיה למפתוח' | מזהה: 'txtPath'
-סוג: ControlType.TitleBar                | שם: 'מפתוח אוטומטי מתיקיה - אלטשולר שחם' | מזהה: 'TitleBar'
-סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmAutoArchive'
-סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
-סוג: ControlType.Button                  | שם: 'Minimize' | מזהה: 'Minimize'
-סוג: ControlType.Button                  | שם: 'Maximize' | מזהה: 'Maximize'
-סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
-------------------------------------------------------------
-תעתיק לי גם את הרשימה הזו - נמשיך לפיה לשלב הבא.
-============================================================
-תעתיק לי הכל מלמעלה.
-לחץ Enter לסגירה...
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Automation;
+using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
+
+class Program
+{
+    static string baseFolder = @"\\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל";
+
+    [DllImport("user32.dll")]
+    static extern bool SetCursorPos(int x, int y);
+
+    [DllImport("user32.dll")]
+    static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
+
+    [DllImport("user32.dll")]
+    static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
+    const uint MOUSEEVENTF_LEFTUP = 0x0004;
+
+    [STAThread]
+    static void Main()
+    {
+        string exePath = @"E:\Root\HomeFolder\Shared\IT\Utils\ReportsEngine\Exe\ReportsEngine.exe";
+
+        Console.WriteLine("מחפש את תיקיית היום...");
+        // *** לבדיקות בלבד: אם תשים כאן נתיב, הוא ישמש במקום לחפש את תיקיית היום ***
+        // *** כשתרצה לחזור לחיפוש האוטומטי הרגיל של תיקיית היום - תרוקן את זה בחזרה ל-"" ***
+        string forceFolderOverride = @"\\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57";
+
+        string todayFolder = !string.IsNullOrEmpty(forceFolderOverride)
+            ? forceFolderOverride
+            : FindTodayFolder(baseFolder);
+        string xmlFilePath = null;
+
+        if (todayFolder == null)
+        {
+            Console.WriteLine("(!) לא מצאתי תיקייה שהשם שלה תואם את תאריך היום (" + DateTime.Today.ToString("yyyy-dd-MM") + ") בתוך:");
+            Console.WriteLine("    " + baseFolder);
+            Console.WriteLine("(!) יכול להיות שהתיקייה של היום עוד לא נוצרה, או שהשם שלה שונה ממה שציפינו.");
+        }
+        else
+        {
+            Console.WriteLine("מצאתי תיקיית היום: " + todayFolder);
+
+            string[] xmlFiles = Directory.GetFiles(todayFolder, "*.xml", SearchOption.AllDirectories);
+            if (xmlFiles.Length > 0)
+            {
+                xmlFilePath = xmlFiles[0];
+                Console.WriteLine("מצאתי קובץ XML: " + xmlFilePath);
+            }
+            else
+            {
+                Console.WriteLine("(!) התיקייה נמצאה, אבל אין בתוכה (או בתתי-תיקיות שלה) שום קובץ XML.");
+            }
+        }
+        Console.WriteLine(new string('=', 60));
+
+        Console.WriteLine("פותח את התוכנה...");
+        Process proc = Process.Start(exePath);
+        try { proc.WaitForInputIdle(5000); } catch { }
+
+        AutomationElement reportWindow = FindWindowByProcessId(proc.Id, 15);
+        if (reportWindow == null) { Console.WriteLine("לא מצאתי חלון."); Console.ReadLine(); return; }
+
+        Console.WriteLine("בוחר קטגוריה 'עדכונים-תפעול'...");
+        SelectItemInside(reportWindow, "cmbCategory", "עדכונים-תפעול");
+        Thread.Sleep(1500);
+
+        Console.WriteLine("בוחר את הדוח 'קליטת מעברים מXML'...");
+        SelectItemInside(reportWindow, "lstReports", "קליטת מעברים מXML");
+        Thread.Sleep(500);
+
+        var handlesBefore1 = GetWindowHandlesForProcess(proc.Id);
+        Console.WriteLine("לוחץ על 'בחירת דוח'...");
+        ClickButton(reportWindow, "btnChooseReport");
+
+        AutomationElement nextWindow = FindNewWindowByHandle(proc.Id, handlesBefore1, 20);
+        if (nextWindow == null) { Console.WriteLine("לא נפתח חלון נוסף."); Console.ReadLine(); return; }
+        Console.WriteLine("נמצא חלון: '" + nextWindow.Current.Name + "'");
+
+        Console.WriteLine("ממלא סיסמה...");
+        SetTextValue(nextWindow, "Password", "951753");
+
+        BringToFront(nextWindow);
+        Thread.Sleep(300);
+
+        Console.WriteLine("לוחץ על 'פתיחת קובץ'...");
+        ClickButton(nextWindow, "btnExcel");
+        Thread.Sleep(1500);
+
+        // *** השינוי המרכזי: בלי סינון לפי תהליך (pid) בכלל ***
+        string targetTitle = "בדיקת XML וטעינתו למערכת";
+        AutomationElement fileWindow = FindWindowByTitleAnyProcess(nextWindow, targetTitle, 6);
+
+        if (fileWindow == null)
+        {
+            Console.WriteLine("לא נמצא לפי שם - מנסה גם לחיצת עכבר אמיתית...");
+            AutomationElement btn = nextWindow.FindFirst(TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.AutomationIdProperty, "btnExcel"));
+            if (btn != null)
+            {
+                RealClick(btn);
+                Thread.Sleep(1000);
+                fileWindow = FindWindowByTitleAnyProcess(nextWindow, targetTitle, 8);
+            }
+        }
+
+        if (fileWindow == null)
+        {
+            Console.WriteLine("עדיין לא נמצא. תגיד לי בדיוק איך כתוב שם החלון אצלך.");
+            Console.WriteLine("לחץ Enter לסגירה...");
+            Console.ReadLine();
+            return;
+        }
+
+        Console.WriteLine("נמצא חלון: '" + fileWindow.Current.Name + "'");
+
+        if (!string.IsNullOrEmpty(xmlFilePath))
+        {
+            Console.WriteLine("ממלא את נתיב קובץ ה-XML...");
+            SetTextValue(fileWindow, "txtXML", xmlFilePath);
+        }
+
+        // *** מוצאים את קובץ ה-XSD הקבוע (נמצא ישירות בתיקיית הבסיס, לא בתיקיית היום) ***
+        string xsdFilePath = null;
+        try
+        {
+            string[] xsdFiles = Directory.GetFiles(baseFolder, "*.xsd");
+            if (xsdFiles.Length > 0) xsdFilePath = xsdFiles[0];
+        }
+        catch (Exception ex) { Console.WriteLine("(!) שגיאה בחיפוש XSD: " + ex.Message); }
+
+        if (xsdFilePath == null)
+        {
+            Console.WriteLine("(!) לא מצאתי קובץ XSD בתיקיית הבסיס. עוצר כאן.");
+            Console.ReadLine();
+            return;
+        }
+
+        Console.WriteLine("מצאתי קובץ XSD: " + xsdFilePath);
+        Console.WriteLine("ממלא את נתיב קובץ ה-XSD...");
+        SetTextValue(fileWindow, "txtXSD", xsdFilePath);
+        Thread.Sleep(500);
+
+        Console.WriteLine("לוחץ על 'בדיקה מול XSD'...");
+        ClickButton(fileWindow, "btnCheckXmlVsXsd");
+        Console.WriteLine("ממתין לחלון אישור אפשרי...");
+        HandleConfirmationPopup(6);
+
+        Thread.Sleep(1000);
+
+        Console.WriteLine("לוחץ על 'עדכון דוח 816-עמיתים'...");
+        ClickButton(fileWindow, "btnUpdateReport");
+        Console.WriteLine("ממתין לחלון 'כן/לא'...");
+        HandleConfirmationPopup(6);
+
+        Thread.Sleep(1000);
+        Console.WriteLine("ממתין לחלון אישור נוסף...");
+        HandleConfirmationPopup(6);
+
+        // נותנים לחלון הזה זמן להיסגר ולחזור למסך הקודם
+        Thread.Sleep(1500);
+
+        Console.WriteLine("מסמן 'שמירה בסיום' במסך הקודם...");
+        SetCheckBox(nextWindow, "chkSaveFileAtEnd", true);
+
+        Thread.Sleep(500);
+        Console.WriteLine("לוחץ על 'יצוא לאקסל' (מריץ את הדוח בפועל)...");
+        ClickButton(nextWindow, "btnExportExcel");
+
+        Console.WriteLine("ממתין לחלון 'שמירה בסיום'...");
+        AutomationElement saveWindow = FindWindowByTitleAnyProcess(nextWindow, "שמירה בסיום ההרצה", 20);
+
+        if (saveWindow == null)
+        {
+            Console.WriteLine("(!) לא נמצא חלון בשם 'שמירה בסיום הרצה'.");
+            Console.WriteLine("    הנה כל שמות החלונות שכן קיימים כרגע - חפש שם משהו דומה:");
+            Console.WriteLine(new string('-', 60));
+
+            Console.WriteLine("    חלונות עצמאיים:");
+            AutomationElementCollection topWindows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement w in topWindows)
+            {
+                string n = w.Current.Name;
+                if (!string.IsNullOrWhiteSpace(n)) Console.WriteLine("       - '" + n + "'");
+            }
+
+            Console.WriteLine("    חלונות פנימיים בתוך 'דוח 1152':");
+            AutomationElementCollection innerWindows = nextWindow.FindAll(TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
+            foreach (AutomationElement w in innerWindows)
+            {
+                string n = w.Current.Name;
+                if (!string.IsNullOrWhiteSpace(n)) Console.WriteLine("       - '" + n + "'");
+            }
+        }
+        else
+        {
+            Console.WriteLine("נמצא חלון: '" + saveWindow.Current.Name + "'");
+
+            BringToFront(saveWindow);
+            Thread.Sleep(400);
+
+            var handlesBeforeBrowse = GetAllTopWindowHandles();
+            Console.WriteLine("לוחץ על 'סייר...'...");
+            ClickButton(saveWindow, "btnBrowse");
+
+            AutomationElement browseDialog = FindNewTopWindowAny(handlesBeforeBrowse, 5)
+                ?? FindWindowByTitleAnyProcess(saveWindow, "Save As", 5)
+                ?? FindWindowByTitleAnyProcess(nextWindow, "Save As", 5);
+
+            if (browseDialog == null)
+            {
+                Console.WriteLine("לא נמצא - מנסה לחיצת עכבר אמיתית על 'סייר...'...");
+                AutomationElement browseBtn = saveWindow.FindFirst(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.AutomationIdProperty, "btnBrowse"));
+                if (browseBtn != null)
+                {
+                    RealClick(browseBtn);
+                    browseDialog = FindNewTopWindowAny(handlesBeforeBrowse, 5)
+                                   ?? FindWindowByTitleAnyProcess(saveWindow, "Save As", 8)
+                                   ?? FindWindowByTitleAnyProcess(nextWindow, "Save As", 8);
+                }
+            }
+
+            if (browseDialog == null)
+            {
+                Console.WriteLine("(!) לא נפתח חלון סייר. עוצר כאן.");
+            }
+            else
+            {
+                Console.WriteLine("נמצא חלון סייר: '" + browseDialog.Current.Name + "'");
+                BringToFront(browseDialog);
+                Thread.Sleep(500);
+
+                AutomationElement editBox = browseDialog.FindFirst(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.AutomationIdProperty, "1001"));
+
+                if (editBox == null)
+                {
+                    Console.WriteLine("(!) לא מצאתי את תיבת 'File name'.");
+                }
+                else
+                {
+                    Console.WriteLine("קליק פיזי על תיבת השם...");
+                    RealClick(editBox);
+                    Thread.Sleep(400);
+
+                    Console.WriteLine("מרוקן את השדה...");
+                    object clearPattern;
+                    if (editBox.TryGetCurrentPattern(ValuePattern.Pattern, out clearPattern))
+                    {
+                        try { ((ValuePattern)clearPattern).SetValue(""); }
+                        catch { }
+                    }
+                    Thread.Sleep(300);
+
+                    Console.WriteLine("מקליד עם המקלדת...");
+                    // *** מקלידים את הנתיב המלא לתיקיית היום הנכונה - ולא רק את השם ***
+                    // כך זה לא משנה איזו תיקייה מוצגת כרגע בחלון הסייר (גם אם היא "זוכרת" מקום ישן)
+                    string fullSavePath = Path.Combine(todayFolder, "SubFolder1", "אחרי בפועל.xlsm");
+                    Console.WriteLine("מקליד את הנתיב המלא: " + fullSavePath);
+                    SendKeys.SendWait(fullSavePath);
+                    Thread.Sleep(500);
+
+                    object vp;
+                    if (editBox.TryGetCurrentPattern(ValuePattern.Pattern, out vp))
+                        Console.WriteLine("בתיבה כתוב עכשיו: '" + ((ValuePattern)vp).Current.Value + "'");
+
+                    Thread.Sleep(300);
+
+                    // *** קריטי: לוחצים פיזית על Save, לא "בשקט" ***
+                    AutomationElement saveBtn = browseDialog.FindFirst(TreeScope.Descendants,
+                        new PropertyCondition(AutomationElement.AutomationIdProperty, "1"));
+
+                    if (saveBtn != null)
+                    {
+                        Console.WriteLine("קליק פיזי על Save...");
+                        RealClick(saveBtn);
+                    }
+                    else
+                    {
+                        Console.WriteLine("לא מצאתי כפתור Save - שולח Enter.");
+                        SendKeys.SendWait("{ENTER}");
+                    }
+                    Thread.Sleep(2000);
+
+                    // *** בדיקה: האם תיבת הנתיב הראשית באמת התעדכנה? ***
+                    AutomationElement mainField = saveWindow.FindFirst(TreeScope.Descendants,
+                        new PropertyCondition(AutomationElement.AutomationIdProperty, "txtFolderName"));
+                    if (mainField != null)
+                    {
+                        object mvp;
+                        if (mainField.TryGetCurrentPattern(ValuePattern.Pattern, out mvp))
+                            Console.WriteLine("התיבה הראשית עכשיו מראה: '" + ((ValuePattern)mvp).Current.Value + "'");
+                    }
+                }
+            }
+
+            Console.WriteLine("לוחץ על 'אישור' הסופי בחלון 'שמירה בסיום ההרצה'...");
+            DateTime saveClickTime = DateTime.Now;
+            ClickButton(saveWindow, "btnSave");
+
+            string expectedPath = Path.Combine(todayFolder, "SubFolder1", "אחרי בפועל.xlsm");
+
+            Console.WriteLine("ממתין שהקובץ באמת יופיע (עד 90 שניות)...");
+            bool found = false;
+            for (int i = 0; i < 30; i++)
+            {
+                if (File.Exists(expectedPath)) { found = true; break; }
+                Thread.Sleep(3000);
+            }
+
+            // *** רשת ביטחון: אם לא נמצא בשם הנכון, מחפשים קובץ חדש בכל שם ומשנים לו שם ***
+            if (!found)
+            {
+                Console.WriteLine("(!) לא נמצא בשם 'אחרי בפועל' - מחפש קובץ חדש שנוצר בכל שם אחר (רשת ביטחון)...");
+
+                string searchFolder = Path.Combine(todayFolder, "SubFolder1");
+                string newFile = WaitForNewExcelFile(searchFolder, saveClickTime, 15);
+
+                if (newFile == null)
+                {
+                    Console.WriteLine("(!) לא מצאתי שום קובץ אקסל חדש.");
+                }
+                else
+                {
+                    Console.WriteLine("מצאתי קובץ חדש (בשם אחר): " + newFile);
+                    try
+                    {
+                        if (File.Exists(expectedPath)) File.Delete(expectedPath);
+                        File.Move(newFile, expectedPath);
+                        Console.WriteLine("שיניתי לו שם ל: " + expectedPath);
+                        found = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("(!) שגיאה בשינוי שם: " + ex.Message);
+                    }
+                }
+            }
+
+            if (found)
+            {
+                Console.WriteLine("מצוין! הקובץ נמצא: " + expectedPath);
+
+                // *** שלב חדש: יוצרים קובץ חדש עם שני הטאבים זה לצד זה ***
+                string outputFolder = Path.GetDirectoryName(expectedPath);
+                string outputName = "report_115_" + DateTime.Now.ToString("yyyy_MM_dd-HH-mm") + ".xlsx";
+                string outputFullPath = Path.Combine(outputFolder, outputName);
+
+                Console.WriteLine("יוצר קובץ ממוזג: " + outputFullPath);
+                try
+                {
+                    CombineTabsToNewWorkbook(expectedPath, "שגיאות הקמה", "סטטוס הקמה במערכת", outputFullPath);
+                    Console.WriteLine("הקובץ הממוזג נוצר בהצלחה!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("(!) שגיאה ביצירת הקובץ הממוזג: " + ex.Message);
+                }
+
+                // *** שלב נוסף: מחלצים את הטאב 'קבצים לפתוח' לקובץ נפרד בשם 'מפתוחים' ***
+                string openFilesOutputPath = Path.Combine(outputFolder, "מפתוחים.xlsx");
+                Console.WriteLine("שמות הטאבים שבאמת יש בקובץ:");
+                try
+                {
+                    foreach (string name in GetSheetNames(expectedPath))
+                        Console.WriteLine("   - '" + name + "'");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("(!) לא הצלחתי לקרוא את שמות הטאבים: " + ex.Message);
+                }
+
+                Console.WriteLine("מחלץ את הטאב 'קבצים לפתוח' לקובץ: " + openFilesOutputPath);
+                try
+                {
+                    CopySingleSheetToNewWorkbook(expectedPath, "קבצים למפתוח", openFilesOutputPath);
+                    Console.WriteLine("קובץ 'מפתוחים' נוצר בהצלחה!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("(!) שגיאה ביצירת קובץ 'מפתוחים': " + ex.Message);
+                }
+
+                // *** שלב נוסף: מעתיקים את תיקיית 'מסמכים' עצמה (עם השם שלה) ליעד הקבוע ***
+                string docsSourceFolder = Path.Combine(outputFolder, "מסמכים");
+                string docsDestBase = @"\\100.100.100.6\Root\ScanDocs\Source\2\מפתוח אוטומטי";
+                string docsDestFolder = Path.Combine(docsDestBase, "מסמכים");
+
+                Console.WriteLine("מעתיק את תיקיית 'מסמכים' אל: " + docsDestFolder);
+                try
+                {
+                    if (Directory.Exists(docsSourceFolder))
+                    {
+                        CopyDirectoryContents(docsSourceFolder, docsDestFolder);
+                        Console.WriteLine("התיקייה הועתקה בהצלחה!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("(!) לא מצאתי תיקיית 'מסמכים' בנתיב: " + docsSourceFolder);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("(!) שגיאה בהעתקת התיקייה: " + ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine("(!) לא רואה את הקובץ בנתיב הצפוי: " + expectedPath);
+            }
+        }
+
+        Console.WriteLine(new string('=', 60));
+        Console.WriteLine("מנקה: סוגר את 'מנוע דוחות' ופותח את התיקייה הראשית להצגה...");
+
+        try
+        {
+            if (!proc.HasExited)
+            {
+                proc.CloseMainWindow();
+                if (!proc.WaitForExit(5000))
+                {
+                    Console.WriteLine("   סגירה רגילה לא הספיקה, סוגר בכוח...");
+                    proc.Kill();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("   (!) בעיה בסגירת התוכנה: " + ex.Message);
+        }
+
+        try
+        {
+            if (todayFolder != null)
+                Process.Start("explorer.exe", todayFolder);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("   (!) בעיה בפתיחת התיקייה: " + ex.Message);
+        }
+
+        Console.WriteLine(new string('=', 60));
+        Console.WriteLine("=== שלב 2: פותח את התוכנה הבאה ===");
+
+        // *** תשים כאן את הנתיב האמיתי לתוכנה השנייה (בלי שום מרכאות/פרמטרים בפנים!) ***
+        string exePath2 = @"C:\Program Files\Archive\Archive.exe";
+        // *** ננסה קודם בלי פרמטר בכלל, כדי לוודא שנפתח חלון רגיל שרואים ***
+        string exeArgs2 = "-auto";
+
+        Console.WriteLine("פותח את התוכנה השנייה...");
+        Process proc2 = string.IsNullOrEmpty(exeArgs2)
+            ? Process.Start(exePath2)
+            : Process.Start(exePath2, exeArgs2);
+        try { proc2.WaitForInputIdle(5000); } catch { }
+
+        AutomationElement window2 = FindWindowByProcessId(proc2.Id, 15);
+
+        if (window2 == null)
+        {
+            Console.WriteLine("(!) לא מצאתי את חלון התוכנה השנייה.");
+        }
+        else
+        {
+            Console.WriteLine("נמצא חלון (מחכה שהוא יטען לגמרי)...");
+
+            // מנסים כמה פעמים - יכול לקחת רגע עד שהתוכן באמת נטען
+            AutomationElementCollection controls2 = null;
+            for (int i = 0; i < 15; i++)
+            {
+                controls2 = window2.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+                if (controls2.Count > 0) break;
+                Thread.Sleep(1000);
+            }
+
+            Console.WriteLine("שם החלון: '" + window2.Current.Name + "'");
+            Console.WriteLine(new string('-', 60));
+            Console.WriteLine("אלה כל השדות/כפתורים בחלון הזה (" + (controls2?.Count ?? 0) + " נמצאו):");
+            Console.WriteLine(new string('-', 60));
+
+            if (controls2 != null)
+            {
+                foreach (AutomationElement el in controls2)
+                {
+                    try
+                    {
+                        Console.WriteLine($"סוג: {el.Current.ControlType.ProgrammaticName,-35} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("   (!) לא הצלחתי לקרוא אלמנט אחד: " + ex.GetType().Name + " - " + ex.Message);
+                    }
+                }
+            }
+
+            // *** תשים כאן את שם המשתמש והסיסמה האמיתיים ***
+            string username2 = "USERNAME_HERE";
+            string password2 = "PASSWORD_HERE";
+
+            BringToFront(window2);
+            Thread.Sleep(300);
+
+            Console.WriteLine("ממלא שם משתמש (קליק פיזי + הקלדה אמיתית)...");
+            AutomationElement userField = window2.FindFirst(TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.AutomationIdProperty, "txtUser"));
+            if (userField != null)
+            {
+                RealClick(userField);
+                Thread.Sleep(300);
+                object p1;
+                if (userField.TryGetCurrentPattern(ValuePattern.Pattern, out p1))
+                {
+                    try { ((ValuePattern)p1).SetValue(""); } catch { }
+                }
+                Thread.Sleep(200);
+                SendKeys.SendWait(username2);
+                Thread.Sleep(300);
+            }
+            else
+            {
+                Console.WriteLine("   (!) לא נמצא שדה txtUser.");
+            }
+
+            Console.WriteLine("ממלא סיסמה (קליק פיזי + הקלדה אמיתית)...");
+            AutomationElement passField = window2.FindFirst(TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.AutomationIdProperty, "txtPassword"));
+            if (passField != null)
+            {
+                RealClick(passField);
+                Thread.Sleep(300);
+                object p2;
+                if (passField.TryGetCurrentPattern(ValuePattern.Pattern, out p2))
+                {
+                    try { ((ValuePattern)p2).SetValue(""); } catch { }
+                }
+                Thread.Sleep(200);
+                SendKeys.SendWait(password2);
+                Thread.Sleep(300);
+            }
+            else
+            {
+                Console.WriteLine("   (!) לא נמצא שדה txtPassword.");
+            }
+
+            Thread.Sleep(300);
+            Console.WriteLine("לוחץ פיזית על 'אישור' (OK)...");
+
+            var handlesBeforeLogin = GetWindowHandlesForProcess(proc2.Id);
+
+            AutomationElement okBtn2 = window2.FindFirst(TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.AutomationIdProperty, "OK"));
+
+            if (okBtn2 != null)
+            {
+                var okRect = okBtn2.Current.BoundingRectangle;
+                Console.WriteLine("   כפתור OK נמצא במיקום: X=" + okRect.X + " Y=" + okRect.Y +
+                    " רוחב=" + okRect.Width + " גובה=" + okRect.Height + " (פעיל: " + okBtn2.Current.IsEnabled + ")");
+                RealClick(okBtn2);
+                Console.WriteLine("   בוצעה לחיצה במרכז הכפתור.");
+            }
+            else
+            {
+                Console.WriteLine("   (!) לא נמצא כפתור OK.");
+            }
+
+            Thread.Sleep(1500);
+
+            Console.WriteLine("מחפש את החלון הבא - רק כאלה ששייכים ל-Archive עצמו...");
+
+            AutomationElement window3 = null;
+            try
+            {
+                // *** קריטי: מסננים לפי proc2.Id - כדי לא לתפוס בטעות חלון של תוכנה אחרת ***
+                window3 = FindNewWindowByHandle(proc2.Id, handlesBeforeLogin, 15);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("   (!) שגיאה בחיפוש חלון חדש: " + ex.GetType().Name + " - " + ex.Message);
+            }
+
+            if (window3 == null)
+            {
+                Console.WriteLine("(!) לא נפתח חלון 'חדש' אחרי ההתחברות (לפי הבדיקה הרגילה שלנו).");
+                Console.WriteLine("תגיד לי מה בדיוק אתה רואה על המסך, ומה כתוב ברשימות למעלה שנראה לך קשור.");
+            }
+            else
+            {
+                Console.WriteLine("נמצא חלון חדש: '" + window3.Current.Name + "'");
+                Console.WriteLine(new string('-', 60));
+
+                AutomationElementCollection controls3 = null;
+                for (int i = 0; i < 15; i++)
+                {
+                    controls3 = window3.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+                    if (controls3.Count > 0) break;
+                    Thread.Sleep(1000);
+                }
+
+                Console.WriteLine("אלה כל השדות/כפתורים בחלון הזה (" + (controls3?.Count ?? 0) + " נמצאו):");
+                Console.WriteLine(new string('-', 60));
+
+                if (controls3 != null)
+                {
+                    foreach (AutomationElement el in controls3)
+                    {
+                        try
+                        {
+                            Console.WriteLine($"סוג: {el.Current.ControlType.ProgrammaticName,-35} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("   (!) לא הצלחתי לקרוא אלמנט אחד: " + ex.GetType().Name + " - " + ex.Message);
+                        }
+                    }
+                }
+                Console.WriteLine(new string('-', 60));
+                Console.WriteLine("תעתיק לי גם את הרשימה הזו - נמשיך לפיה לשלב הבא.");
+            }
+        }
+
+        Console.WriteLine(new string('=', 60));
+        Console.WriteLine("תעתיק לי הכל מלמעלה.");
+        Console.WriteLine("לחץ Enter לסגירה...");
+        Console.ReadLine();
+    }
+
+    // מחפש חלון לפי השם המדויק שלו - בלי קשר לאיזה תהליך (process) פתח אותו
+    // מחזיר רשימה של כל שמות הטאבים בקובץ - שימושי לאבחון שמות מדויקים
+    static string[] GetSheetNames(string filePath)
+    {
+        Excel.Application excelApp = null;
+        Excel.Workbook wb = null;
+        try
+        {
+            excelApp = new Excel.Application();
+            excelApp.Visible = false;
+            excelApp.DisplayAlerts = false;
+            wb = excelApp.Workbooks.Open(filePath, ReadOnly: true);
+
+            var names = new System.Collections.Generic.List<string>();
+            foreach (Excel.Worksheet s in wb.Sheets) names.Add(s.Name);
+            return names.ToArray();
+        }
+        finally
+        {
+            if (wb != null) { wb.Close(false); Marshal.ReleaseComObject(wb); }
+            if (excelApp != null) { excelApp.Quit(); Marshal.ReleaseComObject(excelApp); }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+    }
+
+    // פותח את הקובץ המקור, ומעתיק טאב בודד לקובץ חדש
+    static void CopySingleSheetToNewWorkbook(string sourceFile, string sheetName, string outputFullPath)
+    {
+        Excel.Application excelApp = null;
+        Excel.Workbook sourceWb = null;
+        Excel.Workbook newWb = null;
+
+        try
+        {
+            excelApp = new Excel.Application();
+            excelApp.Visible = false;
+            excelApp.DisplayAlerts = false;
+
+            sourceWb = excelApp.Workbooks.Open(sourceFile, ReadOnly: true);
+            Excel.Worksheet sheet = (Excel.Worksheet)sourceWb.Sheets[sheetName];
+
+            newWb = excelApp.Workbooks.Add();
+            Excel.Worksheet placeholderSheet = (Excel.Worksheet)newWb.Sheets[1];
+
+            sheet.Copy(After: newWb.Sheets[newWb.Sheets.Count]);
+            placeholderSheet.Delete();
+
+            newWb.SaveAs(outputFullPath, Excel.XlFileFormat.xlOpenXMLWorkbook);
+        }
+        finally
+        {
+            if (newWb != null) { newWb.Close(false); Marshal.ReleaseComObject(newWb); }
+            if (sourceWb != null) { sourceWb.Close(false); Marshal.ReleaseComObject(sourceWb); }
+            if (excelApp != null) { excelApp.Quit(); Marshal.ReleaseComObject(excelApp); }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+    }
+
+    // מעתיק את כל התוכן (קבצים ותתי-תיקיות) מתיקיית מקור לתיקיית יעד
+    static void CopyDirectoryContents(string sourceDir, string destDir)
+    {
+        Directory.CreateDirectory(destDir);
+
+        foreach (string file in Directory.GetFiles(sourceDir))
+        {
+            string destFile = Path.Combine(destDir, Path.GetFileName(file));
+            File.Copy(file, destFile, true);
+        }
+
+        foreach (string subDir in Directory.GetDirectories(sourceDir))
+        {
+            string destSubDir = Path.Combine(destDir, Path.GetFileName(subDir));
+            CopyDirectoryContents(subDir, destSubDir);
+        }
+    }
+
+    // פותח את הקובץ המקור, ומעתיק שני טאבים שלמים לקובץ חדש (כל אחד כטאב נפרד)
+    static void CombineTabsToNewWorkbook(string sourceFile, string sheet1Name, string sheet2Name, string outputFullPath)
+    {
+        Excel.Application excelApp = null;
+        Excel.Workbook sourceWb = null;
+        Excel.Workbook newWb = null;
+
+        try
+        {
+            excelApp = new Excel.Application();
+            excelApp.Visible = false;
+            excelApp.DisplayAlerts = false;
+
+            sourceWb = excelApp.Workbooks.Open(sourceFile, ReadOnly: true);
+
+            Excel.Worksheet sheet1 = (Excel.Worksheet)sourceWb.Sheets[sheet1Name];
+            Excel.Worksheet sheet2 = (Excel.Worksheet)sourceWb.Sheets[sheet2Name];
+
+            // חוברת חדשה - מתחילה עם טאב ברירת מחדל אחד ריק
+            newWb = excelApp.Workbooks.Add();
+            Excel.Worksheet placeholderSheet = (Excel.Worksheet)newWb.Sheets[1];
+
+            // מעתיקים את שני הטאבים בשלמותם (עם כל התוכן והעיצוב) לתוך החוברת החדשה
+            sheet1.Copy(After: newWb.Sheets[newWb.Sheets.Count]);
+            sheet2.Copy(After: newWb.Sheets[newWb.Sheets.Count]);
+
+            // מוחקים את הטאב הריק המקורי שנוצר אוטומטית עם החוברת החדשה
+            placeholderSheet.Delete();
+
+            newWb.SaveAs(outputFullPath, Excel.XlFileFormat.xlOpenXMLWorkbook);
+        }
+        finally
+        {
+            // חשוב מאוד: לשחרר הכל כמו שצריך, אחרת נשארים תהליכי Excel "רוחות רפאים"
+            if (newWb != null) { newWb.Close(false); Marshal.ReleaseComObject(newWb); }
+            if (sourceWb != null) { sourceWb.Close(false); Marshal.ReleaseComObject(sourceWb); }
+            if (excelApp != null) { excelApp.Quit(); Marshal.ReleaseComObject(excelApp); }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+    }
+
+    static AutomationElement FindWindowByTitleAnyProcess(AutomationElement innerSearchRoot, string title, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElement top = AutomationElement.RootElement.FindFirst(TreeScope.Children,
+                new PropertyCondition(AutomationElement.NameProperty, title));
+            if (top != null) return top;
+
+            if (innerSearchRoot != null)
+            {
+                AutomationElement inner = innerSearchRoot.FindFirst(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.NameProperty, title));
+                if (inner != null) return inner;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    static HashSet<IntPtr> GetWindowHandlesForProcess(int pid)
+    {
+        var set = new HashSet<IntPtr>();
+        AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+        foreach (AutomationElement win in windows)
+        {
+            int wpid = 0;
+            try { wpid = win.Current.ProcessId; } catch { continue; }
+            if (wpid != pid) continue;
+            try { set.Add(new IntPtr(win.Current.NativeWindowHandle)); } catch { }
+        }
+        return set;
+    }
+
+    static AutomationElement FindNewWindowByHandle(int pid, HashSet<IntPtr> knownHandles, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+                if (wpid != pid) continue;
+                IntPtr h;
+                try { h = new IntPtr(win.Current.NativeWindowHandle); } catch { continue; }
+                if (!knownHandles.Contains(h)) return win;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    // מחפש כל חלון (בכל תהליך) עם כפתור "אישור" או "OK", ולוחץ עליו
+    static void HandleConfirmationPopup(int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement w in windows)
+            {
+                AutomationElement okBtn = null;
+                try
+                {
+                    Condition cond = new OrCondition(
+                        new PropertyCondition(AutomationElement.NameProperty, "אישור"),
+                        new PropertyCondition(AutomationElement.NameProperty, "OK"),
+                        new PropertyCondition(AutomationElement.NameProperty, "כן"),
+                        new PropertyCondition(AutomationElement.NameProperty, "Yes"));
+                    okBtn = w.FindFirst(TreeScope.Descendants, cond);
+                }
+                catch { }
+
+                if (okBtn != null)
+                {
+                    Console.WriteLine("   נמצא חלון: '" + w.Current.Name + "' - לוחץ על אישור...");
+                    object pattern;
+                    bool clicked = false;
+                    if (okBtn.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
+                    {
+                        try { ((InvokePattern)pattern).Invoke(); clicked = true; } catch { }
+                    }
+                    if (!clicked) RealClick(okBtn);
+                    return;
+                }
+            }
+            Thread.Sleep(500);
+        }
+        Console.WriteLine("   (לא הופיע חלון אישור - אולי לא היה צורך הפעם)");
+    }
+
+    static void RealClick(AutomationElement element)
+    {
+        var rect = element.Current.BoundingRectangle;
+        int x = (int)(rect.Left + rect.Width / 2);
+        int y = (int)(rect.Top + rect.Height / 2);
+        SetCursorPos(x, y);
+        Thread.Sleep(150);
+        mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
+        Thread.Sleep(80);
+        mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+    }
+
+    static void BringToFront(AutomationElement window)
+    {
+        try
+        {
+            IntPtr hWnd = new IntPtr(window.Current.NativeWindowHandle);
+            SetForegroundWindow(hWnd);
+        }
+        catch { }
+    }
+
+    [DllImport("user32.dll")]
+    static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+    const byte VK_RETURN = 0x0D;
+    const uint KEYEVENTF_KEYUP = 0x0002;
+
+    static void PressEnter()
+    {
+        keybd_event(VK_RETURN, 0, 0, UIntPtr.Zero);
+        Thread.Sleep(50);
+        keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+    }
+
+    // צילום כל החלונות העצמאיים הפתוחים כרגע, בכל תהליך שהוא
+    static HashSet<IntPtr> GetAllTopWindowHandles()
+    {
+        var set = new HashSet<IntPtr>();
+        AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+        foreach (AutomationElement w in windows)
+        {
+            try { set.Add(new IntPtr(w.Current.NativeWindowHandle)); } catch { }
+        }
+        return set;
+    }
+
+    static AutomationElement FindNewTopWindowAny(HashSet<IntPtr> knownHandles, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement w in windows)
+            {
+                IntPtr h;
+                try { h = new IntPtr(w.Current.NativeWindowHandle); } catch { continue; }
+                if (!knownHandles.Contains(h)) return w;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    // מחכה שיופיע קובץ אקסל חדש בתיקייה (או בתתי-תיקיות שלה), שנוצר אחרי הזמן שהעברנו
+    static string WaitForNewExcelFile(string folder, DateTime afterTime, int timeoutSeconds)
+    {
+        string[] validExtensions = { ".xlsm", ".xlsx", ".xls" };
+
+        for (int i = 0; i < timeoutSeconds; i++)
+        {
+            try
+            {
+                var files = Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories)
+                    .Select(f => new FileInfo(f))
+                    .Where(f => f.LastWriteTime > afterTime &&
+                                Array.IndexOf(validExtensions, f.Extension.ToLower()) >= 0)
+                    .OrderByDescending(f => f.LastWriteTime)
+                    .ToList();
+
+                if (files.Count > 0) return files[0].FullName;
+            }
+            catch { }
+            Thread.Sleep(1000);
+        }
+        return null;
+    }
+
+    // מוצא את תיקיית היום לפי השם שלה (yyyy-dd-MM--...) ולא לפי מתי נגעו בה לאחרונה
+    // (חשוב: אם נכתוב קבצים לתוך תיקייה ישנה, תאריך ה"שינוי האחרון" שלה מתעדכן -
+    //  ולכן אי אפשר לסמוך על זה, וצריך לקרוא את התאריך האמיתי מתוך השם)
+    static string FindTodayFolder(string parentFolder)
+    {
+        try
+        {
+            var dirs = Directory.GetDirectories(parentFolder);
+
+            foreach (string d in dirs)
+            {
+                string name = Path.GetFileName(d);
+                if (name.Length < 10) continue;
+
+                string datePart = name.Substring(0, 10); // "yyyy-dd-MM"
+                DateTime parsedDate;
+                if (DateTime.TryParseExact(datePart, "yyyy-dd-MM", null,
+                        System.Globalization.DateTimeStyles.None, out parsedDate))
+                {
+                    if (parsedDate.Date == DateTime.Today)
+                        return d;
+                }
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("(!) שגיאה בגישה לתיקייה: " + ex.Message);
+            return null;
+        }
+    }
+
+    static AutomationElement FindWindowByProcessId(int pid, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElementCollection windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+                if (wpid == pid) return win;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    static void SelectItemInside(AutomationElement parentWindow, string containerAutomationId, string itemName)
+    {
+        AutomationElement container = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, containerAutomationId));
+        if (container == null) { Console.WriteLine("   (!) לא נמצא: " + containerAutomationId); return; }
+
+        AutomationElement item = null;
+        for (int i = 0; i < 10 && item == null; i++)
+        {
+            item = container.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, itemName));
+            if (item == null) Thread.Sleep(300);
+        }
+        if (item == null) { Console.WriteLine("   (!) לא נמצא פריט בשם: " + itemName); return; }
+
+        object pattern;
+        if (item.TryGetCurrentPattern(SelectionItemPattern.Pattern, out pattern))
+            ((SelectionItemPattern)pattern).Select();
+        else if (item.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
+            ((InvokePattern)pattern).Invoke();
+    }
+
+    static void ClickButton(AutomationElement parentWindow, string buttonAutomationId)
+    {
+        AutomationElement button = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, buttonAutomationId));
+        if (button == null) { Console.WriteLine("   (!) לא נמצא כפתור: " + buttonAutomationId); return; }
+
+        object pattern;
+        if (button.TryGetCurrentPattern(InvokePattern.Pattern, out pattern))
+        {
+            try { ((InvokePattern)pattern).Invoke(); }
+            catch (Exception ex) { Console.WriteLine("   (!) Invoke נכשל: " + ex.Message); }
+        }
+    }
+
+    static void SetCheckBox(AutomationElement parentWindow, string automationId, bool check)
+    {
+        AutomationElement cb = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+
+        if (cb == null) { Console.WriteLine("   (!) לא נמצאה תיבת סימון: " + automationId); return; }
+
+        object pattern;
+        if (cb.TryGetCurrentPattern(TogglePattern.Pattern, out pattern))
+        {
+            TogglePattern toggle = (TogglePattern)pattern;
+            bool isChecked = toggle.Current.ToggleState == ToggleState.On;
+            if (isChecked != check)
+            {
+                try { toggle.Toggle(); }
+                catch (Exception ex) { Console.WriteLine("   (!) סימון נכשל: " + ex.Message); }
+            }
+            else
+            {
+                Console.WriteLine("   (המצב כבר היה כמו שרצינו)");
+            }
+        }
+        else
+        {
+            Console.WriteLine("   (!) התיבה לא תומכת בסימון ישיר.");
+        }
+    }
+
+    static void SetTextValue(AutomationElement parentWindow, string automationId, string text)
+    {
+        AutomationElement field = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+        if (field == null) { Console.WriteLine("   (!) לא נמצא שדה: " + automationId); return; }
+
+        object pattern;
+        if (field.TryGetCurrentPattern(ValuePattern.Pattern, out pattern))
+        {
+            try { ((ValuePattern)pattern).SetValue(text); }
+            catch (Exception ex) { Console.WriteLine("   (!) מילוי נכשל: " + ex.Message); }
+        }
+    }
+}
