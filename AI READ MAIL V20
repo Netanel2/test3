@@ -808,17 +808,31 @@ class Program
         return null;
     }
 
+    // מוצא את תיקיית היום לפי השם שלה (yyyy-dd-MM--...) ולא לפי מתי נגעו בה לאחרונה
+    // (חשוב: אם נכתוב קבצים לתוך תיקייה ישנה, תאריך ה"שינוי האחרון" שלה מתעדכן -
+    //  ולכן אי אפשר לסמוך על זה, וצריך לקרוא את התאריך האמיתי מתוך השם)
     static string FindTodayFolder(string parentFolder)
     {
         try
         {
             var dirs = Directory.GetDirectories(parentFolder);
-            var todayDirs = dirs
-                .Select(d => new DirectoryInfo(d))
-                .Where(d => d.LastWriteTime.Date == DateTime.Today || d.CreationTime.Date == DateTime.Today)
-                .OrderByDescending(d => d.LastWriteTime)
-                .ToList();
-            return todayDirs.FirstOrDefault()?.FullName;
+
+            foreach (string d in dirs)
+            {
+                string name = Path.GetFileName(d);
+                if (name.Length < 10) continue;
+
+                string datePart = name.Substring(0, 10); // "yyyy-dd-MM"
+                DateTime parsedDate;
+                if (DateTime.TryParseExact(datePart, "yyyy-dd-MM", null,
+                        System.Globalization.DateTimeStyles.None, out parsedDate))
+                {
+                    if (parsedDate.Date == DateTime.Today)
+                        return d;
+                }
+            }
+
+            return null;
         }
         catch (Exception ex)
         {
