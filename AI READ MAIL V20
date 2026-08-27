@@ -1,7 +1,106 @@
-E:\Root\HomeFolder\Personal זה מוביל לכאן בלחיצה על החלק של הבחירת מפ]תוחים שצריך לבחור את הקובץ מפתוחים... 
-
-זה לא טוב זה צריך להכנס לנתיב הזה: מכאן: \\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל
-
-לתיקיה של אותו היום לדוגמה: 
-
-\\100.100.100.6\Root\HomeFolder\Shared\תפעול\אלטשולר\מעברים שהוקמו מאקסמאל\2025-27-04--09-57\SubFolder1 ולבחור פה. 
+פותח את Archive...
+ממלא שם משתמש וסיסמה...
+מחפש את החלון הבא...
+נמצא: 'מפתוח אוטומטי מתיקיה - אלטשולר שחם'
+לוחץ על 'בחירה...' (btnBrowseFolder)...
+נמצא חלון: 'Browse For Folder'
+------------------------------------------------------------
+סוג: ControlType.Text                    | שם: '' | מזהה: '14146'
+סוג: ControlType.Pane                    | שם: '' | מזהה: ''
+סוג: ControlType.Tree                    | שם: 'Tree View' | מזהה: '100'
+סוג: ControlType.ScrollBar               | שם: 'Vertical Scroll Bar' | מזהה: 'Vertical ScrollBar'
+סוג: ControlType.Button                  | שם: 'Back by small amount' | מזהה: 'SmallDecrement'
+סוג: ControlType.Button                  | שם: 'Back by large amount' | מזהה: 'LargeDecrement'
+סוג: ControlType.Thumb                   | שם: 'Thumb' | מזהה: 'Thumb'
+סוג: ControlType.Button                  | שם: 'Forward by large amount' | מזהה: 'LargeIncrement'
+סוג: ControlType.Button                  | שם: 'Forward by small amount' | מזהה: 'SmallIncrement'
+סוג: ControlType.TreeItem                | שם: 'This PC' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: '3D Objects' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Desktop' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Documents' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Downloads' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'L on IT-NETANEL' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Music' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'N on IT-NETANEL' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Pictures' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Q on IT-NETANEL' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Videos' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Y on IT-NETANEL' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'DVD Drive (D:)' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'DATA (E:)' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'DATA' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'FromF' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Root' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: '05.06.23' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: '203502570' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Communication' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'DLL' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'hila 2711' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Hilan' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'HomeFolder' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Logs' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'MimshakMaasikimHistory' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Mislaka' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'MislakaHistory' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Reports' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Safes' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'ScanDocs' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Destination' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Source' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: '2' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: '3' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: '7' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: '8' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: '10' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'ArchiveTextFiles' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'CheckRobot' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Source' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'Temp' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'בדיקות מסלולי השקעה' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'בדיקת מרכיבי חשבון בקופת גמל' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'הילה' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'ויקטוריה' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'מרינה' | מזהה: ''
+סוג: ControlType.TreeItem                | שם: 'HASAVA (F:)' | מזהה: ''
+סוג: ControlType.Button                  | שם: 'OK' | מזהה: '1'
+סוג: ControlType.Button                  | שם: 'Cancel' | מזהה: '2'
+סוג: ControlType.Pane                    | שם: '' | מזהה: '14151'
+סוג: ControlType.TitleBar                | שם: 'Browse For Folder' | מזהה: 'TitleBar'
+סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'SystemMenuBar'
+סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
+סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
+------------------------------------------------------------
+מנווט בעץ: 2 -> מפתוח אוטומטי -> מסמכים...
+נמצא 'מסמכים' - בוחר...
+לוחץ OK...
+תיבת הנתיב עכשיו מראה: 'E:\Root\ScanDocs\Source\2\מפתוח אוטומטי\מסמכים\'
+------------------------------------------------------------
+בוחר ב'מבנה שם קבצים' את 'אקסל בפורמט...'...
+מדפיס מחדש את כל השדות בחלון (לבדוק אם משהו חדש הופיע)...
+------------------------------------------------------------
+סוג: ControlType.Edit                    | שם: 'מוצר' | מזהה: 'txtExcelPath'
+סוג: ControlType.Text                    | שם: 'אקסל ליבוא' | מזהה: 'lbltxtExcelPath'
+סוג: ControlType.Button                  | שם: 'בחירה...' | מזהה: 'btnBrowseFolderExcelPath'
+סוג: ControlType.Text                    | שם: 'מבנה שם קבצים' | מזהה: 'Label5'
+סוג: ControlType.ComboBox                | שם: 'מבנה שם קבצים' | מזהה: 'cmbFilesFormat'
+סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
+סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
+סוג: ControlType.Text                    | שם: 'תיקיה למפתוח' | מזהה: 'Label1'
+סוג: ControlType.Button                  | שם: 'בחירה...' | מזהה: 'btnBrowseFolder'
+סוג: ControlType.Button                  | שם: 'מפתוח קבצים מהתיקיה' | מזהה: 'btnArchiveFiles'
+סוג: ControlType.Edit                    | שם: 'תיקיה למפתוח' | מזהה: 'txtPath'
+סוג: ControlType.TitleBar                | שם: 'מפתוח אוטומטי מתיקיה - אלטשולר שחם' | מזהה: 'TitleBar'
+סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmAutoArchive'
+סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
+סוג: ControlType.Button                  | שם: 'Minimize' | מזהה: 'Minimize'
+סוג: ControlType.Button                  | שם: 'Maximize' | מזהה: 'Maximize'
+סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
+------------------------------------------------------------
+לוחץ על 'בחירה...' (btnBrowseFolderExcelPath)...
+נמצא חלון: 'בחירת קובץ אקסל לקליטת נתונים:'
+מקליד את הנתיב המלא לקובץ מפתוחים...
+תיבת נתיב האקסל עכשיו מראה: ''
+------------------------------------------------------------
+לוחץ על 'מפתוח קבצים מהתיקיה' (btnArchiveFiles)...
+לא נפתח חלון נוסף אחרי הלחיצה (אולי זה תקין - בדוק חזותית).
+סיום. לחץ Enter לסגירה...
