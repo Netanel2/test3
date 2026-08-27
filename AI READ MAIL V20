@@ -1,99 +1,408 @@
-פותח את Archive...
-ממלא שם משתמש וסיסמה...
-מחפש את החלון הבא...
-נמצא: 'מפתוח אוטומטי מתיקיה - אלטשולר שחם'
-לוחץ על 'בחירה...' (btnBrowseFolder)...
-נמצא חלון: 'Browse For Folder'
-------------------------------------------------------------
-סוג: ControlType.Text                    | שם: '' | מזהה: '14146'
-סוג: ControlType.Pane                    | שם: '' | מזהה: ''
-סוג: ControlType.Tree                    | שם: 'Tree View' | מזהה: '100'
-סוג: ControlType.ScrollBar               | שם: 'Vertical Scroll Bar' | מזהה: 'Vertical ScrollBar'
-סוג: ControlType.Button                  | שם: 'Back by small amount' | מזהה: 'SmallDecrement'
-סוג: ControlType.Button                  | שם: 'Back by large amount' | מזהה: 'LargeDecrement'
-סוג: ControlType.Thumb                   | שם: 'Thumb' | מזהה: 'Thumb'
-סוג: ControlType.Button                  | שם: 'Forward by large amount' | מזהה: 'LargeIncrement'
-סוג: ControlType.Button                  | שם: 'Forward by small amount' | מזהה: 'SmallIncrement'
-סוג: ControlType.TreeItem                | שם: 'This PC' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: '3D Objects' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Desktop' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Documents' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Downloads' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'L on IT-NETANEL' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Music' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'N on IT-NETANEL' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Pictures' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Q on IT-NETANEL' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Videos' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Y on IT-NETANEL' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'DVD Drive (D:)' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'DATA (E:)' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'DATA' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'FromF' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Root' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: '05.06.23' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: '203502570' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Communication' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'DLL' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'hila 2711' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Hilan' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'HomeFolder' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Logs' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'MimshakMaasikimHistory' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Mislaka' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'MislakaHistory' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Reports' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Safes' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'ScanDocs' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Destination' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Source' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: '2' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: '3' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: '7' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: '8' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: '10' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'ArchiveTextFiles' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'CheckRobot' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Source' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'Temp' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'בדיקות מסלולי השקעה' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'בדיקת מרכיבי חשבון בקופת גמל' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'הילה' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'ויקטוריה' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'מרינה' | מזהה: ''
-סוג: ControlType.TreeItem                | שם: 'HASAVA (F:)' | מזהה: ''
-סוג: ControlType.Button                  | שם: 'OK' | מזהה: '1'
-סוג: ControlType.Button                  | שם: 'Cancel' | מזהה: '2'
-סוג: ControlType.Pane                    | שם: '' | מזהה: '14151'
-סוג: ControlType.TitleBar                | שם: 'Browse For Folder' | מזהה: 'TitleBar'
-סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'SystemMenuBar'
-סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
-סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
-------------------------------------------------------------
-מנווט בעץ: 2 -> מפתוח אוטומטי -> מסמכים...
-נמצא 'מסמכים' - בוחר...
-לוחץ OK...
-תיבת הנתיב עכשיו מראה: 'E:\Root\ScanDocs\Source\2\מסמכים\'
-------------------------------------------------------------
-בוחר ב'מבנה שם קבצים' את 'אקסל בפורמט...'...
-מדפיס מחדש את כל השדות בחלון (לבדוק אם משהו חדש הופיע)...
-------------------------------------------------------------
-סוג: ControlType.Edit                    | שם: 'מוצר' | מזהה: 'txtExcelPath'
-סוג: ControlType.Text                    | שם: 'אקסל ליבוא' | מזהה: 'lbltxtExcelPath'
-סוג: ControlType.Button                  | שם: 'בחירה...' | מזהה: 'btnBrowseFolderExcelPath'
-סוג: ControlType.Text                    | שם: 'מבנה שם קבצים' | מזהה: 'Label5'
-סוג: ControlType.ComboBox                | שם: 'מבנה שם קבצים' | מזהה: 'cmbFilesFormat'
-סוג: ControlType.List                    | שם: '' | מזהה: 'ListBox'
-סוג: ControlType.Button                  | שם: 'Drop Down Button' | מזהה: 'DropDown'
-סוג: ControlType.Text                    | שם: 'תיקיה למפתוח' | מזהה: 'Label1'
-סוג: ControlType.Button                  | שם: 'בחירה...' | מזהה: 'btnBrowseFolder'
-סוג: ControlType.Button                  | שם: 'מפתוח קבצים מהתיקיה' | מזהה: 'btnArchiveFiles'
-סוג: ControlType.Edit                    | שם: 'תיקיה למפתוח' | מזהה: 'txtPath'
-סוג: ControlType.TitleBar                | שם: 'מפתוח אוטומטי מתיקיה - אלטשולר שחם' | מזהה: 'TitleBar'
-סוג: ControlType.MenuBar                 | שם: 'System Menu Bar' | מזהה: 'frmAutoArchive'
-סוג: ControlType.MenuItem                | שם: 'System' | מזהה: 'Item 1'
-סוג: ControlType.Button                  | שם: 'Minimize' | מזהה: 'Minimize'
-סוג: ControlType.Button                  | שם: 'Maximize' | מזהה: 'Maximize'
-סוג: ControlType.Button                  | שם: 'Close' | מזהה: 'Close'
-------------------------------------------------------------
-סיום. לחץ Enter לסגירה...
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Automation;
+using System.Windows.Forms;
+
+class Program
+{
+    [DllImport("user32.dll")]
+    static extern bool SetCursorPos(int x, int y);
+    [DllImport("user32.dll")]
+    static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
+    [DllImport("user32.dll")]
+    static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
+    const uint MOUSEEVENTF_LEFTUP = 0x0004;
+
+    [STAThread]
+    static void Main()
+    {
+        // *** מלא כאן ***
+        string exePath2 = @"C:\Program Files\Archive\Archive.exe";
+        string exeArgs2 = "-auto";
+        string username2 = "USERNAME_HERE";
+        string password2 = "PASSWORD_HERE";
+
+        Console.WriteLine("פותח את Archive...");
+        Process proc2 = string.IsNullOrEmpty(exeArgs2)
+            ? Process.Start(exePath2)
+            : Process.Start(exePath2, exeArgs2);
+        try { proc2.WaitForInputIdle(5000); } catch { }
+
+        AutomationElement window2 = FindWindowByProcessId(proc2.Id, 15);
+        if (window2 == null) { Console.WriteLine("(!) לא נמצא חלון login."); Console.ReadLine(); return; }
+
+        BringToFront(window2);
+        Thread.Sleep(300);
+
+        Console.WriteLine("ממלא שם משתמש וסיסמה...");
+        FillField(window2, "txtUser", username2);
+        FillField(window2, "txtPassword", password2);
+
+        Thread.Sleep(300);
+        var handlesBeforeLogin = GetWindowHandlesForProcess(proc2.Id);
+
+        AutomationElement okBtn2 = window2.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, "OK"));
+        if (okBtn2 != null) RealClick(okBtn2);
+
+        Console.WriteLine("מחפש את החלון הבא...");
+        AutomationElement window3 = FindNewWindowByHandle(proc2.Id, handlesBeforeLogin, 15);
+
+        if (window3 == null)
+        {
+            Console.WriteLine("(!) לא נמצא חלון חדש.");
+            Console.ReadLine();
+            return;
+        }
+
+        Console.WriteLine("נמצא: '" + window3.Current.Name + "'");
+        BringToFront(window3);
+        Thread.Sleep(300);
+
+        // *** כאן השלב שרוצים לבדוק: לחיצה על "בחירה..." ***
+        Console.WriteLine("לוחץ על 'בחירה...' (btnBrowseFolder)...");
+        var handlesBeforeFolder = GetAllTopWindowHandles();
+        var innerBeforeFolder = GetInnerWindowIds(window3);
+
+        AutomationElement browseFolderBtn = window3.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, "btnBrowseFolder"));
+
+        if (browseFolderBtn == null)
+        {
+            Console.WriteLine("(!) לא נמצא כפתור btnBrowseFolder.");
+        }
+        else
+        {
+            RealClick(browseFolderBtn);
+
+            AutomationElement folderDialog = FindNewTopWindowAny(handlesBeforeFolder, 6)
+                ?? FindNewInnerWindow(window3, innerBeforeFolder, 6);
+
+            if (folderDialog == null)
+            {
+                Console.WriteLine("(!) לא נפתח חלון בחירת תיקייה (גם לא כחלון פנימי).");
+            }
+            else
+            {
+                Console.WriteLine("נמצא חלון: '" + folderDialog.Current.Name + "'");
+                Console.WriteLine(new string('-', 60));
+
+                AutomationElementCollection folderControls = null;
+                for (int i = 0; i < 10; i++)
+                {
+                    folderControls = folderDialog.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+                    if (folderControls.Count > 0) break;
+                    Thread.Sleep(500);
+                }
+
+                if (folderControls != null)
+                {
+                    foreach (AutomationElement el in folderControls)
+                    {
+                        try
+                        {
+                            Console.WriteLine($"סוג: {el.Current.ControlType.ProgrammaticName,-35} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("   (!) שגיאה: " + ex.Message);
+                        }
+                    }
+                }
+                Console.WriteLine(new string('-', 60));
+                Console.WriteLine("מנווט בעץ: 2 -> מפתוח אוטומטי -> מסמכים...");
+
+                AutomationElement item2 = FindTreeItemByName(folderDialog, "2", 8);
+                if (item2 == null)
+                {
+                    Console.WriteLine("(!) לא מצאתי את הפריט '2' בעץ.");
+                }
+                else
+                {
+                    ExpandTreeItem(item2);
+                    Thread.Sleep(1200);
+
+                    AutomationElement itemAuto = FindTreeItemByName(folderDialog, "מפתוח אוטומטי", 8);
+                    if (itemAuto == null)
+                    {
+                        Console.WriteLine("(!) לא מצאתי את 'מפתוח אוטומטי'.");
+                    }
+                    else
+                    {
+                        ExpandTreeItem(itemAuto);
+                        Thread.Sleep(1200);
+
+                        AutomationElement itemDocs = FindTreeItemByName(itemAuto, "מסמכים", 8);
+                        if (itemDocs == null)
+                        {
+                            Console.WriteLine("(!) לא מצאתי את 'מסמכים'.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("נמצא 'מסמכים' - בוחר...");
+                            object selPattern;
+                            if (itemDocs.TryGetCurrentPattern(SelectionItemPattern.Pattern, out selPattern))
+                                ((SelectionItemPattern)selPattern).Select();
+                            else
+                                RealClick(itemDocs);
+
+                            Thread.Sleep(500);
+
+                            Console.WriteLine("לוחץ OK...");
+                            AutomationElement okBtnFolder = folderDialog.FindFirst(TreeScope.Descendants,
+                                new PropertyCondition(AutomationElement.NameProperty, "OK"));
+                            if (okBtnFolder != null)
+                                RealClick(okBtnFolder);
+                            else
+                                Console.WriteLine("(!) לא מצאתי כפתור OK.");
+
+                            Thread.Sleep(1000);
+
+                            AutomationElement pathField = window3.FindFirst(TreeScope.Descendants,
+                                new PropertyCondition(AutomationElement.AutomationIdProperty, "txtPath"));
+                            if (pathField != null)
+                            {
+                                object vp;
+                                if (pathField.TryGetCurrentPattern(ValuePattern.Pattern, out vp))
+                                    Console.WriteLine("תיבת הנתיב עכשיו מראה: '" + ((ValuePattern)vp).Current.Value + "'");
+                            }
+                        }
+                    }
+                }
+
+                Console.WriteLine(new string('-', 60));
+            }
+        }
+
+        // *** שלב הבא: בוחרים את הפריט האחרון ברשימת 'מבנה שם קבצים' ***
+        Console.WriteLine("בוחר ב'מבנה שם קבצים' את 'אקסל בפורמט...'...");
+        SelectComboItem(window3, "cmbFilesFormat", "אקסל בפורמט");
+        Thread.Sleep(1000);
+
+        Console.WriteLine("מדפיס מחדש את כל השדות בחלון (לבדוק אם משהו חדש הופיע)...");
+        Console.WriteLine(new string('-', 60));
+        AutomationElementCollection controlsAfterFormat = window3.FindAll(TreeScope.Descendants, Condition.TrueCondition);
+        foreach (AutomationElement el in controlsAfterFormat)
+        {
+            try
+            {
+                string t = el.Current.ControlType.ProgrammaticName;
+                // מדלגים על כל רשימת סוגי המסמכים הארוכה כדי שלא יהיה רעש
+                if (t == "ControlType.ListItem") continue;
+                Console.WriteLine($"סוג: {t,-35} | שם: '{el.Current.Name}' | מזהה: '{el.Current.AutomationId}'");
+            }
+            catch { }
+        }
+        Console.WriteLine(new string('-', 60));
+
+        Console.WriteLine("סיום. לחץ Enter לסגירה...");
+        Console.ReadLine();
+    }
+
+    // מחפש פריט בעץ (TreeItem) לפי שם, בכל מקום בעץ (לא רק ברמה העליונה)
+    static AutomationElement FindTreeItemByName(AutomationElement root, string name, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            AutomationElement item = root.FindFirst(TreeScope.Descendants,
+                new AndCondition(
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TreeItem),
+                    new PropertyCondition(AutomationElement.NameProperty, name)));
+            if (item != null) return item;
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    // מרחיב פריט בעץ (כמו ללחוץ על החץ הקטן), בלי צורך לדייק בלחיצה
+    static void ExpandTreeItem(AutomationElement item)
+    {
+        object pattern;
+        if (item.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out pattern))
+        {
+            var ecp = (ExpandCollapsePattern)pattern;
+            if (ecp.Current.ExpandCollapseState != ExpandCollapseState.Expanded)
+            {
+                try { ecp.Expand(); }
+                catch { RealClick(item); }
+            }
+        }
+        else
+        {
+            RealClick(item);
+        }
+    }
+
+    static HashSet<string> GetInnerWindowIds(AutomationElement parent)
+    {
+        var set = new HashSet<string>();
+        var cond = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window);
+        var wins = parent.FindAll(TreeScope.Descendants, cond);
+        foreach (AutomationElement w in wins)
+        {
+            try { set.Add(string.Join(",", w.GetRuntimeId())); } catch { }
+        }
+        return set;
+    }
+
+    static AutomationElement FindNewInnerWindow(AutomationElement parent, HashSet<string> knownIds, int timeoutSeconds)
+    {
+        var cond = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window);
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            var wins = parent.FindAll(TreeScope.Descendants, cond);
+            foreach (AutomationElement w in wins)
+            {
+                string id;
+                try { id = string.Join(",", w.GetRuntimeId()); } catch { continue; }
+                if (!knownIds.Contains(id)) return w;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    // בוחר פריט מרשימה נפתחת (ComboBox) לפי טקסט חלקי (Contains) בשם הפריט
+    static void SelectComboItem(AutomationElement parentWindow, string comboAutomationId, string itemNameContains)
+    {
+        AutomationElement combo = parentWindow.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, comboAutomationId));
+        if (combo == null) { Console.WriteLine("   (!) לא נמצא קומבו: " + comboAutomationId); return; }
+
+        var items = combo.FindAll(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem));
+
+        AutomationElement target = null;
+        foreach (AutomationElement item in items)
+        {
+            string n = "";
+            try { n = item.Current.Name; } catch { }
+            if (n.Contains(itemNameContains)) { target = item; break; }
+        }
+
+        if (target == null) { Console.WriteLine("   (!) לא נמצא פריט המכיל: " + itemNameContains); return; }
+
+        object pattern;
+        if (target.TryGetCurrentPattern(SelectionItemPattern.Pattern, out pattern))
+            ((SelectionItemPattern)pattern).Select();
+        else
+            RealClick(target);
+    }
+
+    static void FillField(AutomationElement window, string automationId, string text)
+    {
+        AutomationElement field = window.FindFirst(TreeScope.Descendants,
+            new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+        if (field == null) { Console.WriteLine("   (!) לא נמצא שדה: " + automationId); return; }
+
+        RealClick(field);
+        Thread.Sleep(300);
+        object p;
+        if (field.TryGetCurrentPattern(ValuePattern.Pattern, out p))
+        {
+            try { ((ValuePattern)p).SetValue(""); } catch { }
+        }
+        Thread.Sleep(200);
+        SendKeys.SendWait(text);
+        Thread.Sleep(300);
+    }
+
+    static void RealClick(AutomationElement element)
+    {
+        var rect = element.Current.BoundingRectangle;
+        int x = (int)(rect.Left + rect.Width / 2);
+        int y = (int)(rect.Top + rect.Height / 2);
+        SetCursorPos(x, y);
+        Thread.Sleep(150);
+        mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
+        Thread.Sleep(80);
+        mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+    }
+
+    static void BringToFront(AutomationElement window)
+    {
+        try { SetForegroundWindow(new IntPtr(window.Current.NativeWindowHandle)); }
+        catch { }
+    }
+
+    static AutomationElement FindWindowByProcessId(int pid, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+                if (wpid == pid) return win;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    static HashSet<IntPtr> GetWindowHandlesForProcess(int pid)
+    {
+        var set = new HashSet<IntPtr>();
+        var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+        foreach (AutomationElement win in windows)
+        {
+            int wpid = 0;
+            try { wpid = win.Current.ProcessId; } catch { continue; }
+            if (wpid != pid) continue;
+            try { set.Add(new IntPtr(win.Current.NativeWindowHandle)); } catch { }
+        }
+        return set;
+    }
+
+    static AutomationElement FindNewWindowByHandle(int pid, HashSet<IntPtr> knownHandles, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement win in windows)
+            {
+                int wpid = 0;
+                try { wpid = win.Current.ProcessId; } catch { continue; }
+                if (wpid != pid) continue;
+                IntPtr h;
+                try { h = new IntPtr(win.Current.NativeWindowHandle); } catch { continue; }
+                if (!knownHandles.Contains(h)) return win;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+
+    static HashSet<IntPtr> GetAllTopWindowHandles()
+    {
+        var set = new HashSet<IntPtr>();
+        var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+        foreach (AutomationElement w in windows)
+        {
+            try { set.Add(new IntPtr(w.Current.NativeWindowHandle)); } catch { }
+        }
+        return set;
+    }
+
+    static AutomationElement FindNewTopWindowAny(HashSet<IntPtr> knownHandles, int timeoutSeconds)
+    {
+        for (int i = 0; i < timeoutSeconds * 2; i++)
+        {
+            var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement w in windows)
+            {
+                IntPtr h;
+                try { h = new IntPtr(w.Current.NativeWindowHandle); } catch { continue; }
+                if (!knownHandles.Contains(h)) return w;
+            }
+            Thread.Sleep(500);
+        }
+        return null;
+    }
+}
