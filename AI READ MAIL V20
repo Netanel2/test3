@@ -560,16 +560,59 @@ class Program
 
             AutomationElement okBtn2 = window2.FindFirst(TreeScope.Descendants,
                 new PropertyCondition(AutomationElement.AutomationIdProperty, "OK"));
+
             if (okBtn2 != null)
+            {
+                var okRect = okBtn2.Current.BoundingRectangle;
+                Console.WriteLine("   כפתור OK נמצא במיקום: X=" + okRect.X + " Y=" + okRect.Y +
+                    " רוחב=" + okRect.Width + " גובה=" + okRect.Height + " (פעיל: " + okBtn2.Current.IsEnabled + ")");
                 RealClick(okBtn2);
+                Console.WriteLine("   בוצעה לחיצה במרכז הכפתור.");
+            }
             else
+            {
                 Console.WriteLine("   (!) לא נמצא כפתור OK.");
+            }
+
+            Thread.Sleep(1500);
+
+            // *** מדפיסים את *כל* החלונות הפתוחים כרגע (לא רק "חדשים") - כדי לראות בדיוק מה יש על המסך ***
+            Console.WriteLine(new string('-', 60));
+            Console.WriteLine("כל החלונות העצמאיים הפתוחים כרגע במחשב:");
+            AutomationElementCollection allWindowsNow = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            foreach (AutomationElement w in allWindowsNow)
+            {
+                string n = "";
+                try { n = w.Current.Name; } catch { }
+                if (!string.IsNullOrWhiteSpace(n))
+                    Console.WriteLine("   - '" + n + "'");
+            }
+
+            Console.WriteLine("כל החלונות הפנימיים בתוך חלון ההתחברות (window2):");
+            try
+            {
+                AutomationElementCollection innerNow = window2.FindAll(TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window));
+                foreach (AutomationElement w in innerNow)
+                {
+                    string n = "";
+                    try { n = w.Current.Name; } catch { }
+                    if (!string.IsNullOrWhiteSpace(n))
+                        Console.WriteLine("   - '" + n + "'");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("   (!) שגיאה: " + ex.Message);
+            }
+            Console.WriteLine(new string('-', 60));
 
             AutomationElement window3 = FindNewTopWindowAny(handlesBeforeLogin, 15);
 
             if (window3 == null)
             {
-                Console.WriteLine("(!) לא נפתח חלון נוסף אחרי ההתחברות (אולי זה בסדר, או שצריך לחכות יותר).");
+                Console.WriteLine("(!) לא נפתח חלון 'חדש' אחרי ההתחברות (לפי הבדיקה הרגילה שלנו).");
+                Console.WriteLine("תגיד לי מה בדיוק אתה רואה על המסך, ומה כתוב ברשימות למעלה שנראה לך קשור.");
             }
             else
             {
