@@ -1,14 +1,19 @@
-שלב חדש וחשוב — צריך להוסיף ספרייה (לא כמו עד עכשיו!)
+SupportChat
 
-בפעם הזאת זה לא "Add Reference" הרגיל — צריך להתקין חבילת NuGet (זה קל יותר, בלי חיפוש קבצים):
+Installing:
 
-ב-Visual Studio: תפריט Tools → NuGet Package Manager → Manage NuGet Packages for Solution...
-לשונית Browse, בשורת החיפוש תכתוב: ClosedXML
-תסמן את הפרויקט שלך → Install
-תאשר את תנאי הרישיון אם מופיע
-אחרי ההתקנה
-
-Ctrl+A → מחק ב-Program.cs → הדבק את הקובץ שלמעלה → Ctrl+S → F5.
+DocumentFormat.OpenXml.Framework.3.1.1
+DocumentFormat.OpenXml.3.1.1
+ExcelNumberFormat.1.1.0
+Microsoft.Bcl.HashCode.1.1.1
+RBush.Signed.4.0.0
+System.Buffers.4.5.1
+System.Numerics.Vectors.4.5.0
+System.Runtime.CompilerServices.Unsafe.4.7.0
+System.Memory.4.5.5
+ClosedXML.Parser.2.0.0
+SixLabors.Fonts.1.0.0
+ClosedXML.0.105.1
 
 
 using System;
